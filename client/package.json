@@ -1,0 +1,35 @@
+{
+  "name": "Flow",
+  "version": "1.0.0",
+  "description": "Event flow page",
+  "main": "app.js",
+  "author": "",
+  "license": "LGPL-3.0",
+  "scripts": {
+    "babel-node": "babel-node --presets=env",
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,*.md,package-lock.json,./public,*.html --copy-files",
+    "start": "npm run build && node dist/index.js",
+    "start-wip": "nodemon --exec npm run babel-node ./index.js"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "dist/*",
+      "node_modules/*"
+    ]
+  },
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "express": "^4.16.2",
+    "express-history-api-fallback": "^2.2.1",
+    "jquery": "^3.3.1",
+    "jsrsasign": "^8.0.6",
+    "mustache": "^2.3.0",
+    "page": "^1.8.3",
+    "popper.js": "^1.12.9"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "rimraf": "^2.6.2"
+  }
+}

@@ -1,0 +1,55 @@
+.profile-img {
+    margin-top: 5px;
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+.flow-content {
+    margin-top: 1rem;
+}
+
+.card {
+    margin-bottom: 2rem;
+}
+
+.status-upload {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.droptext {
+    text-align: right;
+}
+
+.droptext .dropdown-toggle::after {
+    border: none;
+}
+
+.fa-ellipsis-h:hover {
+    color: #5C6A76;
+    cursor: pointer;
+}
+
+#post-submit {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-bottom: 7px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.status-upload textarea {
+    border: medium none;
+    color: #777777;
+    font-size: 14px;
+    height: 142px;
+    letter-spacing: 0.3px;
+    padding: 20px;
+    width: 100%;
+    resize:vertical;
+    outline:none;
+    border: 1px solid #F2F2F2;
+}

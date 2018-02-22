@@ -1,8 +1,5 @@
-/*
-    MVC observer utility
-    Used to send data to GUI from model
+"use strict";
 
-*/
 class EventBus {
 
   constructor() {
@@ -10,11 +7,11 @@ class EventBus {
   }
 
   register(observer) {
-    this.observers.push(observer)
+    this.observers.push(observer);
   }
 
   unregister(observer) {
-    let i = observers.indexOf(observer);
+    let i = this.observers.indexOf(observer);
     this.observers.slice(i, 1);
   }
 

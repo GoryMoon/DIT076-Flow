@@ -1,3 +1,8 @@
+# NetBeans (auto-generated code)
+dist/*
+project.properties
+project.xml
+
 # Logs
 logs
 *.log

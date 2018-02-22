@@ -1,7 +1,6 @@
 # NetBeans (auto-generated code)
-dist/*
-project.properties
-project.xml
+client/dist/*
+client/nbproject/*
 
 # Logs
 logs

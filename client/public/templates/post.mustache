@@ -1,0 +1,42 @@
+<div class="card">
+  <div class="card-header">
+    <div class="clearfix">
+      <img src="img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
+      <div class="user-info">
+        <div class="clearfix">
+          <div class="float-left">
+            <h5>{{name}}</h5>
+            <small class="text-muted" title="{{raw_time}}" data-toggle="tooltip" data-placement="bottom">{{pretty_time}}</small>
+          </div>
+          <div class="droptext float-right">
+            <div class="dropdown">
+              <a class="dropdown-toggle" id="postDrop{{postid}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
+              <div class="dropdown-menu" aria-labelledby="postDrop{{postid}}">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+              </div>
+            </div>
+            <span class="text-muted">{{groupname}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="post-content">
+      <h3>{{posttitle}}</h3>
+      <hr>
+      {{posttext}}
+    </div>
+  </div>
+  <div class="card-footer">
+    <form class="form-inline">
+        <input type="text" class="form-control col-10 mr-auto" placeholder="Comment">
+        <button type="submit" class="btn btn-primary col-1"><i class="fa fa-share"></i> Post</button>
+    </form>
+    <hr>
+    <div>
+      <!-- Comments -->
+    </div>
+  </div>
+</div>

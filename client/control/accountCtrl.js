@@ -4,6 +4,9 @@ import {
 serverService as server
 } from "../model/serverService.js"
 import {
+EVENT_ACCOUNT_LOGIN,
+EVENT_ACCOUNT_REGISTER,
+EVENT_ACCOUNT_LOGOUT,
 eventBus as eB
 } from "../util/eventBus.js"
 import {
@@ -24,7 +27,7 @@ class AccountCtrl {
         let accountLoginData = {email: null, password: null};
         accountLoginData.email = getData(ACCOUNT_LOGIN_EMAIL);
         accountLoginData.password = getData(ACCOUNT_LOGIN_PASSWORD);
-        server.rpcLoginAccount(accountLoginData, data => { return eB.notify("ACCOUNT_LOGIN", data); });
+        server.rpcLoginAccount(accountLoginData, data => { return eB.notify(EVENT_ACCOUNT_LOGIN, data); });
     }
     
     register() { // NOT TESTED
@@ -32,13 +35,14 @@ class AccountCtrl {
         accountRegisterData.email = getData(ACCOUNT_REGISTER_EMAIL);
         accountRegisterData.nick = getData(ACCOUNT_REGISTER_NICK);
         accountRegisterData.password = getData(ACCOUNT_REGISTER_PASSWORD);
-        server.rpcLoginAccount(accountRegisterData, data => { return eB.notify("ACCOUNT_REGISTER", data); });
+        server.rpcRegisterAccount(accountRegisterData, data => { return eB.notify(EVENT_ACCOUNT_REGISTER, data); });
     }
     
-    logout() { // NOT SPECIFIED FOR IMPL.
+    logout() { // NOT TESTED
         let accountLogoutData = {id: null};
         accountLogoutData.id = getData(ACCOUNT_ID);
-        server.rpcLoginAccount(accountLogoutData, data => { return eB.notify("ACCOUNT_LOGOUT", data); });
+//        server.rpcLoginAccount(accountLogoutData, data => { return eB.notify("ACCOUNT_LOGOUT", data); });
+        eB.notify(EVENT_ACCOUNT_LOGOUT, accountLogoutData); // Logout is client-side
     }
 }
 
@@ -47,5 +51,5 @@ const accountCtrl = new AccountCtrl();
 $(document).ready(function () {
     $(ACCOUNT_LOGIN_BUTTON).on("click", accountCtrl.login);
     $(ACCOUNT_REGISTER_BUTTON).on("click", accountCtrl.register);
-    // $(ACCOUNT_LOGOUT_BUTTON).on("click", accountCtrl.logout); // NOT SPECIFIED FOR IMPL.
+    $(ACCOUNT_LOGOUT_BUTTON).on("click", accountCtrl.logout);
 });

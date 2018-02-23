@@ -4,6 +4,9 @@ import {
 serverService as server
 } from "../model/serverService.js"
 import {
+EVENT_COMMENT_RETRIEVE,
+EVENT_COMMENT_SEND,
+EVENT_COMMENT_HIDE,
 eventBus as eB
 } from "../util/eventBus.js"
 import {
@@ -27,7 +30,7 @@ class CommentCtrl {
         commentRetrieveData.postid = getData(COMMENT_FILTER_POSTID);
         commentRetrieveData.from = getData(COMMENT_FILTER_TIME);
         commentRetrieveData.count = getData(COMMENT_FILTER_COUNT);
-        server.rpcRetrieveComments(commentRetrieveData, data => { return eB.notify("COMMENT_RETRIEVE", data); });
+        server.rpcRetrieveComments(commentRetrieveData, data => { return eB.notify(EVENT_COMMENT_RETRIEVE, data); });
     }
     
     send() { // NOT TESTED
@@ -35,14 +38,14 @@ class CommentCtrl {
         commentSendData.userid = getData(ACCOUNT_ID);
         commentSendData.postid = getData(COMMENT_POST_ID);
         commentSendData.commenttext = getData(COMMENT_SEND_TEXT);
-        server.rpcSendComment(commentSendData, data => { return eB.notify("COMMENT_SEND", data); });
+        server.rpcSendComment(commentSendData, data => { return eB.notify(EVENT_COMMENT_SEND, data); });
     }
     
     hide() { // NOT TESTED
         let commentHideData = {userid: null, commentid: null};
         commentHideData.userid = getData(ACCOUNT_ID);
         commentHideData.commentid = getData(COMMENT_ID);
-        server.rpcHideComment(commentHideData, data => { return eB.notify("COMMENT_HIDE", data); });
+        server.rpcHideComment(commentHideData, data => { return eB.notify(EVENT_COMMENT_HIDE, data); });
     }
 }
 

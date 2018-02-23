@@ -4,6 +4,8 @@ import {
 serverService as server
 } from "../model/serverService.js"
 import {
+EVENT_GROUP_RETRIEVE,
+EVENT_GROUP_SEND,
 eventBus as eB
 } from "../util/eventBus.js"
 import {
@@ -24,22 +26,22 @@ class GroupCtrl {
         groupRetrieveData.search = getData(GROUP_FILTER_TEXT);
         groupRetrieveData.from = getData(GROUP_FILTER_TIME);
         groupRetrieveData.count = getData(GROUP_FILTER_COUNT);
-        server.rpcRetrieveGroups(groupRetrieveData, data => { return eB.notify("GROUP_RETRIEVE", data); });
+        server.rpcRetrieveGroups(groupRetrieveData, data => { return eB.notify(EVENT_GROUP_RETRIEVE, data); });
     }
     
     send() { // NOT TESTED
         let groupSendData = {userid: null, groupname: null};
         groupSendData.userid = getData(ACCOUNT_ID);
         groupSendData.groupname = getData(GROUP_SEND_NAME);
-        server.rpcSendGroup(groupSendData, data => { return eB.notify("GROUP_SEND", data); });
+        server.rpcSendGroup(groupSendData, data => { return eB.notify(EVENT_GROUP_SEND, data); });
     }
     
-    hide() { // NOT SPECIFIED
+//    hide() { // NOT SPECIFIED
         //let commentHideData = {userid: null, commentid: null};
        // commentHideData.userid = getData(ACCOUNT_ID);
       //  commentHideData.commentid = getData(COMMENT_ID);
      //   server.rpcLoginAccount(commentHideData, data => { return eB.notify("COMMENT_HIDE", data); });
-    }
+//    }
 }
 
 const groupCtrl = new GroupCtrl();

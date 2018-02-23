@@ -4,6 +4,9 @@ import {
 serverService as server
 } from "../model/serverService.js"
 import {
+EVENT_POST_RETRIEVE,
+EVENT_POST_SEND,
+EVENT_POST_HIDE,
 eventBus as eB
 } from "../util/eventBus.js"
 import {
@@ -28,7 +31,7 @@ class PostCtrl {
         postRetrieveData.group = getData(POST_FILTER_GROUP);
         postRetrieveData.from = getData(POST_FILTER_TIME);
         postRetrieveData.count = getData(POST_FILTER_COUNT);
-        server.rpcRetrievePosts(postRetrieveData, data => { return eB.notify("POST_RETRIEVE", data); });
+        server.rpcRetrievePosts(postRetrieveData, data => { return eB.notify(EVENT_POST_RETRIEVE, data); });
     }
     
     send() { // NOT TESTED
@@ -37,14 +40,14 @@ class PostCtrl {
         postSendData.groupid = getData(POST_SEND_GROUP_ID);
         postSendData.posttitle = getData(POST_SEND_TITLE);
         postSendData.posttext = getData(POST_SEND_TEXT);
-        server.rpcSendPost(postSendData, data => { return eB.notify("POST_SEND", data); });
+        server.rpcSendPost(postSendData, data => { return eB.notify(EVENT_POST_SEND, data); });
     }
     
     hide() { // NOT TESTED
         let postHideData = {userid: null, postid: null};
         postHideData.userid = getData(ACCOUNT_ID);
         postHideData.postid = getData(POST_HIDE_ID);
-        server.rpcHidePost(postHideData, data => { return eB.notify("POST_HIDE", data); });
+        server.rpcHidePost(postHideData, data => { return eB.notify(EVENT_POST_HIDE, data); });
     }
 }
 

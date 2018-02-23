@@ -2,7 +2,7 @@
 
 class ServerService {
     constructor() {
-        this.serverUrl = "http://localhost:8080/";
+        this.serverUrl = "http://localhost:8080/flow/rest/";
         this.errorFunc = function(msg, ajaxOpt, thrownError, funcName) {
             console.log("Failiure in \"" + funcName + "\"");
             console.log("Error Message: " + JSON.stringify(msg));

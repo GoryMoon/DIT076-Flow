@@ -1,6 +1,6 @@
 "use strict";
 
-class serverService {
+class ServerService {
     constructor() {
         this.serverUrl = "http://localhost:8080/";
         this.errorFunc = function(msg, ajaxOpt, thrownError, funcName) {
@@ -128,7 +128,7 @@ class serverService {
         });
     }
     
-    rpcSendComments(commentData, callback) { // NOT TESTED
+    rpcSendComment(commentData, callback) { // NOT TESTED
         this.sendingFunc(commentData, "rpcSendComments");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},

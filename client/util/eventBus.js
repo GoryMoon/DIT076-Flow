@@ -18,7 +18,6 @@ class EventBus {
   notify(event, data) {
     this.observers.forEach(function(observer) {
       observer.onModelEvent(event, data);
-      //console.log(item, index);
     });
   }
 

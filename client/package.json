@@ -7,8 +7,8 @@
   "license": "LGPL-3.0",
   "scripts": {
     "babel-node": "babel-node --presets=env",
-    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,*.md,package-lock.json,./public,*.html --copy-files",
-    "start": "npm run build && node dist/index.js",
+    "build": "rimraf public/js/dist/ && babel ./ --out-dir public/js/dist/ --ignore ./dist,./node_modules,./.babelrc,./package.json,./npm-debug.log,*.md,package-lock.json,./public,*.html --copy-files",
+    "start": "npm run build && node public/js/dist/index.js",
     "start-wip": "nodemon --exec npm run babel-node ./index.js"
   },
   "nodemonConfig": {

@@ -7,7 +7,7 @@ process.argv.forEach(function (val, index, array) {
 });
 
 const app = express();
-const root = join(__dirname, '../public');
+const root = join(__dirname, '../../');
 
 app.use(express.static(root));
 app.use(history('index.html', { root }));

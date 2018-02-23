@@ -1,5 +1,6 @@
 # NetBeans / auto-generated code
 /client/public/js/dist/*
+/client/dist/*
 /client/nbproject/*
 
 # Logs

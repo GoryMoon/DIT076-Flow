@@ -20,3 +20,9 @@ functionality built in. Possible have to explore a bit.
 - npm start
 - Visit localhost:3000
 - Rerun efter js code change
+
+## To run server
+- Start MySQL server
+- Ensure that the MySQL server is configured as per server\src\main\webapp\WEB-INF\glassfish-resources.xml concerning database, user and password
+- Open in NetBeans, build and deploy
+- Use localhost:8080 (Currently)

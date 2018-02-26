@@ -8,7 +8,7 @@ EVENT_ACCOUNT_REGISTER,
 EVENT_ACCOUNT_LOGOUT,
 eventBus as eB
 } from "../util/eventBus.js"
-import setTitle from "../util/general.js"
+import { setTitle } from "../util/general.js"
 import Mustache from 'mustache'
 
 class AccountView {
@@ -16,10 +16,10 @@ class AccountView {
     onModelEvent(event, data) {
         switch(event) {
             case EVENT_ACCOUNT_VIEW_LOGIN:
-                this.accountViewLogin();
+                this.accountViewLogin(data);
                 break;
             case EVENT_ACCOUNT_VIEW_REGISTER:
-                this.accountViewRegister();
+                this.accountViewRegister(data);
                 break;
             case EVENT_ACCOUNT_LOGIN:
                 this.accountLogin(data);
@@ -33,16 +33,17 @@ class AccountView {
         }
     }
 
-    accountViewLogin() {
-        document.title = "Flow - Login"
+    accountViewLogin(ctx) {
+        setTitle('Login');
+        //TODO optimize with saving of templates?
         $.get('/templates/login.mustache', function(template) {
             var rendered = Mustache.render(template);
             $('#content').html(rendered);
         });
     }
 
-    accountViewRegister() {
-        document.title = "Flow - Register"
+    accountViewRegister(ctx) {
+        setTitle('Register');
         $.get('/templates/register.mustache', function(template) {
             var rendered = Mustache.render(template);
             $('#content').html(rendered);

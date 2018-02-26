@@ -1,2 +1,23 @@
-<h1>Login</h1>
-<a href="/register">Register</a>
+<form class="form-register_signin">
+  <div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+    <p>Don't have an account? <a href="/register">Register here</a></p>
+  </div>
+
+  <div class="form-label-group">
+    <input type="email" id="account_login_email" class="form-control" placeholder="Email address" required autofocus>
+    <label for="account_login_email">Email address</label>
+  </div>
+
+  <div class="form-label-group">
+    <input type="password" id="account_login_password" class="form-control" placeholder="Password" required>
+    <label for="account_login_password">Password</label>
+  </div>
+
+  <!--<div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> Remember me
+    </label>
+  </div>-->
+  <button id="account_login_button" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+</form>

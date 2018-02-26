@@ -10,7 +10,15 @@ export function hasUser() {
 }
 
 export function setTitle(title) {
-    window.title = "Flow - " + title;
+    document.title = "Flow - " + title;
+}
+
+export function validate() {
+    for (var i = 0; i < arguments.length; i++) {
+        if ($(arguments[i])[0].checkValidity() == false)
+            return false;
+    };
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +36,7 @@ export const ACCOUNT_LOGIN_PASSWORD = "#account_login_password";
 export const ACCOUNT_REGISTER_EMAIL = "#account_register_email";
 export const ACCOUNT_REGISTER_NICK = "#account_register_nick";
 export const ACCOUNT_REGISTER_PASSWORD = "#account_register_password";
+export const ACCOUNT_REGISTER_PASSWORD_CONFIRM = "#account_register_password_confirm";
 
 // ACCOUNT BUTTONS
 export const ACCOUNT_LOGIN_BUTTON = "#account_login_button";

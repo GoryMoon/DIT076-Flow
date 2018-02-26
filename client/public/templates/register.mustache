@@ -1,2 +1,37 @@
-<h1>Register</h1>
-<a href="/login">Login</a>
+<form class="form-register_signin">
+  <div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+    <p>Already have an account? <a href="/login">Login here</a></p>
+  </div>
+
+  <div class="form-label-group">
+    <input type="email" id="account_register_email" class="form-control" placeholder="Email address" required autofocus>
+    <label for="account_register_email">Email address</label>
+  </div>
+  <div class="form-label-group">
+    <input type="text" id="account_register_nick" class="form-control" placeholder="Nick" required>
+    <label for="account_register_nick">Nick</label>
+  </div>
+  <div class="form-label-group">
+    <input type="password" id="account_register_password" class="form-control" placeholder="Password" required>
+    <label for="account_register_password">Password</label>
+  </div>
+  <div class="form-label-group">
+    <input type="password" id="account_register_password_confirm" class="form-control" placeholder="Password (Confirm)" oninput="check(this)" required>
+    <label for="account_register_password_confirm">Password (Confirm)</label>
+  </div>
+  <button id="account_register_button" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+</form>
+<script language='javascript' type='text/javascript'>
+    function check(input) {
+        if (input.value != $('#account_register_password').val()) {
+            input.setCustomValidity('Password Must be Matching.');
+        } else {
+            // input is valid -- reset the error message
+            input.setCustomValidity('');
+        }
+        if (input.value == "") {
+            input.setCustomValidity('');
+        };
+    }
+</script>

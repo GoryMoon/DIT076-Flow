@@ -16,10 +16,6 @@ var _expressHistoryApiFallback2 = _interopRequireDefault(_expressHistoryApiFallb
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-process.argv.forEach(function (val, index, array) {
-  console.log(index + ': ' + val);
-});
-
 var app = (0, _express2.default)();
 var root = (0, _path.join)(__dirname, '../public');
 

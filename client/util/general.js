@@ -16,7 +16,6 @@ export const ACCOUNT_NICK = "#account_nick"; // should be added to result in log
 // ACCOUNT INPUT
 export const ACCOUNT_LOGIN_EMAIL = "#account_login_email";
 export const ACCOUNT_LOGIN_PASSWORD = "#account_login_password";
-export const ACCOUNT_LOGIN_EMAIL = "#account_login_email";
 
 export const ACCOUNT_REGISTER_EMAIL = "#account_register_email";
 export const ACCOUNT_REGISTER_NICK = "#account_register_nick";

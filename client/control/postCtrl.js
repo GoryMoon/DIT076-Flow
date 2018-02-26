@@ -53,6 +53,9 @@ class PostCtrl {
 
 const postCtrl = new PostCtrl();
 
+//TODO add pathes for the data loading
+//page('/', postCtrl.retrieve);
+
 $(document).ready(function () {
     $(POST_RETRIEVE_BUTTON).on("click", postCtrl.retrieve);
     $(POST_SEND_BUTTON).on("click", postCtrl.send);

@@ -15,11 +15,12 @@ functionality built in. Possible have to explore a bit.
 - zoizer: Filip Törnqvist
 
 ## To run client
-- cd client
-- npm install
-- npm start
+- `cd client`
+- `npm install`
+- In one terminal run `npm run build`
+- In another terminal run `npm start`
+
 - Visit localhost:3000
-- Rerun efter js code change
 
 ## To run server
 - Start MySQL server

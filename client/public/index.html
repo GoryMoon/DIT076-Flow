@@ -12,7 +12,10 @@
     <script defer src="/js/fontawesome-all.js"></script>
     <!-- Page router -->
     <script src="/js/page.js"></script>
-    <script src="/js/dist/view/main.js"></script>
+    <!-- jQuery library -->
+    <script src="/js/jquery.js"></script>
+    <!-- Main program -->
+    <script src="/js/dist/bundle.js"></script>
   </head>
 
   <body>
@@ -296,8 +299,6 @@
       </div>
 
     </div>
-    <!-- jQuery library -->
-    <script src="/js/jquery.js"></script>
     <!-- Bootstrap -->
     <script src="/js/bootstrap.bundle.js"></script>
     <script>
@@ -306,6 +307,7 @@
       // support ES6 module loading
       // window is "the global" object
       window.$ = $;
+      page();
 
       $(function () {
         $('[data-toggle="tooltip"]').tooltip()

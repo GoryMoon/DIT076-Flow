@@ -8,7 +8,7 @@
   "scripts": {
     "babel-node": "babel-node --presets=env",
     "build-old": "rimraf public/js/dist/ && babel ./ --out-dir public/js/dist/ --ignore ./dist,./node_modules,./.babelrc,./package.json,./npm-debug.log,*.md,package-lock.json,./public,*.html --copy-files",
-    "build": "watchify control/*.js model/*.js util/*.js view/*.js -o public/js/dist/bundle.js -t [ babelify --presets [ env ] ] -v",
+    "build": "watchify util/*.js control/*.js model/*.js view/*.js -o public/js/dist/bundle.js -t [ babelify --presets [ env ] ] -v -d",
     "start": "babel index.js --out-dir dist/ && node dist/index.js"
   },
   "nodemonConfig": {
@@ -25,7 +25,8 @@
     "jsrsasign": "^8.0.6",
     "mustache": "^2.3.0",
     "page": "^1.8.3",
-    "popper.js": "^1.12.9"
+    "popper.js": "^1.12.9",
+    "store": "^2.0.12"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

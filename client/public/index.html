@@ -10,19 +10,13 @@
 
     <!-- Fontawesome icons -->
     <script defer src="/js/fontawesome-all.js"></script>
-    <!-- Page router -->
-    <script src="/js/page.js"></script>
-    <!-- jQuery library -->
-    <script src="/js/jquery.js"></script>
-    <!-- Main program -->
-    <script src="/js/dist/bundle.js"></script>
   </head>
 
   <body>
     <nav class="navbar navbar-expand-sm navbar-dark sticky-top bg-dark">
       <div class="container">
         <a class="navbar-brand col-sm-2 col-md-1 mr-0" href="/">Flow</a>
-        <ul class="navbar-nav mr-auto">
+        <!--<ul class="navbar-nav mr-auto">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarGroupLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Groups <span class="badge badge-light">4</span>
@@ -32,7 +26,8 @@
               <a class="dropdown-item" href="#">Family <span class="badge badge-light">1</span></a>
             </div>
           </li>
-        </ul>
+        </ul>-->
+        <!--
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarProfileLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -43,13 +38,13 @@
                 <a class="dropdown-item" href="/logout">Sign out</a>
               </div>
           </li> 
-        </ul>
+        </ul>-->
       </div>
     </nav>
 
-    <div class="container flow-content">
+    <div id="content" class="container flow-content">
       <!-- CREATE POST -->
-      <div class="card">
+      <!--<div class="card">
         <form class="status-upload">
           <textarea placeholder="What do you want to share" ></textarea>
           <div id="post-submit">
@@ -57,13 +52,12 @@
             <button type="submit" class="btn btn-primary"><i class="fa fa-share"></i> Post</button>
           </div>
         </form>
-      </div>
-
+      </div>-->
 
 
 
       <!-- POST -->
-      <div class="card">
+      <!--<div class="card">
         <div class="card-header">
           <div class="clearfix">
             <img src="/img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
@@ -102,205 +96,25 @@
           </form>
           <hr>
           <div>
-
+-->
             <!-- Comments -->
-          </div>
+          <!--</div>
         </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="clearfix">
-            <img src="/img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
-            <div class="user-info">
-              <div class="clearfix">
-                <div class="float-left">
-                  <h5>Magnus</h5>
-                  <small class="text-muted" title="Torsdag 22 februari 2018 kl. 14:44" data-toggle="tooltip" data-placement="bottom">5 hours ago</small>
-                </div>
-                <div class="droptext float-right">
-                  <div class="dropdown">
-                    <a class="dropdown-toggle" id="postDrop12345" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
-                    <div class="dropdown-menu" aria-labelledby="postDrop12345">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                    </div>
-                  </div>
-                  <span class="text-muted">Global</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="post-content">
-            Just finished a new feature on here.<br/>
-            First one to find it gets a special badge; and no it's not able to get a badge that's new ;)
-          </div>
-        </div>
-        <div class="card-footer">
-          <form class="form-inline">
-              <input type="text" class="form-control col-10 mr-auto" placeholder="Comment">
-              <button type="submit" class="btn btn-primary col-1"><i class="fa fa-share"></i> Post</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="clearfix">
-            <img src="/img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
-            <div class="user-info">
-              <div class="clearfix">
-                <div class="float-left">
-                  <h5>Filip</h5>
-                  <small class="text-muted" title="Torsdag 22 februari 2018 kl. 14:44" data-toggle="tooltip" data-placement="bottom">6 hours ago</small>
-                </div>
-                <div class="droptext float-right">
-                  <div class="dropdown">
-                    <a class="dropdown-toggle" id="postDrop12346" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
-                    <div class="dropdown-menu" aria-labelledby="postDrop12346">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                    </div>
-                  </div>
-                  <span class="text-muted">Global</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="post-content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br/>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </div>
-        </div>
-        <div class="card-footer">
-          <form class="form-inline">
-              <input type="text" class="form-control col-10 mr-auto" placeholder="Comment">
-              <button type="submit" class="btn btn-primary col-1"><i class="fa fa-share"></i> Post</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="clearfix">
-            <img src="/img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
-            <div class="user-info">
-              <div class="clearfix">
-                <div class="float-left">
-                  <h5>Gustaf</h5>
-                  <small class="text-muted" title="Torsdag 22 februari 2018 kl. 14:44" data-toggle="tooltip" data-placement="bottom">8 hours ago</small>
-                </div>
-                <div class="droptext float-right">
-                  <div class="dropdown">
-                    <a class="dropdown-toggle" id="postDrop12347" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
-                    <div class="dropdown-menu" aria-labelledby="postDrop12347">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                    </div>
-                  </div>
-                  <span class="text-muted">Global</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="post-content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br/>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </div>
-        </div>
-        <div class="card-footer">
-          <form class="form-inline">
-              <input type="text" class="form-control col-10 mr-auto" placeholder="Comment">
-              <button type="submit" class="btn btn-primary col-1"><i class="fa fa-share"></i> Post</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="clearfix">
-            <img src="/img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
-            <div class="user-info">
-              <div class="clearfix">
-                <div class="float-left">
-                  <h5>Magnus</h5>
-                  <small class="text-muted" title="Torsdag 22 februari 2018 kl. 14:44" data-toggle="tooltip" data-placement="bottom">1 day ago</small>
-                </div>
-                <div class="droptext float-right">
-                  <div class="dropdown">
-                    <a class="dropdown-toggle" id="postDrop12348" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
-                    <div class="dropdown-menu" aria-labelledby="postDrop12348">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                    </div>
-                  </div>
-                  <span class="text-muted">Global</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="post-content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br/>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </div>
-        </div>
-        <div class="card-footer">
-          <form class="form-inline">
-              <input type="text" class="form-control col-10 mr-auto" placeholder="Comment">
-              <button type="submit" class="btn btn-primary col-1"><i class="fa fa-share"></i> Post</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="clearfix">
-            <img src="/img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
-            <div class="user-info">
-              <div class="clearfix">
-                <div class="float-left">
-                  <h5>Filip</h5>
-                  <small class="text-muted" title="Torsdag 22 februari 2018 kl. 14:44" data-toggle="tooltip" data-placement="bottom">2 days ago</small>
-                </div>
-                <div class="droptext float-right">
-                  <div class="dropdown">
-                    <a class="dropdown-toggle" id="postDrop12349" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
-                    <div class="dropdown-menu" aria-labelledby="postDrop12349">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                    </div>
-                  </div>
-                  <span class="text-muted">Global</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="post-content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br/>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </div>
-        </div>
-        <div class="card-footer">
-          <form class="form-inline">
-              <input type="text" class="form-control col-10 mr-auto" placeholder="Comment">
-              <button type="submit" class="btn btn-primary col-1"><i class="fa fa-share"></i> Post</button>
-          </form>
-        </div>
-      </div>
+      </div>-->
 
     </div>
+    <!-- jQuery library -->
+    <script src="/js/jquery.js"></script>
     <!-- Bootstrap -->
     <script src="/js/bootstrap.bundle.js"></script>
+    <!-- Page router -->
+    <script src="/js/page.js"></script>
+    <!-- Storage plugin -->
+    <script src="/js/store.legacy.min.js"></script>
+    <!-- Middleware -->
+    <script src="/js/dist/middleware.js"></script>
+    <!-- Main program -->
+    <script src="/js/dist/bundle.js"></script>
     <script>
       // Ugly hack, but must create global reference to jquery
       // to be accsessible in ES6 modules. JQuery doesn't

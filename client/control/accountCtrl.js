@@ -4,6 +4,8 @@ import {
 serverService as server
 } from "../model/serverService.js"
 import {
+EVENT_ACCOUNT_VIEW_LOGIN,
+EVENT_ACCOUNT_VIEW_REGISTER,
 EVENT_ACCOUNT_LOGIN,
 EVENT_ACCOUNT_REGISTER,
 EVENT_ACCOUNT_LOGOUT,
@@ -23,6 +25,14 @@ ACCOUNT_LOGOUT_BUTTON
 } from "../util/general.js"
 
 class AccountCtrl {
+    viewLogin() {
+        eB.notify(EVENT_ACCOUNT_VIEW_LOGIN);
+    }
+
+    viewRegister() {
+        eB.notify(EVENT_ACCOUNT_VIEW_REGISTER);
+    }
+
     login() { // NOT TESTED
         let accountLoginData = {email: null, password: null};
         accountLoginData.email = getData(ACCOUNT_LOGIN_EMAIL);
@@ -47,6 +57,9 @@ class AccountCtrl {
 }
 
 const accountCtrl = new AccountCtrl();
+
+page('/login', accountCtrl.viewLogin);
+page('/register', accountCtrl.viewRegister);
 
 $(document).ready(function () {
     $(ACCOUNT_LOGIN_BUTTON).on("click", accountCtrl.login);

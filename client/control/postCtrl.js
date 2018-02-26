@@ -11,6 +11,7 @@ eventBus as eB
 } from "../util/eventBus.js"
 import {
 getData,
+hasUser,
 ACCOUNT_ID,
 POST_FILTER_GROUP,
 POST_FILTER_TIME,
@@ -26,12 +27,14 @@ POST_HIDE_BUTTON
 
 class PostCtrl {
     retrieve() { // NOT TESTED
-        let postRetrieveData = {userid: null, group: null, from: null, count: null};
-        postRetrieveData.userid = getData(ACCOUNT_ID);
-        postRetrieveData.group = getData(POST_FILTER_GROUP);
-        postRetrieveData.from = getData(POST_FILTER_TIME);
-        postRetrieveData.count = getData(POST_FILTER_COUNT);
-        server.rpcRetrievePosts(postRetrieveData, data => { return eB.notify(EVENT_POST_RETRIEVE, data); });
+        if (hasUser()) {
+            let postRetrieveData = {userid: null, group: null, from: null, count: null};
+            postRetrieveData.userid = getData(ACCOUNT_ID);
+            postRetrieveData.group = getData(POST_FILTER_GROUP);
+            postRetrieveData.from = getData(POST_FILTER_TIME);
+            postRetrieveData.count = getData(POST_FILTER_COUNT);
+            server.rpcRetrievePosts(postRetrieveData, data => { return eB.notify(EVENT_POST_RETRIEVE, data); });
+        }
     }
     
     send() { // NOT TESTED

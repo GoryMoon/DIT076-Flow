@@ -1,5 +1,5 @@
 # NetBeans / auto-generated code
-/client/public/js/dist/*
+/client/public/js/dist/bundle.js
 /client/dist/*
 /client/nbproject/*
 /server/target/*

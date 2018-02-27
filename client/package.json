@@ -8,7 +8,7 @@
   "scripts": {
     "babel-node": "babel-node --presets=env",
     "build-old": "rimraf public/js/dist/ && babel ./ --out-dir public/js/dist/ --ignore ./dist,./node_modules,./.babelrc,./package.json,./npm-debug.log,*.md,package-lock.json,./public,*.html --copy-files",
-    "build": "watchify util/eventBus.js util/general.js control/accountCtrl.js control/commentCtrl.js control/groupCtrl.js control/postCtrl.js model/serverService.js view/accountView.js view/commentView.js view/groupView.js view/postView.js -o public/js/dist/bundle.js -t [ babelify --presets [ env ] ] -v -d",
+    "build": "globify util/* control/* model/* view/* -o public/js/dist/bundle.js -w -t babelify -v -d",
     "start": "babel index.js --out-dir dist/ && node dist/index.js"
   },
   "nodemonConfig": {
@@ -34,6 +34,7 @@
     "babel-preset-env": "^1.6.1",
     "babelify": "^8.0.0",
     "browserify": "^16.1.0",
+    "globify": "^2.3.0",
     "rimraf": "^2.6.2",
     "watchify": "^3.10.0"
   }

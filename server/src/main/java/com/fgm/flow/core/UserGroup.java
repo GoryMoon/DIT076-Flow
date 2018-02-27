@@ -3,6 +3,7 @@ package com.fgm.flow.core;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -22,6 +23,8 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import com.google.gson.annotations.Expose;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * A Flow user
@@ -32,10 +35,10 @@ import com.google.gson.annotations.Expose;
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(
-        name="user",
-        uniqueConstraints = @UniqueConstraint(columnNames={"nick", "email"})
+        name="usergroup",
+        uniqueConstraints = @UniqueConstraint(columnNames={"name"})
 )
-public class User implements Serializable
+public class UserGroup implements Serializable
 {
     @Id
     @Getter
@@ -49,21 +52,14 @@ public class User implements Serializable
     @Setter
     @Column(nullable=false)
     @Expose
-    private String email;
+    private String name;
     
-    @Setter
-    @Getter
-    @Column(nullable=false)
-    @Size(min = 2, max = 25,
-            message = "Nickname must be between 2 and 25 characters long")
-    @Expose
-    private String nick;
-    
+
+    @ManyToOne
+    @JoinColumn(name="OWNER")   
     @Getter
     @Setter
-    @Column(nullable=false)
-    @Expose
-    private String password;
+    private User owner;
     
     @Getter
     @Setter
@@ -72,37 +68,22 @@ public class User implements Serializable
     @Expose
     private Date time;
     
-    
-    
-    @OneToMany(mappedBy="poster", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="userGroup", cascade = CascadeType.ALL)
     @Setter
     @Getter
     private List<Post> posts;
-    
-    /*
-    public List<Post> getPosts()
-    {
-        return posts;
-    }
-    */
     
     public void addPost(Post post)
     {
         posts.add(post);
     }
     
-    
-    public final void timeStamp()
-    {
-        time = new Date();
-    }
-    
-    public User(String email, String nick, String password)
+    public UserGroup(String name, User owner)
     {
         this.id = 0;
-        this.email = email;
-        this.nick = nick;
-        this.password = password;
-        timeStamp();
+        this.name = name;
+        this.owner = owner;
+        this.posts = new ArrayList<>();
+        this.time = new Date();
     }
 }

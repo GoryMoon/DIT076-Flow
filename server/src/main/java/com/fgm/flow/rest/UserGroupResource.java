@@ -7,13 +7,16 @@ package com.fgm.flow.rest;
 
 import com.fgm.flow.core.Post;
 import com.fgm.flow.core.User;
+import com.fgm.flow.core.UserGroup;
 import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.UserRegistry;
+import com.fgm.flow.dao.UserGroupRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
 import java.util.List;
 import static java.lang.System.out;
+import static java.lang.System.err;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -33,69 +36,48 @@ import javax.ws.rs.core.Response;
  *
  * @author fgm
  */
-@Path("post")
-public class PostResource {
+@Path("group")
+public class UserGroupResource {
 
     //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     @Context
     private UriInfo uriInfo;
 
-    @EJB
-    private PostRegistry postReg;
+    //@EJB
+    //private PostRegistry postReg;
     @EJB
     private UserRegistry userReg;
+    @EJB
+    private UserGroupRegistry uGroupReg;
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
-
-    /*
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(Post post)
-    {
-        post.timeStamp();
-        
-        User poster = postReg.find(post.getPoster());
-        product.setUser(user);
-        
-        
-        postReg.create(post);
-
-        // Respond with status 'ok' and only the ID if the
-        // nick did not already exist
-        return Response.ok().build();
-    }
-    */
     
     @POST
     @Path("create")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     public Response create(
-            @FormParam("title") String title,
-            @FormParam("text") String text,
-            @FormParam("usergroup") String userGroup,
-            @FormParam("poster") int posterId
+            @FormParam("name") String name,
+            @FormParam("ownerId") int ownerId
         ) 
     {
-        User poster = userReg.find(posterId);
+        User owner = userReg.find(ownerId);
+        List<UserGroup> uGroupsWithName = uGroupReg.findByName(name);
         
-        if(poster != null)
-        {
-            Post post = new Post(title, text, userGroup, poster);
+        if(owner != null && uGroupsWithName.size() == 0)
+        {        
+            UserGroup userGroup = new UserGroup(name, owner);
 
-            postReg.create(post);
-                
-            poster.addPost(post);
-        
-            URI postUri = uriInfo
+            uGroupReg.create(userGroup);
+
+            URI userGroupUri = uriInfo
                     .getAbsolutePathBuilder()
-                    .path(String.valueOf(post.getId()))
-                    .build(post);
+                    .path(String.valueOf(userGroup.getId()))
+                    .build(userGroup);
             
-            return Response.created(postUri).build();
-
+            return Response.created(userGroupUri).build();
         }
         
         return Response.status(403).build();
@@ -107,11 +89,8 @@ public class PostResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
     {        
-        List<Post> posts = postReg.findAll();
-        
-        out.println(posts);
-        out.println(gsonEWE.toJson(posts));
-        
-        return Response.ok(gsonEWE.toJson(posts)).build();
+        List<UserGroup> userGroups = uGroupReg.findAll();
+
+        return Response.ok(gsonEWE.toJson(userGroups)).build();
     }
 }

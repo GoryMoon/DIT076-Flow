@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
 import com.google.gson.annotations.Expose;
 
 /**
- * A Flow user
+ * A post comment
  *
  * @author fgm
  */
@@ -32,9 +32,9 @@ import com.google.gson.annotations.Expose;
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(
-        name="post"
+        name="comment"
 )
-public class Post implements Serializable
+public class Comment implements Serializable
 {
     @Id
     @Getter
@@ -45,38 +45,31 @@ public class Post implements Serializable
     //@ManyToOne
     @Expose
     private int id;
-    
-    @Getter
-    @Setter
-    @Column(nullable=false)
-    @Expose
-    private String title;
-    
+
     @Getter
     @Setter
     @Column(nullable=false)
     @Expose
     private String text;
-    //@Getter
-    //@Setter
-    //@Column(nullable=false) 
-    //@ManyToOne
-    //@MapsId("id")
-    //@JoinColumn(name = "POSTER", nullable = false)
-    //private User poster;
     
     @ManyToOne
-    @JoinColumn(name="POSTER", nullable=false)
+    @JoinColumn(name="POST", nullable=false)
     @Getter
     @Setter
-    private User poster;
-
+    private Post post;
     
+    @ManyToOne
+    @JoinColumn(name="COMMENTER", nullable=false)
+    @Getter
+    @Setter
+    private User commenter;
+    
+    // Use enum instead perhaps?
     @Getter
     @Setter
     @Column(nullable=false)
     @Expose
-    private String userGroup;
+    private int status;
     
     @Getter
     @Setter
@@ -90,13 +83,13 @@ public class Post implements Serializable
         time = new Date();
     }
     
-    public Post(String title, String text, String userGroup, User poster)
+    public Comment(String text, Post post, User commenter, int status)
     {
         this.id = 0; // Dummy value
-        this.title = title;
         this.text = text;
-        this.userGroup = userGroup;
-        this.poster = poster;
+        this.post = post;
+        this.commenter = commenter;
+        this.status = status;
         timeStamp();
     }
     

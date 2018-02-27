@@ -32,6 +32,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final DateTimePath<java.util.Date> time = createDateTime("time", java.util.Date.class);
 
+    public final ListPath<UserGroup, QUserGroup> userGroups = this.<UserGroup, QUserGroup>createList("userGroups", UserGroup.class, QUserGroup.class, PathInits.DIRECT2);
+
     public QUser(String variable) {
         super(User.class, forVariable(variable));
     }

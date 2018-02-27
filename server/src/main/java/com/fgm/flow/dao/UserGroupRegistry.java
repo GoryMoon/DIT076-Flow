@@ -1,12 +1,12 @@
 package com.fgm.flow.dao;
 
-import com.fgm.flow.core.User;
+import com.fgm.flow.core.UserGroup;
 //import static java.lang.System.out;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import com.fgm.flow.core.QUser;
+import com.fgm.flow.core.QUserGroup;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 /**
@@ -14,16 +14,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
  * @author fgm
  */
 @Stateless
-public class UserRegistry extends AbstractQuery<User, Integer>
+public class UserGroupRegistry extends AbstractQuery<UserGroup, Integer>
 {
 
     @PersistenceContext(unitName = "flow_pu")
     private EntityManager em;
       
 
-    public UserRegistry()
+    public UserGroupRegistry()
     {
-        super(User.class, QUser.user);
+        super(UserGroup.class, QUserGroup.userGroup);
     }
 
     @Override
@@ -37,24 +37,13 @@ public class UserRegistry extends AbstractQuery<User, Integer>
         this.em = em;
     }
     
-    public List<User> findByNick(String nick)
+    public List<UserGroup> findByName(String name)
     {
-        QUser user = QUser.user;
+        QUserGroup uGroup = QUserGroup.userGroup;
         JPAQueryFactory qf = new JPAQueryFactory(em);
-        List<User> found = qf.select(user)
-                .from(user)
-                .where(user.nick.eq(nick))
-                .fetch();
-        return found;
-    }
-    
-    public List<User> findByEmail(String email)
-    {
-        QUser user = QUser.user;
-        JPAQueryFactory qf = new JPAQueryFactory(em);
-        List<User> found = qf.select(user)
-                .from(user)
-                .where(user.email.eq(email))
+        List<UserGroup> found = qf.select(uGroup)
+                .from(uGroup)
+                .where(uGroup.name.eq(name))
                 .fetch();
         return found;
     }

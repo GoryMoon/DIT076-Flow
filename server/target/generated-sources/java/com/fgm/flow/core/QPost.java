@@ -22,6 +22,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public static final QPost post = new QPost("post");
 
+    public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
+
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
     public final QUser poster;
@@ -32,7 +34,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath title = createString("title");
 
-    public final StringPath userGroup = createString("userGroup");
+    public final QUserGroup userGroup;
 
     public QPost(String variable) {
         this(Post.class, forVariable(variable), INITS);
@@ -53,6 +55,7 @@ public class QPost extends EntityPathBase<Post> {
     public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.poster = inits.isInitialized("poster") ? new QUser(forProperty("poster")) : null;
+        this.userGroup = inits.isInitialized("userGroup") ? new QUserGroup(forProperty("userGroup"), inits.get("userGroup")) : null;
     }
 
 }

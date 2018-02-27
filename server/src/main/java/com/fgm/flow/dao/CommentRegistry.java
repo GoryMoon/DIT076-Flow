@@ -1,12 +1,12 @@
 package com.fgm.flow.dao;
 
-import com.fgm.flow.core.Post;
+import com.fgm.flow.core.Comment;
 //import static java.lang.System.out;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import com.fgm.flow.core.QPost;
+import com.fgm.flow.core.QComment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 /**
@@ -14,16 +14,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
  * @author fgm
  */
 @Stateless
-public class PostRegistry extends AbstractQuery<Post, Integer>
+public class CommentRegistry extends AbstractQuery<Comment, Integer>
 {
 
     @PersistenceContext(unitName = "flow_pu")
     private EntityManager em;
       
 
-    public PostRegistry()
+    public CommentRegistry()
     {
-        super(Post.class, QPost.post);
+        super(Comment.class, QComment.comment);
     }
 
     @Override
@@ -37,13 +37,13 @@ public class PostRegistry extends AbstractQuery<Post, Integer>
         this.em = em;
     }
     
-    public List<Post> findById(int id)
+    public List<Comment> findById(int id)
     {
-        QPost post = QPost.post;
+        QComment comment = QComment.comment;
         JPAQueryFactory qf = new JPAQueryFactory(em);
-        List<Post> found = qf.select(post)
-                .from(post)
-                .where(post.id.eq(id))
+        List<Comment> found = qf.select(comment)
+                .from(comment)
+                .where(comment.id.eq(id))
                 .fetch();
         return found;
     }

@@ -52,6 +52,12 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response register(User user)
     {
+        // Check user object
+        if(user.getEmail() == null || user.getNick() == null  || user.getPassword() == null)
+        {
+            return Response.status(400).build();
+        }
+        
         List<User> usersWithNick = userReg.findByNick(user.getNick());
         List<User> usersWithEmail = userReg.findByEmail(user.getEmail());
         
@@ -66,7 +72,7 @@ public class UserResource {
 
         // Respond with status 'ok' and only the ID if the
         // nick did not already exist
-        return Response.ok(user.getId()).build();
+        return Response.ok(gson.toJson(user.getId())).build();
     }
     
     @POST
@@ -74,6 +80,12 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response login(User userEmailAndPass)
     {
+        // Check user object
+        if(userEmailAndPass.getEmail() == null || userEmailAndPass.getPassword() == null)
+        {
+            return Response.status(400).build();
+        }
+        
         List<User> usersWithEmail = userReg.findByEmail(userEmailAndPass.getEmail());
         
         // Respond with status 'conflict' if the nick already exists
@@ -90,7 +102,7 @@ public class UserResource {
         }        
         
         // Respond with status 'ok' and the ID if login was successful
-        return Response.ok(user.getId()).build();
+        return Response.ok(gson.toJson(user.getId())).build();
     }
     
     
@@ -104,26 +116,16 @@ public class UserResource {
         ) 
     {
         User user = userReg.find(userId);
-        
-        int count = 0;
-        
-        if(user != null)
+
+        if(user == null)
         {
-            count = user.getPosts().size();
+            return Response.status(400).build();
         }
+        
+        int count = user.getPosts().size();
 
         return Response.ok(gson.toJson(count)).build();
     }
-    
-    @GET
-    @Path("test")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response test() 
-    {
-        return Response.ok(gson.toJson(1337)).build();
-    }
-    
-    
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})

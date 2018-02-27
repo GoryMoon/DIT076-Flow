@@ -2,6 +2,7 @@ package com.fgm.flow.core;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import javax.persistence.UniqueConstraint;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.MapsId;
@@ -24,7 +26,7 @@ import lombok.EqualsAndHashCode;
 import com.google.gson.annotations.Expose;
 
 /**
- * A Flow user
+ * A post
  *
  * @author fgm
  */
@@ -57,13 +59,6 @@ public class Post implements Serializable
     @Column(nullable=false)
     @Expose
     private String text;
-    //@Getter
-    //@Setter
-    //@Column(nullable=false) 
-    //@ManyToOne
-    //@MapsId("id")
-    //@JoinColumn(name = "POSTER", nullable = false)
-    //private User poster;
     
     @ManyToOne
     @JoinColumn(name="POSTER", nullable=false)
@@ -71,12 +66,11 @@ public class Post implements Serializable
     @Setter
     private User poster;
 
-    
+    @ManyToOne
+    @JoinColumn(name="USERGROUP", nullable=false)
     @Getter
     @Setter
-    @Column(nullable=false)
-    @Expose
-    private String userGroup;
+    private UserGroup userGroup;
     
     @Getter
     @Setter
@@ -85,19 +79,31 @@ public class Post implements Serializable
     @Expose
     private Date time;
     
-    public final void timeStamp()
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
+    @Setter
+    @Getter
+    private List<Comment> comments;
+    
+    /*
+    public List<Post> getPosts()
     {
-        time = new Date();
+        return posts;
+    }
+    */
+    
+    public void addComment(Comment comment)
+    {
+        comments.add(comment);
     }
     
-    public Post(String title, String text, String userGroup, User poster)
+    public Post(String title, String text, UserGroup userGroup, User poster)
     {
         this.id = 0; // Dummy value
         this.title = title;
         this.text = text;
         this.userGroup = userGroup;
         this.poster = poster;
-        timeStamp();
+        this.time = new Date();
     }
     
     public String toString()

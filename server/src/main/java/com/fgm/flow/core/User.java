@@ -3,6 +3,7 @@ package com.fgm.flow.core;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -72,12 +73,15 @@ public class User implements Serializable
     @Expose
     private Date time;
     
-    
-    
     @OneToMany(mappedBy="poster", cascade = CascadeType.ALL)
     @Setter
     @Getter
     private List<Post> posts;
+    
+    @OneToMany(mappedBy="owner", cascade = CascadeType.ALL)
+    @Setter
+    @Getter
+    private List<UserGroup> userGroups;
     
     /*
     public List<Post> getPosts()
@@ -91,6 +95,10 @@ public class User implements Serializable
         posts.add(post);
     }
     
+    public void addUserGroup(UserGroup userGroup)
+    {
+        userGroups.add(userGroup);
+    }
     
     public final void timeStamp()
     {
@@ -103,6 +111,8 @@ public class User implements Serializable
         this.email = email;
         this.nick = nick;
         this.password = password;
+        this.posts = new ArrayList<>();
+        this.userGroups = new ArrayList<>();
         timeStamp();
     }
 }

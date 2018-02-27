@@ -5,10 +5,12 @@
  */
 package com.fgm.flow.rest;
 
-import com.fgm.flow.core.Post;
 import com.fgm.flow.core.User;
-import com.fgm.flow.dao.PostRegistry;
+import com.fgm.flow.core.Post;
+import com.fgm.flow.core.Comment;
 import com.fgm.flow.dao.UserRegistry;
+import com.fgm.flow.dao.PostRegistry;
+import com.fgm.flow.dao.CommentRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
@@ -33,8 +35,8 @@ import javax.ws.rs.core.Response;
  *
  * @author fgm
  */
-@Path("post")
-public class PostResource {
+@Path("comment")
+public class CommentResource {
 
     //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
@@ -42,62 +44,50 @@ public class PostResource {
     private UriInfo uriInfo;
 
     @EJB
-    private PostRegistry postReg;
-    @EJB
     private UserRegistry userReg;
+    @EJB
+    private CommentRegistry cmntReg;
+    @EJB
+    private PostRegistry postReg;
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
-
-    /*
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(Post post)
-    {
-        post.timeStamp();
-        
-        User poster = postReg.find(post.getPoster());
-        product.setUser(user);
-        
-        
-        postReg.create(post);
-
-        // Respond with status 'ok' and only the ID if the
-        // nick did not already exist
-        return Response.ok().build();
-    }
-    */
     
     @POST
     @Path("create")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     public Response create(
-            @FormParam("title") String title,
             @FormParam("text") String text,
-            @FormParam("usergroup") String userGroup,
-            @FormParam("poster") int posterId
+            @FormParam("postId") int postId,
+            @FormParam("commenterId") int commenterId,
+            @FormParam("status") int status
         ) 
-    {
-        User poster = userReg.find(posterId);
+    {        
+        Post post = postReg.find(postId);
+        User commenter = userReg.find(commenterId);
         
-        if(poster != null)
+        
+        if(post != null && commenter != null)
         {
-            Post post = new Post(title, text, userGroup, poster);
-
-            postReg.create(post);
-                
-            poster.addPost(post);
-        
-            URI postUri = uriInfo
-                    .getAbsolutePathBuilder()
-                    .path(String.valueOf(post.getId()))
-                    .build(post);
+            out.println("Reached");
             
-            return Response.created(postUri).build();
-
-        }
         
+            Comment comment = new Comment(text, post, commenter, status);
+
+            cmntReg.create(comment);
+
+            post.addComment(comment);
+        
+            URI commentUri = uriInfo
+                    .getAbsolutePathBuilder()
+                    .path(String.valueOf(comment.getId()))
+                    .build(comment);
+            
+            return Response.created(commentUri).build();
+        }
+    
+
         return Response.status(403).build();
         
     }
@@ -107,11 +97,11 @@ public class PostResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
     {        
-        List<Post> posts = postReg.findAll();
+        List<Comment> comments = cmntReg.findAll();
         
-        out.println(posts);
-        out.println(gsonEWE.toJson(posts));
+        out.println(comments);
+        out.println(gsonEWE.toJson(comments));
         
-        return Response.ok(gsonEWE.toJson(posts)).build();
+        return Response.ok(gsonEWE.toJson(comments)).build();
     }
 }

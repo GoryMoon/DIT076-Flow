@@ -17,7 +17,7 @@ functionality built in. Possible have to explore a bit.
 ## To run client
 - `cd client`
 - `npm install`
-- In one terminal run `npm run build`
+- In one terminal run `npm run watch` for development or `npm run build` for production
 - In another terminal run `npm start`
 
 - Visit localhost:3000

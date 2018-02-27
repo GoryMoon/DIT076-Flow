@@ -6,16 +6,9 @@
   "author": "",
   "license": "LGPL-3.0",
   "scripts": {
-    "babel-node": "babel-node --presets=env",
-    "build-old": "rimraf public/js/dist/ && babel ./ --out-dir public/js/dist/ --ignore ./dist,./node_modules,./.babelrc,./package.json,./npm-debug.log,*.md,package-lock.json,./public,*.html --copy-files",
-    "build": "globify util/* control/* model/* view/* -o public/js/dist/bundle.js -w -t babelify -v -d",
+    "build": "globify -g uglifyify util/* control/* model/* view/* -o public/js/dist/bundle.js -t babelify -v",
+    "watch": "globify util/* control/* model/* view/* -o public/js/dist/bundle.js -w -t babelify -v -d",
     "start": "babel index.js --out-dir dist/ && node dist/index.js"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "dist/*",
-      "node_modules/*"
-    ]
   },
   "dependencies": {
     "bootstrap": "^4.0.0",
@@ -36,6 +29,7 @@
     "browserify": "^16.1.0",
     "globify": "^2.3.0",
     "rimraf": "^2.6.2",
+    "uglifyify": "^4.0.5",
     "watchify": "^3.10.0"
   }
 }

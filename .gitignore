@@ -2,6 +2,7 @@
 /client/public/js/dist/*
 /client/dist/*
 /client/nbproject/*
+/server/target/*
 
 # Logs
 logs

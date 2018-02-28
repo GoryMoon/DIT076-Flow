@@ -7,13 +7,16 @@ package com.fgm.flow.rest;
 
 import com.fgm.flow.core.Post;
 import com.fgm.flow.core.User;
+import com.fgm.flow.core.UserGroup;
 import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.UserRegistry;
+import com.fgm.flow.dao.UserGroupRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
 import java.util.List;
 import static java.lang.System.out;
+import static java.lang.System.err;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -45,6 +48,8 @@ public class PostResource {
     private PostRegistry postReg;
     @EJB
     private UserRegistry userReg;
+    @EJB
+    private UserGroupRegistry uGroupReg;
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
@@ -75,19 +80,34 @@ public class PostResource {
     public Response create(
             @FormParam("title") String title,
             @FormParam("text") String text,
-            @FormParam("usergroup") String userGroup,
+            @FormParam("usergroupId") int userGroupId,
             @FormParam("poster") int posterId
         ) 
     {
         User poster = userReg.find(posterId);
-        
-        if(poster != null)
+        //List<UserGroup> uGroupsWithName = uGroupReg.findByName(userGroupName);
+        UserGroup userGroup = uGroupReg.find(userGroupId);
+        // Reconsider
+        /*
+        if(uGroupsWithName.size() > 1)
         {
+            err.println("Database error: More than one group with the same name");
+            return Response.status(403).build();
+        }
+        */
+        
+        
+        if(poster != null && userGroup != null)
+        {
+           // UserGroup userGroup = uGroupsWithName.get(0);
+            
             Post post = new Post(title, text, userGroup, poster);
 
             postReg.create(post);
                 
             poster.addPost(post);
+            
+            poster.addUserGroup(userGroup);
         
             URI postUri = uriInfo
                     .getAbsolutePathBuilder()

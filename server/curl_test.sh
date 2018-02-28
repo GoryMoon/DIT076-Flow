@@ -9,32 +9,30 @@
 curl -v -X OPTIONS http://localhost:8080/
 
 # Get all users
-curl -v -H "Accept: application/json" http://localhost:8080/flow/rest/user 
-curl -v http://localhost:8080/flow/rest/user 
+curl -v -H "Accept: application/json" http://localhost:8080/api/user 
 
 # Create new user using JSON
-curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/flow/rest/user --data '{"email": "x@x.x", "nick": "xnick", "password":"xspass"}'
+curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/api/user/register --data '{"email": "x@x.x", "nick": "xnick", "password":"xspass"}'
 
 
-# Create new post using JSON
- curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/flow/rest/post --data '{"text": "some text", "title": "A title", "usergroup": "some group", "poster_id":"1201"}'
+//# Create new post using JSON
+// curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/flow/rest/post --data '{"text": "some text", "title": "A title", "usergroup": "public", "poster":"###"}'
+
+# Create new post using form parameters
+curl -v -X POST http://localhost:8080/api/post/create --data "title=A title&text=Some text&usergroupId=###&poster=###"
+ 
+# Create new comment using form parameters
+curl -v -X POST http://localhost:8080/api/comment/create --data "text=ABC&postId=####&commenterId=####&status=0"
+
+# Create new group using form parameters
+curl -v -X POST http://localhost:8080/api/group/create --data "name=1337 group&ownerId=####"
 
 
 
-# Get single note
-curl -v -H "Accept: application/json" http://localhost:8080/ws4/rest/author/FF
 
-# Get primitive type (number of notes)
-curl -v -H "Accept: application/json" http://localhost:8080/ws4/rest/author/count
 
-# Create new (NOTE: exception if run more times ... use delete) Using form parameters
-curl -v -X POST  http://localhost:8080/ws4/rest/author --data "id=QQ&firstName=Qbert&lastName=Qson&email=qson@mail"
-
-# Create new (NOTE: exception if run more times ... use delete) Using JSON
-curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/ws4/rest/author --data '{"id":"XX", "firstName": "Xbert", "lastName": "Xson", "email":"xson@mail", "address" : ""}'
-
-# Update a note
-curl -v -X PUT -H "Content-Type: application/json" http://localhost:8080/ws4/rest/author --data '{"id":"XX", "firstName": "NEWbert", "lastName": "NEWson", "email":"NEW@mail", "address" : ""}'
-
-# Delete (last part of URL is id)
-curl -v -X DELETE http://localhost:8080/ws4/rest/author/XX
+curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/api/user/register --data '{"email": "a@a.a", "nick": "anick", "password":"apass"}'
+curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/api/user/login --data '{"email": "a@a.a", "password":"apass"}'
+curl -v -X POST http://localhost:8080/api/post/create --data "title=A title&text=Some text&usergroupId=0&poster=2551"
+curl -v -X POST http://localhost:8080/api/comment/create --data "text=ABC&postId=2552&commenterId=2551&status=0"
+curl -v -X POST http://localhost:8080/api/group/create --data "name=1337 group&ownerId=2551"

@@ -2,7 +2,7 @@
 
 class ServerService {
     constructor() {
-        this.serverUrl = "http://localhost:8080/flow/rest/";
+        this.serverUrl = "http://localhost:8080/api/";
         this.errorFunc = function(msg, ajaxOpt, thrownError, funcName) {
             console.log("Failiure in \"" + funcName + "\"");
             console.log("Error Message: " + JSON.stringify(msg));
@@ -24,7 +24,7 @@ class ServerService {
         this.sendingFunc(registerAccountData, "rpcRegisterAccount");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "register/",
+            url: this.serverUrl + "user/register/",
             data: JSON.stringify(registerAccountData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
@@ -42,7 +42,7 @@ class ServerService {
         this.sendingFunc(loginAccountData, "rpcLoginAccount");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "login/",
+            url: this.serverUrl + "user/login/",
             data: JSON.stringify(loginAccountData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
@@ -60,7 +60,7 @@ class ServerService {
         this.sendingFunc(postFilterData, "rpcRetrievePosts");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "posts/",
+            url: this.serverUrl + "post/",
             data: JSON.stringify(postFilterData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
@@ -78,7 +78,7 @@ class ServerService {
         this.sendingFunc(postData, "rpcSendPost");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "posts/",
+            url: this.serverUrl + "post/",
             data: JSON.stringify(postData),
             method: "POST",
             contentType: "application/json; charset=utf-8",

@@ -51,7 +51,7 @@ class AccountView {
     }
 
     accountLogin(data) { // NOT TESTED
-        store.set('user', data);
+        page('/');
     }
 
     accountRegister(data) { // NOT TESTED
@@ -70,13 +70,13 @@ class AccountView {
                 var rendered = Mustache.render(template, user);
                 $(rendered).insertAfter('#nav-user');
             });
+        } else {
+            $("#nav-group").remove();
+            $("#nav-drop").remove();
         }
     }
 }
 
 const accountView = new AccountView();
 eB.register(accountView);
-
-$(document).ready(function () {
-    accountView.loadPage();
-});
+accountView.loadPage();

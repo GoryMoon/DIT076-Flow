@@ -58,10 +58,12 @@ class AccountCtrl {
     
     logout() { // NOT TESTED
         event.preventDefault();
-        let accountLogoutData = {id: null};
-        accountLogoutData.id = getData(ACCOUNT_ID);
+        //let accountLogoutData = {id: null};
+        //accountLogoutData.id = getInput(ACCOUNT_ID);
 //        server.rpcLoginAccount(accountLogoutData, data => { return eB.notify("ACCOUNT_LOGOUT", data); });
-        eB.notify(EVENT_ACCOUNT_LOGOUT, accountLogoutData); // Logout is client-side
+        eB.notify(EVENT_ACCOUNT_LOGOUT); // Logout is client-side
+        store.remove('user');
+        page('/login');
     }
 }
 

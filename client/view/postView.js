@@ -10,6 +10,7 @@ eventBus as eB
 import { setTitle } from "../util/general.js"
 import Mustache from 'mustache'
 import moment from 'moment';
+import { retriveComments } from "../control/commentCtrl.js"
 
 class CommentView {
  
@@ -42,7 +43,26 @@ class CommentView {
                 var rendered = Mustache.render(template, d);
                 $('#content').append(rendered);
             }
-            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="tooltip"]').tooltip();
+            $(".show_hide-comment.outer").click(function() {
+                if ($(this).next().children('.comments').children().length == 0) {
+                    retriveComments($(this).parents('.card').data("postid"));
+                }
+                if ($(this).next().hasClass('show')) {
+                    $(this).html("Show comments <i class=\"fas fa-angle-down\"></i>");
+                } else {
+                    $(this).html("Hide comments <i class=\"fas fa-angle-up\"></i>");
+                }
+                $(this).next().collapse('toggle');
+            });
+            $(".show_hide-comment.inner").click(function() {
+                if ($(this).parent().hasClass('show')) {
+                    $(this).parent().prev().html("Show comments <i class=\"fas fa-angle-down\"></i>");
+                } else {
+                    $(this).parent().prev().html("Hide comments <i class=\"fas fa-angle-up\"></i>");
+                }
+                $(this).parent().collapse('toggle');
+            });
         });
     }
   

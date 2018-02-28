@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" data-postid="{{id}}">
   <div class="card-header">
     <div class="clearfix">
       <img src="img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
@@ -35,7 +35,13 @@
     </form>
     <hr>
     <div>
-      <!-- Comments -->
+      <a class="show_hide-comment outer">Show comments <i class="fas fa-angle-down"></i></a>
+      <div class="panel-collapse collapse out">
+        <div class="comments">
+          
+        </div>
+        <a class="show_hide-comment inner">Hide comments <i class="fas fa-angle-up"></i></a>
+      </div>
     </div>
   </div>
 </div>

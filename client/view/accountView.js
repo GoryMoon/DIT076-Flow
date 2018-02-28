@@ -52,10 +52,11 @@ class AccountView {
 
     accountLogin(data) { // NOT TESTED
         page('/');
+        this.loadPage();
     }
 
     accountRegister(data) { // NOT TESTED
-        
+        this.loadPage();
     }
 
     accountLogout(data) { // NOT TESTED

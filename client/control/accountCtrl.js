@@ -41,7 +41,10 @@ class AccountCtrl {
             let accountLoginData = {email: null, password: null};
             accountLoginData.email = getInput(ACCOUNT_LOGIN_EMAIL);
             accountLoginData.password = getInput(ACCOUNT_LOGIN_PASSWORD);
-            server.rpcLoginAccount(accountLoginData, data => { return eB.notify(EVENT_ACCOUNT_LOGIN, data); });
+            server.rpcLoginAccount(accountLoginData, data => { 
+                store.set('user', data); 
+                return eB.notify(EVENT_ACCOUNT_LOGIN, data); 
+            });
         }
     }
     

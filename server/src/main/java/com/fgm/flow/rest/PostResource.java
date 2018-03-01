@@ -81,7 +81,7 @@ public class PostResource {
             @FormParam("title") String title,
             @FormParam("text") String text,
             @FormParam("usergroupId") int userGroupId,
-            @FormParam("poster") int posterId
+            @FormParam("posterId") int posterId
         ) 
     {
         User poster = userReg.find(posterId);

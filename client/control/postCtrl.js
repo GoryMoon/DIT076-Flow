@@ -30,30 +30,30 @@ class PostCtrl {
     retrieve() { // NOT TESTED
         if (hasUser()) {
             eB.notify(EVENT_POST_VIEW);
-            let postRetrieveData = {userid: null, group: null, from: null, count: null}; // UNUSED AND DOES NOT MATCH NEW SERVER CLIENT INTERACTION DRAFT
-            postRetrieveData.userid = store.get('user').id;
-            postRetrieveData.group = getInput(POST_FILTER_GROUP);
-            postRetrieveData.from = getInput(POST_FILTER_TIME);
-            postRetrieveData.count = getInput(POST_FILTER_COUNT);
+            let getPostData = {userid: null, group: null, from: null, count: null}; // UNUSED AND DOES NOT MATCH NEW SERVER CLIENT INTERACTION DRAFT
+            getPostData.userid = store.get('user').id;
+            getPostData.group = getInput(POST_FILTER_GROUP);
+            getPostData.from = getInput(POST_FILTER_TIME);
+            getPostData.count = getInput(POST_FILTER_COUNT);
             //eB.notify(EVENT_POST_RETRIEVE, [{groupid: 1, groupname: "Global", userid: 42, usernick: "Gustaf", posttitle: "Test", posttime: 14551515, postid: 4, posttext: "This is a test"}, {groupid: 1, groupname: "Global", userid: 42, usernick: "Gustaf", posttitle: "Test", posttime: 14551515, postid: 5, posttext: "This is a test"}]);
-            server.rpcRetrievePosts(postRetrieveData, data => { return eB.notify(EVENT_POST_RETRIEVE, data); });
+            server.rpcGetPost(getPostData, data => { return eB.notify(EVENT_POST_RETRIEVE, data); });
         }
     }
     
     send() { // NOT TESTED
-        let postSendData = {userid: null, groupid: null, posttitle: null, posttext: null};
-        postSendData.userid = getInput(ACCOUNT_ID);
-        postSendData.groupid = getInput(POST_SEND_GROUP_ID);
-        postSendData.posttitle = getInput(POST_SEND_TITLE);
-        postSendData.posttext = getInput(POST_SEND_TEXT);
-        server.rpcSendPost(postSendData, data => { return eB.notify(EVENT_POST_SEND, data); });
+        let postPostData = {userid: null, groupid: null, posttitle: null, posttext: null};
+        postPostData.userid = getInput(ACCOUNT_ID);
+        postPostData.groupid = getInput(POST_SEND_GROUP_ID);
+        postPostData.posttitle = getInput(POST_SEND_TITLE);
+        postPostData.posttext = getInput(POST_SEND_TEXT);
+        server.rpcPostPost(postPostData, data => { return eB.notify(EVENT_POST_SEND, data); });
     }
     
     hide() { // NOT TESTED
-        let postHideData = {userid: null, postid: null};
-        postHideData.userid = getInput(ACCOUNT_ID);
-        postHideData.postid = getInput(POST_HIDE_ID);
-        server.rpcHidePost(postHideData, data => { return eB.notify(EVENT_POST_HIDE, data); });
+        let putPostData = {userid: null, postid: null};
+        putPostData.userid = getInput(ACCOUNT_ID);
+        putPostData.postid = getInput(POST_HIDE_ID);
+        server.rpcPutPost(putPostData, data => { return eB.notify(EVENT_POST_HIDE, data); });
     }
 }
 

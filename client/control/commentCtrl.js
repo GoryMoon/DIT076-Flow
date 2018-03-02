@@ -25,27 +25,27 @@ COMMENT_HIDE_BUTTON
 
 class CommentCtrl {
     retrieve(postid) { // NOT TESTED
-        let commentRetrieveData = {userid: null, postid: null, from: null, count: null};
+        let getCommentData = {userid: null, postid: null, from: null, count: null};
         //commentRetrieveData.userid = getData(ACCOUNT_ID);
-        commentRetrieveData.postid = postid;
+        getCommentData.postid = postid;
         //commentRetrieveData.from = getData(COMMENT_FILTER_TIME);
         //commentRetrieveData.count = getData(COMMENT_FILTER_COUNT);
-        server.rpcRetrieveComments(commentRetrieveData, data => { return eB.notify(EVENT_COMMENT_RETRIEVE, data); });
+        server.rpcGetComments(getCommentData, data => { return eB.notify(EVENT_COMMENT_RETRIEVE, data); });
     }
     
     send() { // NOT TESTED
-        let commentSendData = {userid: null, postid: null, commenttext: null};
-        commentSendData.userid = getData(ACCOUNT_ID);
-        commentSendData.postid = getData(COMMENT_POST_ID);
-        commentSendData.commenttext = getData(COMMENT_SEND_TEXT);
-        server.rpcSendComment(commentSendData, data => { return eB.notify(EVENT_COMMENT_SEND, data); });
+        let postCommentData = {userid: null, postid: null, commenttext: null};
+        postCommentData.userid = getData(ACCOUNT_ID);
+        postCommentData.postid = getData(COMMENT_POST_ID);
+        postCommentData.commenttext = getData(COMMENT_SEND_TEXT);
+        server.rpcPostComment(postCommentData, data => { return eB.notify(EVENT_COMMENT_SEND, data); });
     }
     
     hide() { // NOT TESTED
-        let commentHideData = {userid: null, commentid: null};
-        commentHideData.userid = getData(ACCOUNT_ID);
-        commentHideData.commentid = getData(COMMENT_ID);
-        server.rpcHideComment(commentHideData, data => { return eB.notify(EVENT_COMMENT_HIDE, data); });
+        let putCommentData = {userid: null, commentid: null};
+        putCommentData.userid = getData(ACCOUNT_ID);
+        putCommentData.commentid = getData(COMMENT_ID);
+        server.rpcPutComment(putCommentData, data => { return eB.notify(EVENT_COMMENT_HIDE, data); });
     }
 }
 

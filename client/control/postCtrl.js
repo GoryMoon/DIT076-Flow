@@ -30,7 +30,7 @@ class PostCtrl {
     retrieve() { // NOT TESTED
         if (hasUser()) {
             eB.notify(EVENT_POST_VIEW);
-            let postRetrieveData = {userid: null, group: null, from: null, count: null};
+            let postRetrieveData = {userid: null, group: null, from: null, count: null}; // UNUSED AND DOES NOT MATCH NEW SERVER CLIENT INTERACTION DRAFT
             postRetrieveData.userid = store.get('user').id;
             postRetrieveData.group = getInput(POST_FILTER_GROUP);
             postRetrieveData.from = getInput(POST_FILTER_TIME);

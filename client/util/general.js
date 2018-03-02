@@ -6,7 +6,7 @@ export function getInput(s) {
 }
 
 export function hasUser() {
-    return store.get('user') != undefined;
+    return store.get('user') !== undefined;
 }
 
 export function setTitle(title) {
@@ -15,7 +15,7 @@ export function setTitle(title) {
 
 export function validate() {
     for (var i = 0; i < arguments.length; i++) {
-        if ($(arguments[i])[0].checkValidity() == false)
+        if ($(arguments[i])[0].checkValidity() === false)
             return false;
     };
     return true;

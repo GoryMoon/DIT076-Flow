@@ -33,6 +33,7 @@ public class ApplicationConfig extends Application {
     {
         resources.add(com.fgm.flow.rest.CORSFilter.class);
         resources.add(com.fgm.flow.rest.CommentResource.class);
+        resources.add(com.fgm.flow.rest.MembershipResource.class);
         resources.add(com.fgm.flow.rest.PostResource.class);
         resources.add(com.fgm.flow.rest.UserGroupResource.class);
         resources.add(com.fgm.flow.rest.UserResource.class);

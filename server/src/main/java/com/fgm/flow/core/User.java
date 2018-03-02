@@ -73,12 +73,12 @@ public class User implements Serializable
     @Expose
     private Date time;
     
-    @OneToMany(mappedBy="poster", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="poster", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @Setter
     @Getter
     private List<Post> posts;
     
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @Setter
     @Getter
     private List<Membership> memberships;

@@ -61,7 +61,7 @@ public class UserGroup implements Serializable
     private User owner;
     */
     
-    @OneToMany(mappedBy="userGroup", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="userGroup", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @Setter
     @Getter
     private List<Membership> memberships;
@@ -73,7 +73,7 @@ public class UserGroup implements Serializable
     @Expose
     private Date time;
     
-    @OneToMany(mappedBy="userGroup", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="userGroup", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @Setter
     @Getter
     private List<Post> posts;

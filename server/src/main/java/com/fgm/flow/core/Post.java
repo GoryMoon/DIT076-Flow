@@ -79,7 +79,7 @@ public class Post implements Serializable
     @Expose
     private Date time;
     
-    @OneToMany(mappedBy="post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="post", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @Setter
     @Getter
     private List<Comment> comments;

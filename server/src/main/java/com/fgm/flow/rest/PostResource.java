@@ -16,8 +16,11 @@ import com.fgm.flow.dao.MembershipRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import static java.util.Collections.sort;
+import java.util.Comparator;
 import static java.lang.System.out;
 import static java.lang.System.err;
 import javax.ejb.EJB;
@@ -105,10 +108,11 @@ public class PostResource {
             UserGroup userGroup = uGroupReg.find(userGroupId);
             
             Post post = new Post(title, text, userGroup, poster);
-
+            
             postReg.create(post);
-                
-            poster.addPost(post);
+            
+            //userGroup.addPost(post);
+            //poster.addPost(post);
             
             //poster.addUserGroup(userGroup);
         
@@ -125,6 +129,7 @@ public class PostResource {
         
     }
     
+    /*
     @POST
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @Produces({MediaType.APPLICATION_JSON})
@@ -148,7 +153,57 @@ public class PostResource {
             }
         }
         
+       
+        sort(posts, new postComparator());
+        
         return Response.ok(gsonEWE.toJson(posts)).build();
+    }
+    */
+
+    
+
+    
+    @POST
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getPostsForUserFromCount(
+            @FormParam("userId") int userId,
+            @FormParam("from") Date from,
+            @FormParam("count") int count
+    ) 
+    {   
+        User user = userReg.find(userId);
+        
+        // Return bad request 400 if user does not exist
+        if(user == null)
+        {
+            return Response.status(400).build();
+        }
+        
+        List<Post> posts = new ArrayList<>();
+        
+        for(Membership memship : user.getMemberships())
+        {
+            for(Post post : memship.getUserGroup().getPosts())
+            {
+                posts.add(post);
+            }
+        }
+        
+        sort(posts, new postComparator());
+        
+        
+        
+        return Response.ok(gsonEWE.toJson(posts)).build();
+    }
+    
+    private class postComparator implements Comparator<Post>
+    {
+        @Override
+        public int compare(Post lPost, Post rPost)
+        {
+            return  lPost.getTime().compareTo(rPost.getTime());
+        }
     }
    
     

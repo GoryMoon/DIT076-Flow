@@ -103,6 +103,68 @@ public class User implements Serializable
     }
     */
     
+    public boolean isMemberOfGroup(UserGroup userGroup)
+    {
+        if(userGroup == null)
+        {
+            return false;
+        }
+        
+        boolean isMember = false;
+        
+        for(Membership membership : memberships)
+        {
+            if(membership.getUserGroup().equals(userGroup))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean isOwnerOfGroup(UserGroup userGroup)
+    {
+        if(userGroup == null)
+        {
+            return false;
+        }
+        
+        for(Membership membership : memberships)
+        {
+            if(membership.getUserGroup().equals(userGroup)
+                    && membership.getStatus() == 0
+            )
+            {
+                return true;
+                
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean isInvitedToGroup(UserGroup userGroup)
+    {
+        if(userGroup == null)
+        {
+            return false;
+        }
+        
+        for(Membership membership : memberships)
+        {
+            if(membership.getUserGroup().equals(userGroup)
+                    && membership.getStatus() == 2
+            )
+            {
+                return true;
+                
+            }
+        }
+        
+        return false;
+    }
+    
     public final void timeStamp()
     {
         time = new Date();

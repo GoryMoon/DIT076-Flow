@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
 import java.util.List;
+import java.util.ArrayList;
 import static java.lang.System.out;
 import static java.lang.System.err;
 import javax.ejb.EJB;
@@ -122,6 +123,32 @@ public class PostResource {
         
         return Response.status(403).build();
         
+    }
+    
+    @POST
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getPostsForUser(@FormParam("userId") int userId) 
+    {
+        User user = userReg.find(userId);
+        
+        // Return bad request 400 if user does not exist
+        if(user == null)
+        {
+            return Response.status(400).build();
+        }
+        
+        List<Post> posts = new ArrayList<>();
+        
+        for(Membership memship : user.getMemberships())
+        {
+            for(Post post : memship.getUserGroup().getPosts())
+            {
+                posts.add(post);
+            }
+        }
+        
+        return Response.ok(gsonEWE.toJson(posts)).build();
     }
    
     

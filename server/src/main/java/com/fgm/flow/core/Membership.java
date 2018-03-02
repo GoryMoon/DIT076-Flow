@@ -83,10 +83,11 @@ public class Membership
     @Embeddable
     public static class MembershipId implements Serializable
     {
-
+        @Getter
         @Column(name = "userId")
         private int userId;
 
+        @Getter
         @Column(name = "userGroupId")
         private int userGroupId;
 

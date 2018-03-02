@@ -69,7 +69,7 @@ public class CommentResource {
             @FormParam("postId") int postId,
             @FormParam("commenterId") int commenterId,
             @FormParam("status") int status
-    ) {
+    ) {        
         Post post = postReg.find(postId);
         User commenter = userReg.find(commenterId);
 
@@ -111,7 +111,7 @@ public class CommentResource {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @Produces({MediaType.APPLICATION_JSON})
     public Response findForId(@FormParam("postId") int postId) 
-    {
+    {    
         JPAQueryFactory qf = new JPAQueryFactory(cmntReg.getEntityManager());
         QComment comment = QComment.comment;
         Post post = postReg.find(postId);
@@ -137,13 +137,14 @@ public class CommentResource {
         {
             commentsOnPostFormatted.add(new ResponseComment(cmnt));
         }
-        
+
         return Response.ok(gson.toJson(commentsOnPostFormatted)).build();
     }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll() {
+        out.println("In comment GET");
         List<Comment> comments = cmntReg.findAll();
 
         return Response.ok(gsonEWE.toJson(comments)).build();

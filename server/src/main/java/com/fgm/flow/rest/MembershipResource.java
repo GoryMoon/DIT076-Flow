@@ -62,7 +62,7 @@ public class MembershipResource {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     public Response create(
             @FormParam("userId") int userId,
-            @FormParam("usergroupId") int userGroupId
+            @FormParam("userGroupId") int userGroupId
         ) 
     {
         User user = userReg.find(userId);
@@ -89,6 +89,89 @@ public class MembershipResource {
         return Response.status(403).build();
         
     }
+    
+    
+    @POST
+    @Path("invite")
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    public Response invite(
+            @FormParam("ownerId") int ownerId,
+            @FormParam("userGroupId") int userGroupId,
+            @FormParam("inviteeId") int inviteeId
+        ) 
+    {
+        User owner = userReg.find(ownerId);
+        User invitee = userReg.find(inviteeId);
+        UserGroup userGroup = uGroupReg.find(userGroupId);
+        // Check if owner, invitee and user group exist
+        if(owner == null || invitee == null || userGroup == null)
+        {
+            // Return bad request 400 if owner or invitee does not exist
+            return Response.status(400).build();
+        }      
+
+        // Return forbidden 403 if owner isn't actually owner of the user group
+        if(!owner.isOwnerOfGroup(userGroup))
+        {
+            return Response.status(403).build();
+        }
+        
+        // Return forbidden 403 if invitee already has a membership status in
+        // the group
+        if(invitee.isMemberOfGroup(userGroup))
+        {
+            return Response.status(403).build();
+        }
+
+        // Create membership for invitee and the user group with status 2, invited
+        Membership membership = new Membership(invitee, userGroup, 2);
+        memshipReg.create(membership);
+        
+        URI postUri = uriInfo
+                .getAbsolutePathBuilder()
+                .path(String.valueOf(membership.getId()))
+                .build(membership);
+
+        return Response.created(postUri).build();
+    }
+    
+    @POST
+    @Path("join")
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    public Response invite(
+            @FormParam("joinerId") int joinerId,
+            @FormParam("userGroupId") int userGroupId
+        ) 
+    {
+        User joiner = userReg.find(joinerId);
+        UserGroup userGroup = uGroupReg.find(userGroupId);
+        // Check if joiner, invitee and user group exist
+        if(joiner == null || userGroup == null)
+        {
+            // Return bad request 400 if owner or invitee does not exist
+            return Response.status(400).build();
+        }      
+
+        // Return forbidden 403 if joiner doesn't have the status invited
+        // for the group
+        if(!joiner.isInvitedToGroup(userGroup))
+        {
+            return Response.status(403).build();
+        }
+
+        // Update membership for joiner and the user group to status 1, active member
+        Membership membership = new Membership(joiner, userGroup, 1);
+        memshipReg.update(membership);
+        
+        URI postUri = uriInfo
+                .getAbsolutePathBuilder()
+                .path(String.valueOf(membership.getId()))
+                .build(membership);
+
+        return Response.created(postUri).build();
+    }
+    
+    
    
     
     @GET

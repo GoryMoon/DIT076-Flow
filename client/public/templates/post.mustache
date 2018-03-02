@@ -1,22 +1,21 @@
-<div class="card">
+<div class="card" data-postid="{{id}}">
   <div class="card-header">
     <div class="clearfix">
       <img src="img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
       <div class="user-info">
         <div class="clearfix">
           <div class="float-left">
-            <h5>{{}}</h5>
+            <h5>Placeholder{{name}}</h5>
             <small class="text-muted" title="{{raw_time}}" data-toggle="tooltip" data-placement="bottom">{{time}}</small>
           </div>
           <div class="droptext float-right">
             <div class="dropdown">
               <a class="dropdown-toggle" id="postDrop{{postid}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
               <div class="dropdown-menu" aria-labelledby="postDrop{{postid}}">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
+                <a id="post_hide_button" class="dropdown-item" href="#">Hide</a>
               </div>
             </div>
-            <span class="text-muted">{{groupname}}</span>
+            <span class="text-muted">Placeholder{{groupname}}</span>
           </div>
         </div>
       </div>
@@ -36,7 +35,13 @@
     </form>
     <hr>
     <div>
-      <!-- Comments -->
+      <a class="show_hide-comment outer">Show comments <i class="fas fa-angle-down"></i></a>
+      <div class="panel-collapse collapse out">
+        <div class="comments">
+          
+        </div>
+        <a class="show_hide-comment inner">Hide comments <i class="fas fa-angle-up"></i></a>
+      </div>
     </div>
   </div>
 </div>

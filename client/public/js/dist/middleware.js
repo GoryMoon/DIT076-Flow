@@ -6,6 +6,8 @@ function loginMiddleware(ctx) {
 
     if (user == undefined && !(path.startsWith('/login') || path.startsWith('/register'))) {
         page.redirect('/login');
+    } else if (user != undefined && (path.startsWith('/login') || path.startsWith('/register'))) {
+        page.redirect('/');
     }
 }
 

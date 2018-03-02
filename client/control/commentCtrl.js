@@ -10,7 +10,7 @@ EVENT_COMMENT_HIDE,
 eventBus as eB
 } from "../util/eventBus.js"
 import {
-getData,
+getInput,
 ACCOUNT_ID,
 COMMENT_FILTER_POSTID,
 COMMENT_FILTER_TIME,
@@ -24,12 +24,12 @@ COMMENT_HIDE_BUTTON
 } from "../util/general.js"
 
 class CommentCtrl {
-    retrieve() { // NOT TESTED
+    retrieve(postid) { // NOT TESTED
         let commentRetrieveData = {userid: null, postid: null, from: null, count: null};
-        commentRetrieveData.userid = getData(ACCOUNT_ID);
-        commentRetrieveData.postid = getData(COMMENT_FILTER_POSTID);
-        commentRetrieveData.from = getData(COMMENT_FILTER_TIME);
-        commentRetrieveData.count = getData(COMMENT_FILTER_COUNT);
+        //commentRetrieveData.userid = getData(ACCOUNT_ID);
+        commentRetrieveData.postid = postid;
+        //commentRetrieveData.from = getData(COMMENT_FILTER_TIME);
+        //commentRetrieveData.count = getData(COMMENT_FILTER_COUNT);
         server.rpcRetrieveComments(commentRetrieveData, data => { return eB.notify(EVENT_COMMENT_RETRIEVE, data); });
     }
     
@@ -51,8 +51,12 @@ class CommentCtrl {
 
 const commentCtrl = new CommentCtrl();
 
+export function retriveComments(postid) {
+    commentCtrl.retrieve(postid);
+}
+
 $(document).ready(function () {
-    $(COMMENT_RETRIEVE_BUTTON).on("click", commentCtrl.retrieve);
+    //$(COMMENT_RETRIEVE_BUTTON).on("click", commentCtrl.retrieve);
     $(COMMENT_SEND_BUTTON).on("click", commentCtrl.send);
     $(COMMENT_HIDE_BUTTON).on("click", commentCtrl.hide);
 });

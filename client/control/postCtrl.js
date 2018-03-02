@@ -31,7 +31,7 @@ class PostCtrl {
         if (hasUser()) {
             eB.notify(EVENT_POST_VIEW);
             let postRetrieveData = {userid: null, group: null, from: null, count: null};
-            postRetrieveData.userid = getInput(ACCOUNT_ID);
+            postRetrieveData.userid = store.get('user').id;
             postRetrieveData.group = getInput(POST_FILTER_GROUP);
             postRetrieveData.from = getInput(POST_FILTER_TIME);
             postRetrieveData.count = getInput(POST_FILTER_COUNT);

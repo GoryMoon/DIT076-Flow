@@ -58,7 +58,9 @@ class AccountView {
     }
 
     accountRegister(data) { // NOT TESTED
-        this.loadPage();
+        console.log("This is accountRegister inside the accountView.");
+   //     this.loadPage();
+        page('/login'); // why the fuck does '/' NOT redirect to the starting page!
     }
 
     accountLogout(data) { // NOT TESTED

@@ -114,7 +114,7 @@ class ServerService {
         this.sendingFunc(commentFilterData, "rpcGetComment");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comments/",
+            url: this.serverUrl + "comment/",
             data: JSON.stringify(commentFilterData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
@@ -132,7 +132,7 @@ class ServerService {
         this.sendingFunc(commentData, "rpcPostComment");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comments/",
+            url: this.serverUrl + "comment/create/",
             data: JSON.stringify(commentData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
@@ -150,7 +150,7 @@ class ServerService {
         this.sendingFunc(commentData, "rpcPutComment");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comments/remove/",
+            url: this.serverUrl + "comment/hide/",
             data: JSON.stringify(commentData),
             method: "DELETE",
             contentType: "application/json; charset=utf-8",
@@ -168,7 +168,7 @@ class ServerService {
         this.sendingFunc(groupFilterData, "rpcGetGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "groups/",
+            url: this.serverUrl + "group/",
             data: JSON.stringify(groupFilterData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
@@ -186,7 +186,7 @@ class ServerService {
         this.sendingFunc(groupData, "rpcPostGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "groups/",
+            url: this.serverUrl + "group/create/",
             data: JSON.stringify(groupData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
@@ -204,7 +204,7 @@ class ServerService {
         this.sendingFunc(groupData, "rpcDeleteGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "groups/",
+            url: this.serverUrl + "group/hide/",
             data: JSON.stringify(groupData),
             method: "DELETE",
             contentType: "application/json; charset=utf-8",

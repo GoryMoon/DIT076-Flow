@@ -63,7 +63,12 @@ const postCtrl = new PostCtrl();
 page('/', postCtrl.retrieve);
 
 $(document).ready(function () {
-    $(POST_RETRIEVE_BUTTON).on("click", postCtrl.retrieve);
-    $(POST_SEND_BUTTON).on("click", postCtrl.send);
-    $(POST_HIDE_BUTTON).on("click", postCtrl.hide);
+    
+    $(document).on("click", POST_RETRIEVE_BUTTON, postCtrl.retrieve);
+    $(document).on("click", POST_SEND_BUTTON, postCtrl.send);
+    $(document).on("click", POST_HIDE_BUTTON, postCtrl.hide);
+    
+  //  $(POST_RETRIEVE_BUTTON).on("click", postCtrl.retrieve);
+  //  $(POST_SEND_BUTTON).on("click", postCtrl.send);
+  //  $(POST_HIDE_BUTTON).on("click", postCtrl.hide);
 });

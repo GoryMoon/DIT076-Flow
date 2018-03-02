@@ -56,7 +56,9 @@ export function retriveComments(postid) {
 }
 
 $(document).ready(function () {
+    $(document).on("click", COMMENT_SEND_BUTTON, commentCtrl.send);
+    $(document).on("click", COMMENT_HIDE_BUTTON, commentCtrl.hide);
     //$(COMMENT_RETRIEVE_BUTTON).on("click", commentCtrl.retrieve);
-    $(COMMENT_SEND_BUTTON).on("click", commentCtrl.send);
-    $(COMMENT_HIDE_BUTTON).on("click", commentCtrl.hide);
+    //$(COMMENT_SEND_BUTTON).on("click", commentCtrl.send);
+    //$(COMMENT_HIDE_BUTTON).on("click", commentCtrl.hide);
 });

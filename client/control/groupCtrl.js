@@ -47,7 +47,10 @@ class GroupCtrl {
 const groupCtrl = new GroupCtrl();
 
 $(document).ready(function () {
-    $(GROUP_RETRIEVE_BUTTON).on("click", groupCtrl.retrieve);
-    $(GROUP_SEND_BUTTON).on("click", groupCtrl.send);
+    
+    $(document).on("click", GROUP_RETRIEVE_BUTTON, groupCtrl.retrieve);
+    $(document).on("click", GROUP_SEND_BUTTON, groupCtrl.send);
+   // $(GROUP_RETRIEVE_BUTTON).on("click", groupCtrl.retrieve);
+   // $(GROUP_SEND_BUTTON).on("click", groupCtrl.send);
 //    $(COMMENT_HIDE_BUTTON).on("click", commentCtrl.hide);
 });

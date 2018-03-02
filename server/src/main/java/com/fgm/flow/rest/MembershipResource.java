@@ -38,16 +38,14 @@ import javax.ws.rs.core.Response;
  *
  * @author fgm
  */
-@Path("group")
-public class UserGroupResource {
+@Path("membership")
+public class MembershipResource {
 
     //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     @Context
     private UriInfo uriInfo;
 
-    //@EJB
-    //private PostRegistry postReg;
     @EJB
     private UserRegistry userReg;
     @EJB
@@ -63,29 +61,29 @@ public class UserGroupResource {
     @Path("create")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     public Response create(
-            @FormParam("name") String name,
-            @FormParam("ownerId") int ownerId
+            @FormParam("userId") int userId,
+            @FormParam("usergroupId") int userGroupId
         ) 
     {
-        User owner = userReg.find(ownerId);
-        List<UserGroup> uGroupsWithName = uGroupReg.findByName(name);
+        User user = userReg.find(userId);
+        UserGroup userGroup = uGroupReg.find(userId);
         
-        if(owner != null && uGroupsWithName.size() == 0)
-        {        
-            UserGroup userGroup = new UserGroup(name);
-
-            uGroupReg.create(userGroup);
-            
-            Membership membership = new Membership(owner, userGroup, 0);
+        if(user != null && userGroup != null)
+        {   
+            Membership membership = 
+                    new Membership(user, userGroup, 0);
 
             memshipReg.create(membership);
-            
-            URI userGroupUri = uriInfo
+
+            //poster.addUserGroup(userGroup);
+        
+            URI postUri = uriInfo
                     .getAbsolutePathBuilder()
-                    .path(String.valueOf(userGroup.getId()))
-                    .build(userGroup);
+                    .path(String.valueOf(membership.getId()))
+                    .build(membership);
             
-            return Response.created(userGroupUri).build();
+            return Response.created(postUri).build();
+
         }
         
         return Response.status(403).build();
@@ -97,8 +95,8 @@ public class UserGroupResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
     {        
-        List<UserGroup> userGroups = uGroupReg.findAll();
-
-        return Response.ok(gsonEWE.toJson(userGroups)).build();
+        List<Membership> memberships = memshipReg.findAll();
+        
+        return Response.ok(gson.toJson(memberships)).build();
     }
 }

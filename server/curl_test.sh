@@ -33,6 +33,6 @@ curl -v -X POST http://localhost:8080/api/group/create --data "name=1337 group&o
 
 curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/api/user/register --data '{"email": "a@a.a", "nick": "anick", "password":"apass"}'
 curl -v -X POST -H "Content-Type: application/json" http://localhost:8080/api/user/login --data '{"email": "a@a.a", "password":"apass"}'
-curl -v -X POST http://localhost:8080/api/post/create --data "title=A title&text=Some text&usergroupId=0&poster=2551"
+curl -v -X POST http://localhost:8080/api/post/create --data "title=A title&text=Some text&usergroupId=0&posterId=2551"
 curl -v -X POST http://localhost:8080/api/comment/create --data "text=ABC&postId=2552&commenterId=2551&status=0"
 curl -v -X POST http://localhost:8080/api/group/create --data "name=1337 group&ownerId=2551"

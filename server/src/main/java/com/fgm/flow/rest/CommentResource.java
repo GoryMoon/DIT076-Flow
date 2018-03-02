@@ -8,9 +8,11 @@ package com.fgm.flow.rest;
 import com.fgm.flow.core.User;
 import com.fgm.flow.core.Post;
 import com.fgm.flow.core.Comment;
+import com.fgm.flow.core.Membership;
 import com.fgm.flow.dao.UserRegistry;
 import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.CommentRegistry;
+import com.fgm.flow.dao.MembershipRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
@@ -49,6 +51,8 @@ public class CommentResource {
     private CommentRegistry cmntReg;
     @EJB
     private PostRegistry postReg;
+    @EJB
+    private MembershipRegistry memshipReg;
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
@@ -66,41 +70,47 @@ public class CommentResource {
     {        
         Post post = postReg.find(postId);
         User commenter = userReg.find(commenterId);
-        
-        
+
+        // Check that the post and commenter exist
         if(post != null && commenter != null)
         {
-            out.println("Reached");
-            
+            // Fetch possible membership that the commenter and the posts
+            // associated group is part of
+            Membership membership = memshipReg.find(
+                    new Membership.MembershipId(
+                            commenterId, post.getUserGroup().getId()));
+            // Check if the membership exists and has owner or 
+            // active member status
+            if(membership != null
+                && (membership.getStatus() == 0 || membership.getStatus() == 1)
+            )
+            {
         
-            Comment comment = new Comment(text, post, commenter, status);
+                Comment comment = new Comment(text, post, commenter, status);
 
-            cmntReg.create(comment);
+                cmntReg.create(comment);
 
-            post.addComment(comment);
-        
-            URI commentUri = uriInfo
-                    .getAbsolutePathBuilder()
-                    .path(String.valueOf(comment.getId()))
-                    .build(comment);
-            
-            return Response.created(commentUri).build();
+                post.addComment(comment);
+
+                URI commentUri = uriInfo
+                        .getAbsolutePathBuilder()
+                        .path(String.valueOf(comment.getId()))
+                        .build(comment);
+
+                return Response.created(commentUri).build();
+            }
         }
     
 
         return Response.status(403).build();
         
     }
-   
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
     {        
         List<Comment> comments = cmntReg.findAll();
-        
-        out.println(comments);
-        out.println(gsonEWE.toJson(comments));
         
         return Response.ok(gsonEWE.toJson(comments)).build();
     }

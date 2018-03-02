@@ -8,9 +8,11 @@ package com.fgm.flow.rest;
 import com.fgm.flow.core.Post;
 import com.fgm.flow.core.User;
 import com.fgm.flow.core.UserGroup;
+import com.fgm.flow.core.Membership;
 import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.UserRegistry;
 import com.fgm.flow.dao.UserGroupRegistry;
+import com.fgm.flow.dao.MembershipRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
@@ -50,6 +52,8 @@ public class PostResource {
     private UserRegistry userReg;
     @EJB
     private UserGroupRegistry uGroupReg;
+    @EJB
+    private MembershipRegistry memshipReg;
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
@@ -81,25 +85,23 @@ public class PostResource {
             @FormParam("title") String title,
             @FormParam("text") String text,
             @FormParam("usergroupId") int userGroupId,
-            @FormParam("poster") int posterId
+            @FormParam("posterId") int posterId
         ) 
     {
-        User poster = userReg.find(posterId);
-        //List<UserGroup> uGroupsWithName = uGroupReg.findByName(userGroupName);
-        UserGroup userGroup = uGroupReg.find(userGroupId);
-        // Reconsider
-        /*
-        if(uGroupsWithName.size() > 1)
-        {
-            err.println("Database error: More than one group with the same name");
-            return Response.status(403).build();
-        }
-        */
+        //User poster = userReg.find(posterId);
+        //UserGroup userGroup = uGroupReg.find(userGroupId);
         
+                    
+        Membership membership = 
+                memshipReg.find(new Membership.MembershipId(posterId, userGroupId));
         
-        if(poster != null && userGroup != null)
+        if(membership != null 
+                && (membership.getStatus() == 0 || membership.getStatus() == 1))
         {
            // UserGroup userGroup = uGroupsWithName.get(0);
+
+            User poster = userReg.find(posterId);
+            UserGroup userGroup = uGroupReg.find(userGroupId);
             
             Post post = new Post(title, text, userGroup, poster);
 
@@ -107,7 +109,7 @@ public class PostResource {
                 
             poster.addPost(post);
             
-            poster.addUserGroup(userGroup);
+            //poster.addUserGroup(userGroup);
         
             URI postUri = uriInfo
                     .getAbsolutePathBuilder()
@@ -128,9 +130,6 @@ public class PostResource {
     public Response findAll()
     {        
         List<Post> posts = postReg.findAll();
-        
-        out.println(posts);
-        out.println(gsonEWE.toJson(posts));
         
         return Response.ok(gsonEWE.toJson(posts)).build();
     }

@@ -78,10 +78,11 @@ public class User implements Serializable
     @Getter
     private List<Post> posts;
     
-    @OneToMany(mappedBy="owner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
     @Setter
     @Getter
-    private List<UserGroup> userGroups;
+    private List<Membership> memberships;
+    //new ArrayList<>();
     
     /*
     public List<Post> getPosts()
@@ -94,11 +95,13 @@ public class User implements Serializable
     {
         posts.add(post);
     }
-    
-    public void addUserGroup(UserGroup userGroup)
+   
+    /* temp
+    public void addUserGroup(Membership membership)
     {
-        userGroups.add(userGroup);
+        memberships.add(membership);
     }
+    */
     
     public final void timeStamp()
     {
@@ -112,7 +115,7 @@ public class User implements Serializable
         this.nick = nick;
         this.password = password;
         this.posts = new ArrayList<>();
-        this.userGroups = new ArrayList<>();
+        //this.memberships = new ArrayList<>();
         timeStamp();
     }
 }

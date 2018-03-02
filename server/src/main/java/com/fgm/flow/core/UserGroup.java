@@ -54,12 +54,18 @@ public class UserGroup implements Serializable
     @Expose
     private String name;
     
-
+    /*
     @ManyToOne
     @JoinColumn(name="OWNER")   
     @Getter
     @Setter
     private User owner;
+    */
+    
+    @OneToMany(mappedBy="userGroup", cascade = CascadeType.ALL)
+    @Setter
+    @Getter
+    private List<Membership> memberships;
     
     @Getter
     @Setter
@@ -78,12 +84,12 @@ public class UserGroup implements Serializable
         posts.add(post);
     }
     
-    public UserGroup(String name, User owner)
+    public UserGroup(String name)
     {
         this.id = 0;
         this.name = name;
-        this.owner = owner;
         this.posts = new ArrayList<>();
+        this.memberships = new ArrayList<>();
         this.time = new Date();
     }
 }

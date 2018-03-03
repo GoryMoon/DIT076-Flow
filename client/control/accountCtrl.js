@@ -28,24 +28,12 @@ ACCOUNT_LOGOUT_BUTTON
 
 class AccountCtrl {
     viewLogin(ctx) {
+        console.log("XXXXXXXXXXXXXXXXXXXXXX page(|/login|, accountCtrl.viewLogin)");
         eB.notify(EVENT_ACCOUNT_VIEW_LOGIN, ctx);
     }
 
     viewRegister(ctx) {
         eB.notify(EVENT_ACCOUNT_VIEW_REGISTER, ctx);
-    }
-
-    login(event) { // NOT TESTED
-        if (validate(ACCOUNT_LOGIN_EMAIL, ACCOUNT_LOGIN_PASSWORD)) {
-            event.preventDefault();
-            let accountLoginData = {email: null, password: null};
-            accountLoginData.email = getInput(ACCOUNT_LOGIN_EMAIL);
-            accountLoginData.password = getInput(ACCOUNT_LOGIN_PASSWORD);
-            server.rpcLoginAccount(accountLoginData, data => { 
-                store.set('user', data); 
-                return eB.notify(EVENT_ACCOUNT_LOGIN, data); 
-            });
-        }
     }
     
     register(event) { // NOT TESTED
@@ -58,6 +46,18 @@ class AccountCtrl {
             server.rpcRegisterAccount(accountRegisterData, data => { return eB.notify(EVENT_ACCOUNT_REGISTER, data); });
         }
     }
+
+    login(event) { // NOT TESTED
+        if (validate(ACCOUNT_LOGIN_EMAIL, ACCOUNT_LOGIN_PASSWORD)) {
+            event.preventDefault();
+            let accountLoginData = {email: null, password: null};
+            accountLoginData.email = getInput(ACCOUNT_LOGIN_EMAIL);
+            accountLoginData.password = getInput(ACCOUNT_LOGIN_PASSWORD);
+            server.rpcLoginAccount(accountLoginData, data => { 
+                return eB.notify(EVENT_ACCOUNT_LOGIN, data); 
+            });
+        }
+    }
     
     logout() { // NOT TESTED
         event.preventDefault();
@@ -65,8 +65,6 @@ class AccountCtrl {
         //accountLogoutData.id = getInput(ACCOUNT_ID);
 //        server.rpcLoginAccount(accountLogoutData, data => { return eB.notify("ACCOUNT_LOGOUT", data); });
         eB.notify(EVENT_ACCOUNT_LOGOUT); // Logout is client-side
-        store.remove('user');
-        page('/login');
     }
 }
 
@@ -76,7 +74,10 @@ page('/login', accountCtrl.viewLogin);
 page('/register', accountCtrl.viewRegister);
 
 $(document).ready(function () {
-    $(ACCOUNT_LOGIN_BUTTON).on("click", accountCtrl.login);
-    $(ACCOUNT_REGISTER_BUTTON).on("click", accountCtrl.register);
-    $(ACCOUNT_LOGOUT_BUTTON).on("click", accountCtrl.logout);
+    $(document).on("click", ACCOUNT_LOGIN_BUTTON, accountCtrl.login);
+    $(document).on("click", ACCOUNT_REGISTER_BUTTON, accountCtrl.register);
+    $(document).on("click", ACCOUNT_LOGOUT_BUTTON, accountCtrl.logout);
+ //   $(ACCOUNT_LOGIN_BUTTON).on("click", accountCtrl.login);
+ //   $(ACCOUNT_REGISTER_BUTTON).on("click", accountCtrl.register);
+ //   $(ACCOUNT_LOGOUT_BUTTON).on("click", accountCtrl.logout);
 });

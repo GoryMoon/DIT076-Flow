@@ -56,8 +56,8 @@ class ServerService {
         });
     }
     
-    rpcRetrievePosts(postFilterData, callback) { // NOT TESTED
-        this.sendingFunc(postFilterData, "rpcRetrievePosts");
+    rpcGetPost(postFilterData, callback) { // NOT TESTED
+        this.sendingFunc(postFilterData, "rpcGetPost");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
             url: this.serverUrl + "post/",
@@ -74,11 +74,11 @@ class ServerService {
         });
     }
     
-    rpcSendPost(postData, callback) { // NOT TESTED
-        this.sendingFunc(postData, "rpcSendPost");
+    rpcPostPost(postData, callback) { // NOT TESTED
+        this.sendingFunc(postData, "rpcPostPost");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "post/",
+            url: this.serverUrl + "post/create/",
             data: JSON.stringify(postData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
@@ -92,8 +92,8 @@ class ServerService {
         });
     }
     
-    rpcHidePost(postData, callback) { // NOT TESTED
-        this.sendingFunc(postData, "rpcHidePost");
+    rpcPutPost(postData, callback) { // NOT TESTED
+        this.sendingFunc(postData, "rpcPutPost");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
             url: this.serverUrl + "posts/hide/",
@@ -110,11 +110,11 @@ class ServerService {
         });
     }
     
-    rpcRetrieveComments(commentFilterData, callback) { // NOT TESTED
-        this.sendingFunc(commentFilterData, "rpcRetrieveComments");
+    rpcGetComment(commentFilterData, callback) { // NOT TESTED
+        this.sendingFunc(commentFilterData, "rpcGetComment");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comments/",
+            url: this.serverUrl + "comment/",
             data: JSON.stringify(commentFilterData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
@@ -128,11 +128,11 @@ class ServerService {
         });
     }
     
-    rpcSendComment(commentData, callback) { // NOT TESTED
-        this.sendingFunc(commentData, "rpcSendComments");
+    rpcPostComment(commentData, callback) { // NOT TESTED
+        this.sendingFunc(commentData, "rpcPostComment");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comments/",
+            url: this.serverUrl + "comment/create/",
             data: JSON.stringify(commentData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
@@ -146,11 +146,11 @@ class ServerService {
         });
     }
     
-    rpcHideComment(commentData, callback) { // NOT TESTED
-        this.sendingFunc(commentData, "rpcHideComment");
+    rpcPutComment(commentData, callback) { // NOT TESTED
+        this.sendingFunc(commentData, "rpcPutComment");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comments/remove/",
+            url: this.serverUrl + "comment/hide/",
             data: JSON.stringify(commentData),
             method: "DELETE",
             contentType: "application/json; charset=utf-8",
@@ -164,11 +164,11 @@ class ServerService {
         });
     }
     
-    rpcRetrieveGroups(groupFilterData, callback) { // NOT TESTED
-        this.sendingFunc(groupFilterData, "rpcRetrieveGroups");
+    rpcGetGroup(groupFilterData, callback) { // NOT TESTED
+        this.sendingFunc(groupFilterData, "rpcGetGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "groups/",
+            url: this.serverUrl + "group/",
             data: JSON.stringify(groupFilterData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
@@ -182,11 +182,11 @@ class ServerService {
         });
     }
     
-    rpcSendGroup(groupData, callback) { // NOT TESTED
-        this.sendingFunc(groupData, "rpcSendGroup");
+    rpcPostGroup(groupData, callback) { // NOT TESTED
+        this.sendingFunc(groupData, "rpcPostGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "groups/",
+            url: this.serverUrl + "group/create/",
             data: JSON.stringify(groupData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
@@ -200,11 +200,11 @@ class ServerService {
         });
     }
     
-    rpcRemoveGroup(groupData, callback) { // NOT TESTED
-        this.sendingFunc(groupData, "rpcRemoveGroup");
+    rpcPutGroup(groupData, callback) { // NOT TESTED
+        this.sendingFunc(groupData, "rpcDeleteGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "groups/",
+            url: this.serverUrl + "group/hide/",
             data: JSON.stringify(groupData),
             method: "DELETE",
             contentType: "application/json; charset=utf-8",

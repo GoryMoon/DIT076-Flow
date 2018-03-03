@@ -5,19 +5,19 @@
   </div>
 
   <div class="form-label-group">
-    <input type="email" id="account_register_email" class="form-control" placeholder="Email address" required autofocus>
+    <input type="email" id="account_register_email" class="form-control" autocomplete="email" placeholder="Email address" required autofocus>
     <label for="account_register_email">Email address</label>
   </div>
   <div class="form-label-group">
-    <input type="text" id="account_register_nick" class="form-control" placeholder="Nick" required>
+    <input type="text" id="account_register_nick" class="form-control" autocomplete="username" placeholder="Nick" required>
     <label for="account_register_nick">Nick</label>
   </div>
   <div class="form-label-group">
-    <input type="password" id="account_register_password" class="form-control" placeholder="Password" required>
+    <input type="password" id="account_register_password" class="form-control" autocomplete="new-password" placeholder="Password" required>
     <label for="account_register_password">Password</label>
   </div>
   <div class="form-label-group">
-    <input type="password" id="account_register_password_confirm" class="form-control" placeholder="Password (Confirm)" oninput="check(this)" required>
+    <input type="password" id="account_register_password_confirm" class="form-control" autocomplete="new-password" placeholder="Password (Confirm)" oninput="check(this)" required>
     <label for="account_register_password_confirm">Password (Confirm)</label>
   </div>
   <button id="account_register_button" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>

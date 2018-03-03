@@ -51,22 +51,28 @@ class AccountView {
     }
 
     accountLogin(data) { // NOT TESTED
-        page('/');
+        console.log("This is accountLogin inside the accountView.");
+        store.set('user', data);
         this.loadPage();
+        page('/');
     }
 
     accountRegister(data) { // NOT TESTED
-        this.loadPage();
+        console.log("This is accountRegister inside the accountView.");
+   //     this.loadPage();
+        page('/login'); // why the fuck does '/' NOT redirect to the starting page!
     }
 
     accountLogout(data) { // NOT TESTED
-        store.remove('user');
+        
+        store.remove('user'); // SHOULD BE MOVED TO VIEW
         this.loadPage();
+        page('/'); // login is called automatically on reload of login, so call simple reload of page to automatically be directed to login
     }
 
     loadPage() {
         var user = store.get('user');
-        if (user != undefined) {
+        if (user !== undefined) {
             $.get('/templates/nav-user.mustache', function(template) {
                 var rendered = Mustache.render(template, user);
                 $(rendered).insertAfter('#nav-user');

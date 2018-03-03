@@ -21,19 +21,19 @@ GROUP_SEND_BUTTON
 
 class GroupCtrl {
     retrieve() { // NOT TESTED
-        let groupRetrieveData = {userid: null, search: null, from: null, count: null};
-        groupRetrieveData.userid = getData(ACCOUNT_ID);
-        groupRetrieveData.search = getData(GROUP_FILTER_TEXT);
-        groupRetrieveData.from = getData(GROUP_FILTER_TIME);
-        groupRetrieveData.count = getData(GROUP_FILTER_COUNT);
-        server.rpcRetrieveGroups(groupRetrieveData, data => { return eB.notify(EVENT_GROUP_RETRIEVE, data); });
+        let getGroupData = {userid: null, search: null, from: null, count: null};
+        getGroupData.userid = getData(ACCOUNT_ID);
+        getGroupData.search = getData(GROUP_FILTER_TEXT);
+        getGroupData.from = getData(GROUP_FILTER_TIME);
+        getGroupData.count = getData(GROUP_FILTER_COUNT);
+        server.rpcGetGroup(getGroupData, data => { return eB.notify(EVENT_GROUP_RETRIEVE, data); });
     }
     
     send() { // NOT TESTED
-        let groupSendData = {userid: null, groupname: null};
-        groupSendData.userid = getData(ACCOUNT_ID);
-        groupSendData.groupname = getData(GROUP_SEND_NAME);
-        server.rpcSendGroup(groupSendData, data => { return eB.notify(EVENT_GROUP_SEND, data); });
+        let postGroupData = {userid: null, groupname: null};
+        postGroupData.userid = getData(ACCOUNT_ID);
+        postGroupData.groupname = getData(GROUP_SEND_NAME);
+        server.rpcPostGroup(postGroupData, data => { return eB.notify(EVENT_GROUP_SEND, data); });
     }
     
 //    hide() { // NOT SPECIFIED
@@ -47,7 +47,10 @@ class GroupCtrl {
 const groupCtrl = new GroupCtrl();
 
 $(document).ready(function () {
-    $(GROUP_RETRIEVE_BUTTON).on("click", groupCtrl.retrieve);
-    $(GROUP_SEND_BUTTON).on("click", groupCtrl.send);
+    
+    $(document).on("click", GROUP_RETRIEVE_BUTTON, groupCtrl.retrieve);
+    $(document).on("click", GROUP_SEND_BUTTON, groupCtrl.send);
+   // $(GROUP_RETRIEVE_BUTTON).on("click", groupCtrl.retrieve);
+   // $(GROUP_SEND_BUTTON).on("click", groupCtrl.send);
 //    $(COMMENT_HIDE_BUTTON).on("click", commentCtrl.hide);
 });

@@ -6,12 +6,14 @@
 package com.fgm.flow.rest;
 
 import com.fgm.flow.core.User;
+import com.fgm.flow.core.UserGroup;
 import com.fgm.flow.dao.UserRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
 import java.util.List;
 import static java.lang.System.out;
+import java.util.Arrays;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -26,6 +28,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -131,6 +138,46 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
     {
+        List<User> users = userReg.findAll();
+        return Response.ok(gsonEWE.toJson(users)).build();
+    }
+    
+    
+    
+    
+    
+    
+    @XmlRootElement
+    public static class GetData {
+        public Integer userid;
+        public Integer groupid;
+        public Integer id;
+        public String email; 
+        public String nick;
+        public Integer count;
+    }
+    // Windows CURL test
+    // curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" "http://localhost:8080/api/user/get/" -d "{ \"userid\":1,\"groupid\":1,\"id\":1,\"email\":\"1\",\"nick\":\"1\",\"count\":5}"
+    @POST
+    @Path("get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getRequest(GetData in) {
+        if (in == null) return Response.status(400).build();
+        if (in.groupid != null || in.email != null || in.nick != null || in.count != null) 
+            return Response.status(Status.NOT_IMPLEMENTED).build();
+        
+        if (userReg.find(in.userid) == null) 
+            return Response.status(Status.UNAUTHORIZED).build();
+        
+        if (in.id != null) { // handle id manually
+            User u = userReg.find(in.id);
+            if (u != null) return Response.ok(gsonEWE.toJson(Arrays.asList(u))).build();
+            else return Response.status(Status.NO_CONTENT).build();
+        }
+        
+        // BEGINNING OF IMPL.
+        
         List<User> users = userReg.findAll();
         return Response.ok(gsonEWE.toJson(users)).build();
     }

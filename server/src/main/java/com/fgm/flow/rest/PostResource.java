@@ -9,10 +9,13 @@ import com.fgm.flow.core.Post;
 import com.fgm.flow.core.User;
 import com.fgm.flow.core.UserGroup;
 import com.fgm.flow.core.Membership;
+import com.fgm.flow.core.HiddenPost;
+import com.fgm.flow.core.HiddenPost.HiddenPostId;
 import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.UserRegistry;
 import com.fgm.flow.dao.UserGroupRegistry;
 import com.fgm.flow.dao.MembershipRegistry;
+import com.fgm.flow.dao.HiddenPostRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
@@ -60,6 +63,8 @@ public class PostResource {
     private UserGroupRegistry uGroupReg;
     @EJB
     private MembershipRegistry memshipReg;
+    @EJB
+    private HiddenPostRegistry hidePostReg;
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
@@ -227,9 +232,106 @@ public class PostResource {
 
         return Response.ok(gson.toJson(new PostDataOut(post))).build();
     }
+
+
+    static class PutData
+    {
+        public Integer userid;
+        public Integer id;
+        public String title;
+        public String text;
+        public String status;
+    }
     
+    static class PutDataOut
+    {
+        public Integer ownerid;
+        public Integer groupid;
+        public Integer id;
+        public String nick;
+        public String title;
+        public String text;
+        public Date time;
     
+        public PutDataOut(Post post)
+        {
+            this.ownerid = post.getPoster().getId();
+            this.groupid = post.getUserGroup().getId();
+            this.id = post.getId();
+            this.nick = post.getPoster().getNick();
+            this.title = post.getTitle();
+            this.text = post.getText();
+            this.time = post.getTime();            
+        }
+    }
     
+    // Only for hiding posts currently, could be expanded to updating posts
+    @PUT
+    @Path("put")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response putRequest(PutData inData)
+    {
+        // Most PutData fields are ignored currently
+        
+        // Respond with status 'bad request' if userid or (post) id haven't
+        // been supplied
+        if(inData.userid == null || inData.id == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        User user = userReg.find(inData.userid);
+        Post post = postReg.find(inData.id);
+        
+        // Respond with status 'not found' if user or post corresponding to
+        // supplied id:s do not exist
+        if(user == null || post == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        // A given status is interpreted as a request for changing the user's
+        // hiddenPost relationship to the given post
+        if(inData.status != null)
+        {
+            // Not allowed to change relationship between user and a post
+            // if the user is not member of the group that the post
+            // is associated with - WS responds with status 'bad request' if
+            // such a request is made. Might be a more fitting error response,
+            // but is it all that important? 
+            if(!user.isMemberOfGroup(post.getUserGroup()))
+            {
+                return Response.status(BAD_REQUEST).build();
+            }
+            
+            HiddenPostId hiddenPostId = new HiddenPostId(inData.userid, inData.id);
+            
+            switch(inData.status.toLowerCase())
+            {
+                case "hidden":
+                // Do nothing if the hidden relationship between the user 
+                // and the post exist already
+                if(hidePostReg.find(hiddenPostId) == null)
+                {
+                    hidePostReg.create(new HiddenPost(user, post));   
+                }
+                break;
+                case "visible":
+                // Do nothing if it is already the case that the hidden
+                // relationship between the user and the post does not exist
+                if(hidePostReg.find(hiddenPostId) != null)
+                {
+                    hidePostReg.delete(new HiddenPostId(inData.userid, inData.id));
+                }
+                break;
+                default:
+                return Response.status(BAD_REQUEST).build();
+            }
+        }
+        
+        return Response.ok(gson.toJson(new PutDataOut(post))).build();
+    }
     
     
     

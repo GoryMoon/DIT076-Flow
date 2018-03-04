@@ -83,12 +83,12 @@ public class UserGroupResource {
         public Integer status;
         public Date time;
     
-        public GetDataOut(UserGroup userGroup, User user)
+        public GetDataOut(Membership membership)
         {
-            this.id = userGroup.getId();
-            this.name = userGroup.getName();
-            this.status = user.getMembershipStatus(userGroup);
-            this.time = userGroup.getTime();
+            this.id = membership.getUserGroup().getId();
+            this.name = membership.getUserGroup().getName();
+            this.status = membership.getStatus();
+            this.time = membership.getTime();
         }
     }
     
@@ -114,12 +114,12 @@ public class UserGroupResource {
         }
         
         List<GetDataOut> getDataOutList = new ArrayList<>();
-        
-        for(UserGroup userGroup : user.getUserGroups())
+                
+        for(Membership membership : user.getMemberships())
         {
-            getDataOutList.add(new GetDataOut(userGroup, user));
+            getDataOutList.add(new GetDataOut(membership));
         }
-
+                
         // Sort the groups based on their names
         sort(getDataOutList, new GDOComparator());
         
@@ -134,7 +134,7 @@ public class UserGroupResource {
             return  lGDO.name.compareTo(rGDO.name);
         }
     }
-    
+
     static class PutData
     {
         public Integer userid;
@@ -156,7 +156,7 @@ public class UserGroupResource {
         }
     }
     
-    @POST
+    @PUT
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -164,7 +164,6 @@ public class UserGroupResource {
     {
         return Response.status(NOT_IMPLEMENTED).build();
     }
-    
     
     static class PostData
     {
@@ -219,6 +218,119 @@ public class UserGroupResource {
         memshipReg.create(membership);
         
         return Response.ok(gson.toJson(new PostDataOut(userGroup))).build();
+    }
+
+    static class JoinData
+    {
+        public Integer userid;
+        public Integer id;
+    }
+
+    static class JoinDataOut
+    {
+        public Integer userid;
+        public Integer id;
+        
+        public JoinDataOut(Membership membership)
+        {
+            this.userid = membership.getUser().getId();
+            this.id = membership.getUserGroup().getId();
+        }
+    }
+    
+    @POST
+    @Path("join")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response joinRequest(JoinData inData)
+    {
+        // Respond with status 'bad request' if userid and id haven't been
+        // supplied
+        if(inData.userid == null || inData.id == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        User user = userReg.find(inData.userid);
+        UserGroup userGroup = uGroupReg.find(inData.id);
+
+        // Respond with status 'not found' if the user and user group
+        // corresponding to the id:s supplied do not exist
+        if(user == null || userGroup == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        // Respond with status 'unauthorized' if the given user hasn't got the
+        // membership status 'invited' for the given user group
+        if(!user.isInvitedToGroup(userGroup))
+        {
+            return Response.status(UNAUTHORIZED).build();
+        }
+        
+        // Update the membership to status 'active member'
+        Membership membership = new Membership(user, userGroup, 1);
+        memshipReg.update(membership);
+        
+        return Response.ok(gson.toJson(new JoinDataOut(membership))).build();
+    }
+
+    static class InviteData
+    {
+        public Integer userid;
+        public Integer invitedid;
+        public Integer id;
+    }
+
+    static class InviteDataOut
+    {
+        public Integer invitedid;
+        public Integer id;
+        
+        public InviteDataOut(Membership membership)
+        {
+            this.invitedid = membership.getUser().getId();
+            this.id = membership.getUserGroup().getId();
+        }
+    }
+    
+    
+    @POST
+    @Path("invite")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response inviteRequest(InviteData inData)
+    {
+        // Respond with status 'bad request' if userid, invitedid 
+        // and id haven't been supplied
+        if(inData.userid == null || inData.userid == null || inData.id == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        User user = userReg.find(inData.userid);
+        User invited = userReg.find(inData.invitedid);
+        UserGroup userGroup = uGroupReg.find(inData.id);
+
+        // Respond with status 'not found' if the user, invited user 
+        // and user group corresponding to the id:s supplied do not exist
+        if(user == null || invited == null || userGroup == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        // Respond with status 'unauthorized' if the given user hasn't got the
+        // membership status 'owner' for the given user group
+        if(!user.isOwnerOfGroup(userGroup))
+        {
+            return Response.status(UNAUTHORIZED).build();
+        }
+        
+        // Create a membership with the 'invited' status for the invited
+        Membership membership = new Membership(invited, userGroup, 2);
+        memshipReg.create(membership);
+        
+        return Response.ok(gson.toJson(new InviteDataOut(membership))).build();
     }
     
     

@@ -90,7 +90,7 @@ public class AccountResource
         // Respond with status 'ok' and the ID if login was successful
         return Response.ok(gson.toJson(new LoginDataOut(user))).build();
     }
-    
+
     static class PutData 
     {
         public Integer userid;

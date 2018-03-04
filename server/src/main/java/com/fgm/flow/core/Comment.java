@@ -83,6 +83,16 @@ public class Comment implements Serializable
         time = new Date();
     }
     
+    public Comment(String text, Post post, User commenter)
+    {
+        this.id = 0; // Dummy value
+        this.text = text;
+        this.post = post;
+        this.commenter = commenter;
+        this.status = 0; // O = visible, currently. May get replaced with enums
+        timeStamp();
+    }
+    
     public Comment(String text, Post post, User commenter, int status)
     {
         this.id = 0; // Dummy value

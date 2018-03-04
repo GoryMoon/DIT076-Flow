@@ -45,6 +45,18 @@ public class AccountResource
         public String password;
     }
     
+        static class LoginDataOut
+    {
+        public Integer id; 
+        public String nick;
+        
+        public LoginDataOut(User user)
+        {
+            this.id = user.getId();
+            this.nick = user.getNick();
+        }
+    }
+    
     @POST
     @Path("login")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -54,7 +66,7 @@ public class AccountResource
         // Check user object
         if(inData.email == null || inData.password == null)
         {
-            return Response.status(400).build();
+            return Response.status(BAD_REQUEST).build();
         }
         
         List<User> usersWithEmail = userReg.findByEmail(inData.email);
@@ -76,13 +88,13 @@ public class AccountResource
         }        
         
         // Respond with status 'ok' and the ID if login was successful
-        return Response.ok(gson.toJson(user.getId())).build();
+        return Response.ok(gson.toJson(new LoginDataOut(user))).build();
     }
     
     static class PutData 
     {
-        public int userid;
-        public int id;
+        public Integer userid;
+        public Integer id;
         public String email;
         public String nick;
         public String password;
@@ -107,7 +119,7 @@ public class AccountResource
     
     static class RegisterDataOut
     {
-        public int id;
+        public Integer id;
         public String nick;
         
         public RegisterDataOut(User user)
@@ -143,11 +155,9 @@ public class AccountResource
         User user = new User(inData.email, inData.nick, inData.password);    
         
         userReg.create(user);
-        
-        RegisterDataOut outData = new RegisterDataOut(user);
 
         // Respond with status 'ok' and only the ID if the
         // nick did not already exists
-        return Response.ok(gson.toJson(outData)).build();
+        return Response.ok(gson.toJson(new RegisterDataOut(user))).build();
     }
 }

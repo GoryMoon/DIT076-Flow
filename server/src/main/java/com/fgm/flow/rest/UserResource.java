@@ -166,7 +166,7 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(GetData in) {
-        if (in == null) return Response.status(400).build();
+        if (in == null) return Response.status(BAD_REQUEST).build();
         if (in.groupid != null || in.email != null || in.nick != null || in.count != null) 
             return Response.status(NOT_IMPLEMENTED).build();
         

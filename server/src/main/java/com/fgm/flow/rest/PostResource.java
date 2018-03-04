@@ -108,12 +108,15 @@ public class PostResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(GetData inData)
     {
-        out.println("Hallo");
         // Most GetData fields are currentlty ignored 
-              
+        if(inData.userid == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
         User user = userReg.find(inData.userid);
         
-        // Return status 'bad request' if user does not exist
+        // Return status 'not found' if user does not exist
         if(user == null)
         {
             return Response.status(NOT_FOUND).build();
@@ -154,6 +157,7 @@ public class PostResource {
             }
         }
 
+        // Newest post first
         sort(GetDataOutList, new GDOComparator());
 
         return Response.ok(gson.toJson(GetDataOutList)).build();
@@ -195,12 +199,17 @@ public class PostResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(PostData inData)
-    {   
+    {
+        if(inData.userid == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
         User user = userReg.find(inData.userid);
         
         if(user == null)
         {
-            return Response.status(BAD_REQUEST).build();
+            return Response.status(NOT_FOUND).build();
         }
         
         UserGroup userGroup = uGroupReg.find(inData.groupid);
@@ -218,6 +227,12 @@ public class PostResource {
 
         return Response.ok(gson.toJson(new PostDataOut(post))).build();
     }
+    
+    
+    
+    
+    
+    
     
     
     

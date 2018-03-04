@@ -38,6 +38,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.*;
 import java.util.Date;
+import java.util.Comparator;
+import static java.util.Collections.sort;
 
 /**
  *
@@ -135,7 +137,19 @@ public class CommentResource {
             getDataOutList.add(new GetDataOut(comment));
         }
         
+        sort(getDataOutList, new GDOComparator());
+        
         return Response.ok(gson.toJson(getDataOutList)).build();
+    }
+    
+    private class GDOComparator implements Comparator<GetDataOut>
+    {
+        @Override
+        public int compare(GetDataOut lGDO, GetDataOut rGDO)
+        {
+            // Order inverted by switch of lPost and rPost
+            return  rGDO.time.compareTo(lGDO.time);
+        }
     }
     
     static class PutData
@@ -244,12 +258,38 @@ public class CommentResource {
     @Path("post")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response createRequest(PutData inData)
+    public Response postRequest(PostData inData)
     {
-        // Most PutData fields are ignored
+        if(inData.userid == null || inData.userid == null
+                || inData.text == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
         
-        return Response.status(NOT_IMPLEMENTED).build();
+        Post post = postReg.find(inData.postid);
+        User user = userReg.find(inData.userid);
+
+        // Check that the post and commenter exist
+        if(post == null ||  user == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+
+        // Check if the user is a member of the group that the post
+        // the user wants to comment is associated with
+        if(!user.isMemberOfGroup(post.getUserGroup()))
+        {
+             return Response.status(UNAUTHORIZED).build();           
+        }
+        
+        Comment comment = new Comment(inData.text, post, user);
+
+        cmntReg.create(comment);
+
+        return Response.ok(gson.toJson(new PostDataOut(comment))).build();
     }
+    
+    
     
     
     
@@ -265,7 +305,8 @@ public class CommentResource {
             @FormParam("postId") int postId,
             @FormParam("commenterId") int commenterId,
             @FormParam("status") int status
-    ) {        
+    ) 
+    {        
         Post post = postReg.find(postId);
         User commenter = userReg.find(commenterId);
 

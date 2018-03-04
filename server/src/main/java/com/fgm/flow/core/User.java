@@ -167,6 +167,39 @@ public class User implements Serializable
         return false;
     }
     
+    public Integer getMembershipStatus(UserGroup userGroup)
+    {
+        if(userGroup == null)
+        {
+            return null;
+        }
+        
+        for(Membership membership : memberships)
+        {
+            if(membership.getUserGroup().equals(userGroup))
+            {
+                return membership.getStatus();
+                
+            }
+        }
+        
+        // Return null if the user doesn't have a membership status in the
+        // given user group
+        return null;
+    }
+    
+    public List<UserGroup> getUserGroups()
+    {
+        List<UserGroup> userGroupList = new ArrayList<>(); 
+        
+        for(Membership membership : memberships)
+        {
+            userGroupList.add(membership.getUserGroup());
+        }
+        
+        return userGroupList;
+    }
+    
     public User(String email, String nick, String password)
     {
         this.id = 0;

@@ -31,6 +31,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources)
     {
+        resources.add(com.fgm.flow.rest.AccountResource.class);
         resources.add(com.fgm.flow.rest.CORSFilter.class);
         resources.add(com.fgm.flow.rest.CommentResource.class);
         resources.add(com.fgm.flow.rest.MembershipResource.class);

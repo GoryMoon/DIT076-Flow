@@ -36,6 +36,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import static javax.ws.rs.core.Response.Status.*;
+import java.util.Date;
 
 /**
  *
@@ -61,6 +63,200 @@ public class CommentResource {
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
 
+    
+    static class GetData
+    {
+        public Integer userid;
+        public Integer ownerid;
+        public Integer postid;
+        public String nick;
+        public Integer id;
+        public String text;
+        public Date before;
+        public Date after;
+        public Integer count;
+    }
+
+    static class GetDataOut
+    {
+        public Integer ownerid;
+        public Integer postid;
+        public Integer id;
+        public String nick;
+        public String text;
+        public Date time;
+    
+        public GetDataOut(Comment comment)
+        {
+            this.ownerid = comment.getCommenter().getId();
+            this.postid = comment.getPost().getId();
+            this.id = comment.getId();
+            this.nick = comment.getCommenter().getNick();
+            this.text = comment.getText();
+            this.time = comment.getTime();
+        }
+    }
+        
+    @POST
+    @Path("get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getRequest(GetData inData)
+    {
+        // Most GetData fields are ignored currently
+        
+        if(inData.postid == null || inData.userid == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        Post post =  postReg.find(inData.postid);
+        User user = userReg.find(inData.userid);
+        
+        if(post == null || user == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        if(!user.isMemberOfGroup(post.getUserGroup()))
+        {
+             return Response.status(UNAUTHORIZED).build();           
+        }
+        
+        List<GetDataOut> getDataOutList = new ArrayList<>();
+        
+        for(Comment comment : post.getComments())
+        {
+            if(comment.getStatus() == 1)
+            {
+                comment.setText("Hidden");
+            }
+            
+            getDataOutList.add(new GetDataOut(comment));
+        }
+        
+        return Response.ok(gson.toJson(getDataOutList)).build();
+    }
+    
+    static class PutData
+    {
+        public Integer userid;
+        public Integer id;
+        public String text;
+        public String status;
+    }
+
+    static class PutDataOut
+    {
+        public Integer ownerid;
+        public Integer postid;
+        public Integer id;
+        public String nick;
+        public String text;
+        public Date time;
+    
+        public PutDataOut(Comment comment)
+        {
+            this.ownerid = comment.getCommenter().getId();
+            this.postid = comment.getPost().getId();
+            this.id = comment.getId();
+            this.nick = comment.getCommenter().getNick();
+            this.text = comment.getText();
+            this.time = comment.getTime();
+        }
+    }
+    
+    @POST
+    @Path("put")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response putRequest(PutData inData)
+    {
+        // Most PutData fields are ignored
+        
+        if(inData.id == null || inData.userid == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        Comment comment =  cmntReg.find(inData.id);
+        User user = userReg.find(inData.userid);
+        
+        if(comment == null || user == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        if(!comment.getCommenter().equals(user))
+        {
+             return Response.status(UNAUTHORIZED).build();           
+        }
+        
+        if(inData.status != null)
+        {
+            switch(inData.status.toLowerCase())
+            {
+                case "hidden":
+                comment.setStatus(1);
+                cmntReg.update(comment);
+                break;
+                case "visible":
+                comment.setStatus(0);
+                cmntReg.update(comment);
+                break;
+                default:
+                return Response.status(BAD_REQUEST).build();
+            }
+        }
+         
+        return Response.ok(gson.toJson(new PutDataOut(comment))).build();
+    }
+    
+    static class PostData
+    {
+        public Integer userid;
+        public Integer postid;
+        public String text;
+        public String status;
+    }
+
+    static class PostDataOut
+    {
+        public Integer ownerid;
+        public Integer postid;
+        public Integer id;
+        public String nick;
+        public String text;
+        public Date time;
+    
+        public PostDataOut(Comment comment)
+        {
+            this.ownerid = comment.getCommenter().getId();
+            this.postid = comment.getPost().getId();
+            this.id = comment.getId();
+            this.nick = comment.getCommenter().getNick();
+            this.text = comment.getText();
+            this.time = comment.getTime();
+        }
+    }
+    
+    @POST
+    @Path("post")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response createRequest(PutData inData)
+    {
+        // Most PutData fields are ignored
+        
+        return Response.status(NOT_IMPLEMENTED).build();
+    }
+    
+    
+    
+    
+    
+    
+    
     @POST
     @Path("create")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
@@ -91,8 +287,6 @@ public class CommentResource {
                 Comment comment = new Comment(text, post, commenter, status);
 
                 cmntReg.create(comment);
-
-                post.addComment(comment);
 
                 URI commentUri = uriInfo
                         .getAbsolutePathBuilder()
@@ -144,7 +338,6 @@ public class CommentResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll() {
-        out.println("In comment GET");
         List<Comment> comments = cmntReg.findAll();
 
         return Response.ok(gsonEWE.toJson(comments)).build();

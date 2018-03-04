@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import static java.util.Collections.sort;
 import java.util.Comparator;
 import static java.lang.System.out;
@@ -37,6 +38,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import static javax.ws.rs.core.Response.Status.*;
 
 /**
  *
@@ -62,25 +64,162 @@ public class PostResource {
     
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
-
-    /*
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(Post post)
+    
+    static class GetData
     {
-        post.timeStamp();
+        public Integer userid;
+        public Integer ownerid;
+        public Integer groupid;
+        public String nick;
+        public Integer id;
+        public String title;
+        public String text;
+        public Date before;
+        public Date after;
+        public Integer count;
+    }
+    
+    static class GetDataOut
+    {
+        public Integer ownerid;
+        public Integer groupid;
+        public Integer id;
+        public String nick;
+        public String title;
+        public String text;
+        public Date time;
+    
+        public GetDataOut(Post post)
+        {
+            this.ownerid = post.getPoster().getId();
+            this.groupid = post.getUserGroup().getId();
+            this.id = post.getId();
+            this.nick = post.getPoster().getNick();
+            this.title = post.getTitle();
+            this.text = post.getText();
+            this.time = post.getTime();            
+        }
+    }
+
+    // For retrieving posts
+    @POST
+    @Path("get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getRequest(GetData inData)
+    {
+        out.println("Hallo");
+        // Most GetData fields are currentlty ignored 
+              
+        User user = userReg.find(inData.userid);
         
-        User poster = postReg.find(post.getPoster());
-        product.setUser(user);
+        // Return status 'bad request' if user does not exist
+        if(user == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        //List<Post> posts = new ArrayList<>();
+        List<GetDataOut> GetDataOutList = new ArrayList<>();
+        
+        // Get posts for all groups the user is an owner of active member of
+        if(inData.groupid == null)
+        {
+            for(Membership memship : user.getMemberships())
+            {
+                if(memship.getStatus() == 0 || memship.getStatus() == 1)
+                {
+                    for(Post post : memship.getUserGroup().getPosts())
+                    {
+                        GetDataOutList.add(new GetDataOut(post));
+                    }
+                }
+            }
+        }
+        else
+        {           
+            UserGroup userGroup = uGroupReg.find(inData.groupid);
+            if(userGroup == null)
+            {
+                return Response.status(NOT_FOUND).build();
+            }
+            
+            if(!user.isMemberOfGroup(userGroup))
+            {
+                return Response.status(UNAUTHORIZED).build();
+            }
+            for(Post post : userGroup.getPosts())
+            {
+                GetDataOutList.add(new GetDataOut(post));
+            }
+        }
+
+        sort(GetDataOutList, new GDOComparator());
+
+        return Response.ok(gson.toJson(GetDataOutList)).build();
+    }
+    
+    static class PostData
+    {
+        public Integer userid;
+        public Integer groupid;
+        public String title;
+        public String text;
+    }
+    
+    static class PostDataOut
+    {
+        public Integer ownerid;
+        public Integer groupid;
+        public Integer id;
+        public String nick;
+        public String title;
+        public String text;
+        public Date time;
+    
+        PostDataOut(Post post)
+        {
+            this.ownerid = post.getPoster().getId();
+            this.groupid = post.getUserGroup().getId();
+            this.id = post.getId();
+            this.nick = post.getPoster().getNick();
+            this.title = post.getTitle();
+            this.text = post.getText();
+            this.time = post.getTime(); 
+        }
+    }
+    
+    // For creating posts
+    @POST
+    @Path("post")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getRequest(PostData inData)
+    {   
+        User user = userReg.find(inData.userid);
+        
+        if(user == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        UserGroup userGroup = uGroupReg.find(inData.groupid);
         
         
+        
+        if(!user.isMemberOfGroup(userGroup))
+        {
+             return Response.status(UNAUTHORIZED).build();           
+        }
+
+        Post post = new Post(inData.title, inData.text, userGroup, user);
+
         postReg.create(post);
 
-        // Respond with status 'ok' and only the ID if the
-        // nick did not already exist
-        return Response.ok().build();
+        return Response.ok(gson.toJson(new PostDataOut(post))).build();
     }
-    */
+    
+    
     
     @POST
     @Path("create")
@@ -189,12 +328,22 @@ public class PostResource {
                 posts.add(post);
             }
         }
+
+
         
         sort(posts, new postComparator());
-        
-        
-        
+
         return Response.ok(gsonEWE.toJson(posts)).build();
+    }
+    
+    private class GDOComparator implements Comparator<GetDataOut>
+    {
+        @Override
+        public int compare(GetDataOut lGDO, GetDataOut rGDO)
+        {
+            // Order inverted by switch of lPost and rPost
+            return  rGDO.time.compareTo(lGDO.time);
+        }
     }
     
     private class postComparator implements Comparator<Post>
@@ -202,7 +351,8 @@ public class PostResource {
         @Override
         public int compare(Post lPost, Post rPost)
         {
-            return  lPost.getTime().compareTo(rPost.getTime());
+            // Order inverted by switch of lPost and rPost
+            return rPost.getTime().compareTo(lPost.getTime());
         }
     }
    

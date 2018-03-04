@@ -85,16 +85,11 @@ public class Post implements Serializable
     private List<Comment> comments;
     
     /*
-    public List<Post> getPosts()
-    {
-        return posts;
-    }
-    */
-    
     public void addComment(Comment comment)
     {
         comments.add(comment);
     }
+    */
     
     public Post(String title, String text, UserGroup userGroup, User poster)
     {

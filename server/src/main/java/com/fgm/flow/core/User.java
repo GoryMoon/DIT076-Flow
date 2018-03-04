@@ -114,7 +114,9 @@ public class User implements Serializable
         
         for(Membership membership : memberships)
         {
-            if(membership.getUserGroup().equals(userGroup))
+            if(membership.getUserGroup().equals(userGroup)
+                && (membership.getStatus() == 0 || membership.getStatus() == 1)        
+            )
             {
                 return true;
             }
@@ -165,11 +167,6 @@ public class User implements Serializable
         return false;
     }
     
-    public final void timeStamp()
-    {
-        time = new Date();
-    }
-    
     public User(String email, String nick, String password)
     {
         this.id = 0;
@@ -177,7 +174,18 @@ public class User implements Serializable
         this.nick = nick;
         this.password = password;
         this.posts = new ArrayList<>();
-        //this.memberships = new ArrayList<>();
-        timeStamp();
+        this.memberships = new ArrayList<>();
+        this.time = new Date();
+    }
+    
+    public User(User user)
+    {
+        this.id = 0;
+        this.email = user.getEmail();
+        this.nick = user.getNick();
+        this.password = user.getPassword();
+        this.posts = new ArrayList<>();
+        this.memberships = new ArrayList<>();
+        this.time = new Date();
     }
 }

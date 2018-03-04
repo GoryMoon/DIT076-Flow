@@ -28,7 +28,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import static javax.ws.rs.core.Response.Status.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
@@ -53,7 +53,6 @@ public class UserResource {
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
     
-
     @POST
     @Path("register")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -62,7 +61,7 @@ public class UserResource {
         // Check user object
         if(user.getEmail() == null || user.getNick() == null  || user.getPassword() == null)
         {
-            return Response.status(400).build();
+            return Response.status(BAD_REQUEST).build();
         }
         
         List<User> usersWithNick = userReg.findByNick(user.getNick());
@@ -71,15 +70,16 @@ public class UserResource {
         // Respond with status 'conflict' if the nick already exists
         if(usersWithNick.size() != 0 || usersWithEmail.size() != 0)
         {
-            return Response.status(409).build();
+            return Response.status(CONFLICT).build();
         }
 
-        user.timeStamp();
-        userReg.create(user);
+        User newUser = new User(user);
+        
+        userReg.create(newUser);
 
         // Respond with status 'ok' and only the ID if the
         // nick did not already exist
-        return Response.ok(gson.toJson(user.getId())).build();
+        return Response.ok(gson.toJson(newUser.getId())).build();
     }
     
     @POST
@@ -95,17 +95,20 @@ public class UserResource {
         
         List<User> usersWithEmail = userReg.findByEmail(userEmailAndPass.getEmail());
         
-        // Respond with status 'conflict' if the nick already exists
+        // Respond with status 'internal server error' if more than one use
+        // is registered with the same email - shouldn't be possible
         if(usersWithEmail.size() != 1)
         {
-            return Response.status(403).build();
+            return Response.status(INTERNAL_SERVER_ERROR).build();
         }
         
         User user = usersWithEmail.get(0);
         
+        // Respond woth status 'unauthorized' if an incorrect password has
+        // been supplied for the user
         if(!user.getPassword().equals(userEmailAndPass.getPassword()))
         {
-            return Response.status(403).build();           
+            return Response.status(UNAUTHORIZED).build();           
         }        
         
         // Respond with status 'ok' and the ID if login was successful
@@ -148,7 +151,7 @@ public class UserResource {
     
     
     @XmlRootElement
-    public static class GetData {
+    static class GetData {
         public Integer userid;
         public Integer groupid;
         public Integer id;
@@ -165,15 +168,15 @@ public class UserResource {
     public Response getRequest(GetData in) {
         if (in == null) return Response.status(400).build();
         if (in.groupid != null || in.email != null || in.nick != null || in.count != null) 
-            return Response.status(Status.NOT_IMPLEMENTED).build();
+            return Response.status(NOT_IMPLEMENTED).build();
         
         if (userReg.find(in.userid) == null) 
-            return Response.status(Status.UNAUTHORIZED).build();
+            return Response.status(UNAUTHORIZED).build();
         
         if (in.id != null) { // handle id manually
             User u = userReg.find(in.id);
             if (u != null) return Response.ok(gsonEWE.toJson(Arrays.asList(u))).build();
-            else return Response.status(Status.NO_CONTENT).build();
+            else return Response.status(NO_CONTENT).build();
         }
         
         // BEGINNING OF IMPL.

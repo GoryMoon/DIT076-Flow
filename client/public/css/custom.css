@@ -17,6 +17,15 @@
     background-color: rgba(0, 0, 0, 0.03);
 }
 
+.status-upload input {
+  width: 100%;
+  font-size: 1.3rem;
+  padding: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  outline:none;
+}
+
 .droptext {
     text-align: right;
 }
@@ -123,6 +132,9 @@
 }
 
 
+.pointer {
+    cursor: pointer;
+}
 
 .show_hide-comment {
     cursor: pointer;

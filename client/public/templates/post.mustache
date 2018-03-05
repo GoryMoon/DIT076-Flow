@@ -1,4 +1,4 @@
-<div class="card" data-postid="{{id}}">
+<div id="postid-{{id}}" class="card" data-postid="{{id}}">
   <div class="card-header">
     <div class="clearfix">
       <img src="img/profile.png" class="float-left profile-img rounded-circle" alt="Profile pic">
@@ -6,13 +6,13 @@
         <div class="clearfix">
           <div class="float-left">
             <h5>Placeholder{{name}}</h5>
-            <small class="text-muted" title="{{raw_time}}" data-toggle="tooltip" data-placement="bottom">{{time}}</small>
+            <small class="text-muted live-time" title="{{tooltip_time}}" data-rawtime="{{raw_time}}" data-toggle="tooltip" data-placement="bottom">{{time}}</small>
           </div>
           <div class="droptext float-right">
             <div class="dropdown">
               <a class="dropdown-toggle" id="postDrop{{postid}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
               <div class="dropdown-menu" aria-labelledby="postDrop{{postid}}">
-                <a id="post_hide_button" class="dropdown-item" href="#">Hide</a>
+                <a id="post_hide_button" class="pointer dropdown-item">Hide</a>
               </div>
             </div>
             <span class="text-muted">Placeholder{{groupname}}</span>

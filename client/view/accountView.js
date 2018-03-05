@@ -8,7 +8,7 @@ EVENT_ACCOUNT_REGISTER,
 EVENT_ACCOUNT_LOGOUT,
 eventBus as eB
 } from "../util/eventBus.js"
-import { setTitle } from "../util/general.js"
+import { setTitle, getTemplate } from "../util/general.js"
 import Mustache from 'mustache'
 
 class AccountView {
@@ -35,48 +35,30 @@ class AccountView {
 
     accountViewLogin(ctx) {
         setTitle('Login');
-        //TODO optimize with saving of templates?
-        $.get('/templates/login.mustache', function(template) {
-            var rendered = Mustache.render(template);
-            $('#content').html(rendered);
-        });
+        getTemplate('/templates/login.mustache', (template) => $('#content').html(Mustache.render(template)));
     }
 
     accountViewRegister(ctx) {
         setTitle('Register');
-        $.get('/templates/register.mustache', function(template) {
-            var rendered = Mustache.render(template);
-            $('#content').html(rendered);
-        });
+        getTemplate('/templates/register.mustache', (template) => $('#content').html(Mustache.render(template)));
     }
 
-    accountLogin(data) { // NOT TESTED
-        console.log("This is accountLogin inside the accountView.");
-        store.set('user', data);
-        this.loadPage();
-        page('/');
+    accountLogin(data) {
+        this.refreshHeader();
     }
 
-    accountRegister(data) { // NOT TESTED
-        console.log("This is accountRegister inside the accountView.");
-   //     this.loadPage();
-        page('/login'); // why the fuck does '/' NOT redirect to the starting page!
+    accountRegister(data) {
+        this.refreshHeader();
     }
 
-    accountLogout(data) { // NOT TESTED
-        
-        store.remove('user'); // SHOULD BE MOVED TO VIEW
-        this.loadPage();
-        page('/'); // login is called automatically on reload of login, so call simple reload of page to automatically be directed to login
+    accountLogout(data) {
+        this.refreshHeader();
     }
 
-    loadPage() {
+    refreshHeader() {
         var user = store.get('user');
         if (user !== undefined) {
-            $.get('/templates/nav-user.mustache', function(template) {
-                var rendered = Mustache.render(template, user);
-                $(rendered).insertAfter('#nav-user');
-            });
+            getTemplate('/templates/nav-user.mustache', (template) => $(Mustache.render(template, user)).insertAfter('#nav-user'));
         } else {
             $("#nav-group").remove();
             $("#nav-drop").remove();
@@ -86,4 +68,4 @@ class AccountView {
 
 const accountView = new AccountView();
 eB.register(accountView);
-accountView.loadPage();
+accountView.refreshHeader();

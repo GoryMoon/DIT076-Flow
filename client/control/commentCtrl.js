@@ -24,20 +24,17 @@ COMMENT_HIDE_BUTTON
 } from "../util/general.js"
 
 class CommentCtrl {
-    retrieve(postid) { // NOT TESTED
+    retrieve(postid) {
         let getCommentData = {userid: null, postid: null, from: null, count: null};
-        //commentRetrieveData.userid = getData(ACCOUNT_ID);
         getCommentData.postid = postid;
-        //commentRetrieveData.from = getData(COMMENT_FILTER_TIME);
-        //commentRetrieveData.count = getData(COMMENT_FILTER_COUNT);
-        server.rpcGetComments(getCommentData, data => { return eB.notify(EVENT_COMMENT_RETRIEVE, data); });
+        server.rpcGetComment(getCommentData, data => { return eB.notify(EVENT_COMMENT_RETRIEVE, { id: postid, comments: data}); });
     }
     
-    send() { // NOT TESTED
+    send(postid, text) { // NOT TESTED
         let postCommentData = {userid: null, postid: null, commenttext: null};
-        postCommentData.userid = getData(ACCOUNT_ID);
-        postCommentData.postid = getData(COMMENT_POST_ID);
-        postCommentData.commenttext = getData(COMMENT_SEND_TEXT);
+        postCommentData.userid = store.get('user').id;
+        postCommentData.postid = postid;
+        postCommentData.commenttext = text;
         server.rpcPostComment(postCommentData, data => { return eB.notify(EVENT_COMMENT_SEND, data); });
     }
     
@@ -49,11 +46,7 @@ class CommentCtrl {
     }
 }
 
-const commentCtrl = new CommentCtrl();
-
-export function retriveComments(postid) {
-    commentCtrl.retrieve(postid);
-}
+export const commentCtrl = new CommentCtrl();
 
 $(document).ready(function () {
     $(document).on("click", COMMENT_SEND_BUTTON, commentCtrl.send);

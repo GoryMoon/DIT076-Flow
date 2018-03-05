@@ -13,7 +13,7 @@ eventBus as eB
 import {
 getInput,
 hasUser,
-ACCOUNT_ID,
+validate,
 POST_FILTER_GROUP,
 POST_FILTER_TIME,
 POST_FILTER_COUNT,
@@ -27,31 +27,36 @@ POST_HIDE_BUTTON
 } from "../util/general.js"
 
 class PostCtrl {
-    retrieve() { // NOT TESTED
+    retrieve() {
         if (hasUser()) {
             eB.notify(EVENT_POST_VIEW);
             let getPostData = {userid: null, group: null, from: null, count: null}; // UNUSED AND DOES NOT MATCH NEW SERVER CLIENT INTERACTION DRAFT
             getPostData.userid = store.get('user').id;
-            getPostData.group = getInput(POST_FILTER_GROUP);
+            /*getPostData.group = getInput(POST_FILTER_GROUP);
             getPostData.from = getInput(POST_FILTER_TIME);
-            getPostData.count = getInput(POST_FILTER_COUNT);
-            //eB.notify(EVENT_POST_RETRIEVE, [{groupid: 1, groupname: "Global", userid: 42, usernick: "Gustaf", posttitle: "Test", posttime: 14551515, postid: 4, posttext: "This is a test"}, {groupid: 1, groupname: "Global", userid: 42, usernick: "Gustaf", posttitle: "Test", posttime: 14551515, postid: 5, posttext: "This is a test"}]);
+            getPostData.count = getInput(POST_FILTER_COUNT);*/
             server.rpcGetPost(getPostData, data => { return eB.notify(EVENT_POST_RETRIEVE, data); });
         }
     }
     
     send() { // NOT TESTED
-        let postPostData = {userid: null, groupid: null, posttitle: null, posttext: null};
-        postPostData.userid = getInput(ACCOUNT_ID);
-        postPostData.groupid = getInput(POST_SEND_GROUP_ID);
-        postPostData.posttitle = getInput(POST_SEND_TITLE);
-        postPostData.posttext = getInput(POST_SEND_TEXT);
-        server.rpcPostPost(postPostData, data => { return eB.notify(EVENT_POST_SEND, data); });
+        if (validate(POST_SEND_TITLE, POST_SEND_TEXT)) {
+            event.preventDefault();
+            let postPostData = {posterId: null, userGroupId: null, title: null, text: null};
+            postPostData.posterId = store.get('user').id;
+            postPostData.userGroupId = 0;//getInput(POST_SEND_GROUP_ID);
+            postPostData.title = getInput(POST_SEND_TITLE);
+            postPostData.text = getInput(POST_SEND_TEXT);
+            server.rpcPostPost(postPostData, data => { 
+                eB.notify(EVENT_POST_SEND, data); 
+                page('/');
+            });
+        }
     }
     
     hide() { // NOT TESTED
         let putPostData = {userid: null, postid: null};
-        putPostData.userid = getInput(ACCOUNT_ID);
+        putPostData.userid = store.get('user').id;
         putPostData.postid = getInput(POST_HIDE_ID);
         server.rpcPutPost(putPostData, data => { return eB.notify(EVENT_POST_HIDE, data); });
     }

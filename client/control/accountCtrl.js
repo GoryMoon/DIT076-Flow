@@ -20,7 +20,6 @@ ACCOUNT_REGISTER_EMAIL,
 ACCOUNT_REGISTER_NICK,
 ACCOUNT_REGISTER_PASSWORD,
 ACCOUNT_REGISTER_PASSWORD_CONFIRM,
-ACCOUNT_ID,
 ACCOUNT_LOGIN_BUTTON,
 ACCOUNT_REGISTER_BUTTON,
 ACCOUNT_LOGOUT_BUTTON
@@ -43,7 +42,12 @@ class AccountCtrl {
             accountRegisterData.email = getInput(ACCOUNT_REGISTER_EMAIL);
             accountRegisterData.nick = getInput(ACCOUNT_REGISTER_NICK);
             accountRegisterData.password = getInput(ACCOUNT_REGISTER_PASSWORD);
-            server.rpcRegisterAccount(accountRegisterData, data => { return eB.notify(EVENT_ACCOUNT_REGISTER, data); });
+            server.rpcRegisterAccount(accountRegisterData, data => { 
+                //TODO change when proper user info is sent
+                store.set('user', {id: parseInt(data)});
+                eB.notify(EVENT_ACCOUNT_REGISTER, data); 
+                page('/');
+            });
         }
     }
 
@@ -53,8 +57,11 @@ class AccountCtrl {
             let accountLoginData = {email: null, password: null};
             accountLoginData.email = getInput(ACCOUNT_LOGIN_EMAIL);
             accountLoginData.password = getInput(ACCOUNT_LOGIN_PASSWORD);
-            server.rpcLoginAccount(accountLoginData, data => { 
-                return eB.notify(EVENT_ACCOUNT_LOGIN, data); 
+            server.rpcLoginAccount(accountLoginData, data => {
+                //TODO change when proper user info is sent
+                store.set('user', {id: parseInt(data)});
+                eB.notify(EVENT_ACCOUNT_LOGIN, data); 
+                page('/');
             });
         }
     }
@@ -64,7 +71,9 @@ class AccountCtrl {
         //let accountLogoutData = {id: null};
         //accountLogoutData.id = getInput(ACCOUNT_ID);
 //        server.rpcLoginAccount(accountLogoutData, data => { return eB.notify("ACCOUNT_LOGOUT", data); });
+        store.remove('user');
         eB.notify(EVENT_ACCOUNT_LOGOUT); // Logout is client-side
+        page('/');
     }
 }
 

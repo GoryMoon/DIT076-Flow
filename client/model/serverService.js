@@ -78,10 +78,9 @@ class ServerService {
         this.sendingFunc(postData, "rpcPostPost");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "post/create/",
-            data: JSON.stringify(postData),
+            url: this.serverUrl + "post/create?title=" + postData.title + "&text=" + postData.text + "&userGroupId=" + postData.userGroupId + "&posterId=" + postData.posterId,
             method: "POST",
-            contentType: "application/json; charset=utf-8",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
             crossDomain: true,
             context: this
         }).done(data => {
@@ -114,16 +113,14 @@ class ServerService {
         this.sendingFunc(commentFilterData, "rpcGetComment");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comment/",
-            data: JSON.stringify(commentFilterData),
-            method: "GET",
-            contentType: "application/json; charset=utf-8",
+            url: this.serverUrl + "comment?postId=" + commentFilterData.postid,
+            method: "POST",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
             crossDomain: true,
-            context: this
         }).done(data => {
             this.successFunc(data, "rpcRetrieveComments");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail((msg, ajaxOpt, thrownError) => { 
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcRetrieveComments"); 
         });
     }

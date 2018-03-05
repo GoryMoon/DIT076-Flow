@@ -1,5 +1,8 @@
 "use strict";
 
+import Mustache from 'mustache'
+import moment from 'moment';
+
 export function getInput(s) {
     let x = $(s).val();
     return (x === "" ? null : x);
@@ -19,6 +22,45 @@ export function validate() {
             return false;
     };
     return true;
+}
+
+export function getMomentTime(data) {
+    return moment(data.toLowerCase(), "MMM DD, YYYY hh:mm:ss a");
+}
+
+export function getFancyTimeData(data) {
+    let time = data.time;
+    data.raw_time = time;
+    time = getMomentTime(time);
+    data.tooltip_time = time.format("ddd DD MMM YYYY HH:mm");
+    time = getFancyTime(time);
+    data.time = time;
+    return data;
+}
+
+export function getFancyTime(time) {
+    let yesterday = moment().subtract(1, 'd');
+    if (time.isSameOrAfter(yesterday)) {
+        time = time.fromNow();
+    } else {
+        time = time.format("DD MMM YYYY HH:mm");
+    }
+    return time;
+}
+
+var templateCache = {};
+
+export function getTemplate(template, callback) {
+    let t = templateCache[template];
+    if (t == undefined) {
+        $.get(template, function(temp) {
+            Mustache.parse(temp);
+            templateCache[template] = temp;
+            callback(temp);
+        });
+    } else {
+       callback(t);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

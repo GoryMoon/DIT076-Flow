@@ -4,9 +4,9 @@ function loginMiddleware(ctx) {
     let path = location.pathname;
     let user = store.get('user');
 
-    if (user === undefined && !(path.startsWith('/login') || path.startsWith('/register'))) {
+    if (user === undefined && !(ctx.path.startsWith('/login') || ctx.path.startsWith('/register'))) {
         page.redirect('/login');
-    } else if (user !== undefined && (path.startsWith('/login') || path.startsWith('/register'))) {
+    } else if (user !== undefined && (ctx.path.startsWith('/login') || ctx.path.startsWith('/register'))) {
         page.redirect('/');
     }
 }

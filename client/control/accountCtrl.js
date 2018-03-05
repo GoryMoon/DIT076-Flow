@@ -48,12 +48,7 @@ class AccountCtrl {
             let accountLoginData = {email: null, password: null};
             accountLoginData.email = getInput(ACCOUNT_LOGIN_EMAIL);
             accountLoginData.password = getInput(ACCOUNT_LOGIN_PASSWORD);
-            server.rpcLoginAccount(accountLoginData, data => {
-                //TODO change when proper user info is sent
-                store.set('user', {id: parseInt(data)});
-                eB.notify(EVENT_ACCOUNT_LOGIN, data); 
-                page('/');
-            });
+            server.rpcLoginAccount(accountLoginData, data => { eB.notify(EVENT_ACCOUNT_LOGIN, data); });
         }
     }
     
@@ -71,12 +66,7 @@ class AccountCtrl {
             accountRegisterData.email = getInput(ACCOUNT_REGISTER_EMAIL);
             accountRegisterData.nick = getInput(ACCOUNT_REGISTER_NICK);
             accountRegisterData.password = getInput(ACCOUNT_REGISTER_PASSWORD);
-            server.rpcRegisterAccount(accountRegisterData, data => { 
-                //TODO change when proper user info is sent
-                store.set('user', {id: parseInt(data)});
-                eB.notify(EVENT_ACCOUNT_REGISTER, data); 
-                page('/');
-            });
+            server.rpcRegisterAccount(accountRegisterData, data => { eB.notify(EVENT_ACCOUNT_REGISTER, data); });
         }
     }
     
@@ -85,9 +75,8 @@ class AccountCtrl {
         //let accountLogoutData = {id: null};
         //accountLogoutData.id = getInput(ACCOUNT_ID);
 //        server.rpcLoginAccount(accountLogoutData, data => { return eB.notify("ACCOUNT_LOGOUT", data); });
-        store.remove('user');
+
         eB.notify(EVENT_ACCOUNT_LOGOUT); // Logout is client-side
-        page('/');
     }
 }
 

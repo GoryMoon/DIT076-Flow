@@ -52,21 +52,15 @@ class AccountView {
     }
 
     accountLogin(data) {
-        store.set('user', {id: parseInt(data.id)});
-        store.set('user', {nick: data.nick});
         this.refreshHeader();
-        page('/');
     }
 
     accountRegister(data) {
         this.refreshHeader();
-        page('/');
     }
 
     accountLogout(data) {        
-        store.remove('user');
         this.refreshHeader();
-        page('/');
     }
     
     accountGet(data) {

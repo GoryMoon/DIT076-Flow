@@ -39,13 +39,13 @@ public class AccountResource
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
     
-    static class LoginData 
+    public static class LoginData 
     {
         public String email; 
         public String password;
     }
     
-        static class LoginDataOut
+    public static class LoginDataOut
     {
         public Integer id; 
         public String nick;
@@ -91,7 +91,7 @@ public class AccountResource
         return Response.ok(gson.toJson(new LoginDataOut(user))).build();
     }
 
-    static class PutData 
+    public static class PutData 
     {
         public Integer userid;
         public Integer id;
@@ -110,14 +110,14 @@ public class AccountResource
         return Response.status(NOT_IMPLEMENTED).build();
     }
     
-    static class RegisterData 
+    public static class RegisterData 
     {
         public String email;
         public String nick;
         public String password;
     }
     
-    static class RegisterDataOut
+    public static class RegisterDataOut
     {
         public Integer id;
         public String nick;

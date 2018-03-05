@@ -5,17 +5,17 @@
       <div class="user-info">
         <div class="clearfix">
           <div class="float-left">
-            <h5>Placeholder{{name}}</h5>
+            <h5>{{nick}}</h5>
             <small class="text-muted live-time" title="{{tooltip_time}}" data-rawtime="{{raw_time}}" data-toggle="tooltip" data-placement="bottom">{{time}}</small>
           </div>
           <div class="droptext float-right">
             <div class="dropdown">
               <a class="dropdown-toggle" id="postDrop{{postid}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
               <div class="dropdown-menu" aria-labelledby="postDrop{{postid}}">
-                <a id="post_hide_button" class="pointer dropdown-item">Hide</a>
+                <a class="post_hide_button pointer dropdown-item">Hide</a>
               </div>
             </div>
-            <span class="text-muted">Placeholder{{groupname}}</span>
+            <span class="text-muted">GroupId {{groupid}}</span>
           </div>
         </div>
       </div>
@@ -30,15 +30,16 @@
   </div>
   <div class="card-footer">
     <form class="form-inline">
-        <input type="text" class="form-control col-10 mr-auto" placeholder="Comment">
-        <button type="submit" class="btn btn-primary col-1"><i class="fa fa-share"></i> Post</button>
+        <input type="text" class="comment_send_text form-control col-10 mr-auto" placeholder="Comment" required>
+        <button type="submit" class="comment_send_button btn btn-primary col-1"><i class="fa fa-share"></i> Post</button>
     </form>
     <hr>
     <div>
       <a class="show_hide-comment outer">Show comments <i class="fas fa-angle-down"></i></a>
-      <div class="panel-collapse collapse out">
+      <div class="panel-collapse collapse out comment-collapse">
+        <button class="comment_retrieve_button btn btn-outline-info btn-small"><i class="fas fa-sync"></i></button>
         <div class="comments">
-          
+
         </div>
         <a class="show_hide-comment inner">Hide comments <i class="fas fa-angle-up"></i></a>
       </div>

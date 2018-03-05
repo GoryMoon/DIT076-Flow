@@ -6,7 +6,10 @@ EVENT_COMMENT_POST,
 EVENT_COMMENT_PUT,
 eventBus as eB
 } from "../util/eventBus.js"
-import { setTitle, getTemplate } from "../util/general.js"
+import { 
+    getTemplate, 
+    getFancyTimeData, 
+} from "../util/general.js"
 import Mustache from 'mustache'
 
 class CommentView {
@@ -30,11 +33,11 @@ class CommentView {
         comments.empty();
         getTemplate('/templates/comment.mustache', (template) => {
             if (data.comments.length == 0) {
-                comments.html('<small>No comments</small>');
+                comments.html('<div class="no-comment"><small>No comments</small></div>');
             } else {
                 for (var i = 0; i < data.comments.length; i++) {
-                    var rendered = Mustache.render(template, data.comments[i]);
-                    comments.html(rendered);
+                    var rendered = Mustache.render(template, getFancyTimeData(data.comments[i]));
+                    comments.append(rendered);
                 }
             }
         });

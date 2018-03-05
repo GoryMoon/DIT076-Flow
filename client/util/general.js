@@ -97,12 +97,12 @@ export const COMMENT_ID = "#comment_id";
 export const COMMENT_FILTER_POSTID = "#comment_filter_postid";
 export const COMMENT_FILTER_TIME = "#comment_filter_time";
 export const COMMENT_FILTER_COUNT = "#comment_filter_count";
-export const COMMENT_SEND_TEXT = "#comment_send_text";
+export const COMMENT_SEND_TEXT = ".comment_send_text";
 
 // COMMENT BUTTONS
-export const COMMENT_RETRIEVE_BUTTON = "#comment_retrieve_button";
-export const COMMENT_SEND_BUTTON = "#comment_send_button";
-export const COMMENT_HIDE_BUTTON = "#comment_hide_button";
+export const COMMENT_RETRIEVE_BUTTON = ".comment_retrieve_button";
+export const COMMENT_SEND_BUTTON = ".comment_send_button";
+export const COMMENT_HIDE_BUTTON = ".comment_hide_button";
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,5 +138,5 @@ export const POST_HIDE_ID = "#post_hide_id";
 // POST BUTTONS
 export const POST_RETRIEVE_BUTTON = "#post_retrieve_button";
 export const POST_SEND_BUTTON = "#post_send_button";
-export const POST_HIDE_BUTTON = "#post_hide_button";
+export const POST_HIDE_BUTTON = ".post_hide_button";
 

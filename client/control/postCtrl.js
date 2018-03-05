@@ -36,15 +36,19 @@ class PostCtrl {
         }
     }
     
-    put() { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+    put(event) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+        let id = $(event.target).parents('.card').data('postid');
         let putPostData = {userid: null, id: null, title: null, text: null, status: null};
         putPostData.userid = store.get('user').id;
-        putPostData.id = getInput(POST_HIDE_ID);
+        putPostData.id = id;
         putPostData.status = 1;
-        server.rpcPutPost(putPostData, data => { return eB.notify(EVENT_POST_PUT, data); });
+        server.rpcPutPost(putPostData, data => { 
+            eB.notify(EVENT_POST_PUT, data); 
+            page('/');
+        });
     }
     
-    post() { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+    post(event) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
         if (validate(POST_SEND_TITLE, POST_SEND_TEXT)) {
             event.preventDefault();
             let postPostData = {userid: null, groupid: null, title: null, text: null, status: null};
@@ -67,12 +71,7 @@ const postCtrl = new PostCtrl();
 page('/', postCtrl.get);
 
 $(document).ready(function () {
-    
     $(document).on("click", POST_RETRIEVE_BUTTON, postCtrl.get);
     $(document).on("click", POST_SEND_BUTTON, postCtrl.post);
     $(document).on("click", POST_HIDE_BUTTON, postCtrl.put);
-    
-  //  $(POST_RETRIEVE_BUTTON).on("click", postCtrl.retrieve);
-  //  $(POST_SEND_BUTTON).on("click", postCtrl.send);
-  //  $(POST_HIDE_BUTTON).on("click", postCtrl.hide);
 });

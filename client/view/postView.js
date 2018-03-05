@@ -59,7 +59,7 @@ class CommentView {
                     self.html("Show comments <i class=\"fas fa-angle-down\"></i>");
                 } else {
                     if (drawer.children('.comments').children().length == 0) {
-                        cc.retrieve(self.parents('.card').data("postid"));
+                        cc.get(self.parents('.card').data("postid"));
                     }
                     self.html("Hide comments <i class=\"fas fa-angle-up\"></i>");
                 }

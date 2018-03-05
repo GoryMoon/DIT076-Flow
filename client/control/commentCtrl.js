@@ -24,29 +24,46 @@ COMMENT_HIDE_BUTTON
 } from "../util/general.js"
 
 class CommentCtrl {
+    refresh(event) {
+        event.preventDefault();
+        let id = $(event.target).parents('.card').data('postid');
+        commentCtrl.get(id);
+    }
+
     get(postid) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
         let getCommentData = {userid: null, ownerid: null, postid: null, nick: null, id: null, text: null, before: null, after: null, count: null};
         getCommentData.userid = store.get('user').id;
         getCommentData.postid = postid;
         
-        server.rpcGetComment(getCommentData, data => { return eB.notify(EVENT_COMMENT_GET, data); });
+        server.rpcGetComment(getCommentData, data => { return eB.notify(EVENT_COMMENT_GET, { id: postid, comments: data}); });
     }
     
-    put() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+    put(event) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let id = $(event.target).parents('.card').data('postid');
         let putCommentData = {userid: null, id: null, text: null, status: null};
         putCommentData.userid = store.get('user').id;
-        putCommentData.id = getData(COMMENT_ID);
+        putCommentData.id = id;
         putCommentData.status = 1; // 1 is hide, 0 is visible. null defaults to visible.
         
         server.rpcPutComment(putCommentData, data => { return eB.notify(EVENT_COMMENT_PUT, data); });
     }
     
-    post(postid, text) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
-        let postCommentData = {userid: null, postid: null, text: null, status: null};
-        postCommentData.userid = store.get('user').id;
-        postCommentData.postid = postid;
-        postCommentData.text = text;
-        server.rpcPostComment(postCommentData, data => { return eB.notify(EVENT_COMMENT_POST, data); });
+    post(event) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let id = $(event.target).parents('.card').data('postid');
+        if (validate("#postid-" + id + " " + COMMENT_SEND_TEXT)) {
+            event.preventDefault();
+            let postCommentData = {userid: null, postid: null, text: null, status: null};
+            postCommentData.userid = store.get('user').id;
+            postCommentData.postid = id;
+            let inVal = $("#postid-" + id + " " + COMMENT_SEND_TEXT);
+            postCommentData.text = inVal.val();
+
+            server.rpcPostComment(postCommentData, data => { 
+                eB.notify(EVENT_COMMENT_POST, data); 
+                inVal.val("");
+                commentCtrl.retrieve(id);
+            });
+        }
     }
 }
 
@@ -55,7 +72,5 @@ export const commentCtrl = new CommentCtrl();
 $(document).ready(function () {
     $(document).on("click", COMMENT_SEND_BUTTON, commentCtrl.post);
     $(document).on("click", COMMENT_HIDE_BUTTON, commentCtrl.put);
-    //$(COMMENT_RETRIEVE_BUTTON).on("click", commentCtrl.get);
-    //$(COMMENT_SEND_BUTTON).on("click", commentCtrl.post);
-    //$(COMMENT_HIDE_BUTTON).on("click", commentCtrl.delete);
+    $(document).on("click", COMMENT_RETRIEVE_BUTTON, commentCtrl.refresh);
 });

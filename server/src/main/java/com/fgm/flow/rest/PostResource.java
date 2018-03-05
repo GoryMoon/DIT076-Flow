@@ -70,7 +70,7 @@ public class PostResource {
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
     
-    static class GetData
+    public static class GetData
     {
         public Integer userid;
         public Integer ownerid;
@@ -84,7 +84,7 @@ public class PostResource {
         public Integer count;
     }
     
-    static class GetDataOut
+    public static class GetDataOut
     {
         public Integer ownerid;
         public Integer groupid;

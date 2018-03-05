@@ -66,7 +66,7 @@ public class CommentResource {
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
 
     
-    static class GetData
+    public static class GetData
     {
         public Integer userid;
         public Integer ownerid;
@@ -79,7 +79,7 @@ public class CommentResource {
         public Integer count;
     }
 
-    static class GetDataOut
+    public static class GetDataOut
     {
         public Integer ownerid;
         public Integer postid;
@@ -152,7 +152,7 @@ public class CommentResource {
         }
     }
     
-    static class PutData
+    public static class PutData
     {
         public Integer userid;
         public Integer id;
@@ -160,7 +160,7 @@ public class CommentResource {
         public String status;
     }
 
-    static class PutDataOut
+    public static class PutDataOut
     {
         public Integer ownerid;
         public Integer postid;
@@ -226,7 +226,7 @@ public class CommentResource {
         return Response.ok(gson.toJson(new PutDataOut(comment))).build();
     }
     
-    static class PostData
+    public static class PostData
     {
         public Integer userid;
         public Integer postid;
@@ -234,7 +234,7 @@ public class CommentResource {
         public String status;
     }
 
-    static class PostDataOut
+    public static class PostDataOut
     {
         public Integer ownerid;
         public Integer postid;

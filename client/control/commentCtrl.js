@@ -11,6 +11,7 @@ eventBus as eB
 } from "../util/eventBus.js"
 import {
 getInput,
+validate,
 ACCOUNT_ID,
 COMMENT_FILTER_POSTID,
 COMMENT_FILTER_TIME,
@@ -61,7 +62,7 @@ class CommentCtrl {
             server.rpcPostComment(postCommentData, data => { 
                 eB.notify(EVENT_COMMENT_POST, data); 
                 inVal.val("");
-                commentCtrl.retrieve(id);
+                commentCtrl.get(id);
             });
         }
     }

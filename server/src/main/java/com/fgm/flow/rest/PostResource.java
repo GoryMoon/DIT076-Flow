@@ -168,7 +168,7 @@ public class PostResource {
         return Response.ok(gson.toJson(GetDataOutList)).build();
     }
     
-    static class PostData
+    public static class PostData
     {
         public Integer userid;
         public Integer groupid;
@@ -176,7 +176,7 @@ public class PostResource {
         public String text;
     }
     
-    static class PostDataOut
+    public static class PostDataOut
     {
         public Integer ownerid;
         public Integer groupid;

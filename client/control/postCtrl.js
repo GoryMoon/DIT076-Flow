@@ -53,7 +53,7 @@ class PostCtrl {
             event.preventDefault();
             let postPostData = {userid: null, groupid: null, title: null, text: null, status: null};
             postPostData.userid = store.get('user').id;
-            postPostData.userGroupId = 0;//getInput(POST_SEND_GROUP_ID);
+            postPostData.groupid = 0;//getInput(POST_SEND_GROUP_ID);
             postPostData.title = getInput(POST_SEND_TITLE);
             postPostData.text = getInput(POST_SEND_TEXT);
             postPostData.status = 0;

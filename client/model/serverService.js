@@ -134,7 +134,7 @@ class ServerService {
             headers: {'Access-Control-Allow-Origin': '*'},
             url: this.serverUrl + "comment/post/",
             data: JSON.stringify(commentPostData),
-            method: "GET",
+            method: "POST",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this

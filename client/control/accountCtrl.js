@@ -35,7 +35,7 @@ class AccountCtrl {
         eB.notify(EVENT_ACCOUNT_VIEW_REGISTER, ctx);
     }
     
-    register(event) { // NOT TESTED
+    register(event) { // PROTOCL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
         if (validate(ACCOUNT_REGISTER_EMAIL, ACCOUNT_REGISTER_NICK, ACCOUNT_REGISTER_PASSWORD, ACCOUNT_REGISTER_PASSWORD_CONFIRM)) {
             event.preventDefault();
             let accountRegisterData = {email: null, nick: null, password: null};
@@ -51,7 +51,7 @@ class AccountCtrl {
         }
     }
 
-    login(event) { // NOT TESTED
+    login(event) { // PROTOCL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
         if (validate(ACCOUNT_LOGIN_EMAIL, ACCOUNT_LOGIN_PASSWORD)) {
             event.preventDefault();
             let accountLoginData = {email: null, password: null};
@@ -66,7 +66,7 @@ class AccountCtrl {
         }
     }
     
-    logout() { // NOT TESTED
+    logout() { // PROTOCL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
         event.preventDefault();
         //let accountLogoutData = {id: null};
         //accountLogoutData.id = getInput(ACCOUNT_ID);

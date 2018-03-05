@@ -20,15 +20,6 @@ import { commentCtrl as cc } from "../control/commentCtrl.js"
 class CommentView {
  
     onModelEvent(event, data) {
-        if (event === EVENT_POST_GET) {
-            this.postRetrieve(data);
-        } else if (event === EVENT_POST_VIEW) {
-            this.postView();
-        } else if (event === EVENT_POST_POST) {
-            this.postSend(data);
-        } else if (event === EVENT_POST_PUT) {
-            this.postHide(data);
-        }
         switch(event) {
             case EVENT_POST_GET:
                 this.postRetrieve(data);

@@ -9,6 +9,8 @@ EVENT_ACCOUNT_VIEW_REGISTER,
 EVENT_ACCOUNT_LOGIN,
 EVENT_ACCOUNT_REGISTER,
 EVENT_ACCOUNT_LOGOUT,
+EVENT_ACCOUNT_GET,
+EVENT_ACCOUNT_PUT,
 eventBus as eB
 } from "../util/eventBus.js"
 import {
@@ -27,7 +29,6 @@ ACCOUNT_LOGOUT_BUTTON
 
 class AccountCtrl {
     viewLogin(ctx) {
-        console.log("XXXXXXXXXXXXXXXXXXXXXX page(|/login|, accountCtrl.viewLogin)");
         eB.notify(EVENT_ACCOUNT_VIEW_LOGIN, ctx);
     }
 
@@ -35,23 +36,13 @@ class AccountCtrl {
         eB.notify(EVENT_ACCOUNT_VIEW_REGISTER, ctx);
     }
     
-    register(event) { // PROTOCL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
-        if (validate(ACCOUNT_REGISTER_EMAIL, ACCOUNT_REGISTER_NICK, ACCOUNT_REGISTER_PASSWORD, ACCOUNT_REGISTER_PASSWORD_CONFIRM)) {
-            event.preventDefault();
-            let accountRegisterData = {email: null, nick: null, password: null};
-            accountRegisterData.email = getInput(ACCOUNT_REGISTER_EMAIL);
-            accountRegisterData.nick = getInput(ACCOUNT_REGISTER_NICK);
-            accountRegisterData.password = getInput(ACCOUNT_REGISTER_PASSWORD);
-            server.rpcRegisterAccount(accountRegisterData, data => { 
-                //TODO change when proper user info is sent
-                store.set('user', {id: parseInt(data)});
-                eB.notify(EVENT_ACCOUNT_REGISTER, data); 
-                page('/');
-            });
-        }
+    get() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let accountGetData = {userid: null, groupid: null, id: null, email: null, nick: null, count: null};
+        accountGetData.userid = store.get('user').id; // verify this user CAN access this information.
+        server.rpcGetAccount(accountGetData, data => { eB.notify(EVENT_ACCOUNT_GET, data); });
     }
 
-    login(event) { // PROTOCL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
+    login(event) { // PROTOCOL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
         if (validate(ACCOUNT_LOGIN_EMAIL, ACCOUNT_LOGIN_PASSWORD)) {
             event.preventDefault();
             let accountLoginData = {email: null, password: null};
@@ -66,7 +57,30 @@ class AccountCtrl {
         }
     }
     
-    logout() { // PROTOCL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
+    put() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let accountPutData = {userid: null, id: null, email: null, nick: null, password: null};
+        accountPutData.userid = store.get('user').id; // id of editor.
+        accountPutData.id = store.get('user').id;   // id of account to be modified.
+        server.rpcPutAccount(accountPutData, data => { eB.notify(EVENT_ACCOUNT_PUT, data); });
+    }
+    
+    register(event) { // PROTOCOL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
+        if (validate(ACCOUNT_REGISTER_EMAIL, ACCOUNT_REGISTER_NICK, ACCOUNT_REGISTER_PASSWORD, ACCOUNT_REGISTER_PASSWORD_CONFIRM)) {
+            event.preventDefault();
+            let accountRegisterData = {email: null, nick: null, password: null};
+            accountRegisterData.email = getInput(ACCOUNT_REGISTER_EMAIL);
+            accountRegisterData.nick = getInput(ACCOUNT_REGISTER_NICK);
+            accountRegisterData.password = getInput(ACCOUNT_REGISTER_PASSWORD);
+            server.rpcRegisterAccount(accountRegisterData, data => { 
+                //TODO change when proper user info is sent
+                store.set('user', {id: parseInt(data)});
+                eB.notify(EVENT_ACCOUNT_REGISTER, data); 
+                page('/');
+            });
+        }
+    }
+    
+    logout() { // PROTOCOL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED
         event.preventDefault();
         //let accountLogoutData = {id: null};
         //accountLogoutData.id = getInput(ACCOUNT_ID);

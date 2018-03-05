@@ -20,29 +20,29 @@ class ServerService {
         
     }
 
-    rpcRegisterAccount(registerAccountData, callback) { // NOT TESTED
-        this.sendingFunc(registerAccountData, "rpcRegisterAccount");
+    rpcGetAccount(getAccountData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        this.sendingFunc(getAccountData, "rpcGetAccount");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "user/register/",
-            data: JSON.stringify(registerAccountData),
+            url: this.serverUrl + "account/get/",
+            data: JSON.stringify(getAccountData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this
         }).done(data => {
-            this.successFunc(data, "rpcRegisterAccount");
+            this.successFunc(data, "rpcGetAccount");
             callback(data);
         }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcRegisterAccount"); 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcGetAccount"); 
         });
     }
     
-    rpcLoginAccount(loginAccountData, callback) { // NOT TESTED
+    rpcLoginAccount(loginAccountData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
         this.sendingFunc(loginAccountData, "rpcLoginAccount");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "user/login/",
+            url: this.serverUrl + "account/login/",
             data: JSON.stringify(loginAccountData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
@@ -56,162 +56,237 @@ class ServerService {
         });
     }
     
-    rpcGetPost(postFilterData, callback) { // NOT TESTED
-        this.sendingFunc(postFilterData, "rpcGetPost");
+    rpcPutAccount(putAccountData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        this.sendingFunc(putAccountData, "rpcPutAccount");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "post/",
-            data: JSON.stringify(postFilterData),
+            url: this.serverUrl + "account/login/",
+            data: JSON.stringify(putAccountData),
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcPutAccount");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcPutAccount"); 
+        });
+    }
+    
+    rpcRegisterAccount(registerAccountData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        this.sendingFunc(registerAccountData, "rpcRegisterAccount");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "account/register/",
+            data: JSON.stringify(registerAccountData),
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcRegisterAccount");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcRegisterAccount"); 
+        });
+    }
+    
+    rpcGetComment(commentGetData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        this.sendingFunc(commentGetData, "rpcGetComment");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "comment/get/",
+            data: JSON.stringify(commentGetData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this
         }).done(data => {
-            this.successFunc(data, "rpcRetrievePosts");
-            callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcRetrievePosts"); 
-        });
-    }
-    
-    rpcPostPost(postData, callback) { // NOT TESTED
-        this.sendingFunc(postData, "rpcPostPost");
-        $.ajax({
-            headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "post/create?title=" + postData.title + "&text=" + postData.text + "&userGroupId=" + postData.userGroupId + "&posterId=" + postData.posterId,
-            method: "POST",
-            contentType: "application/x-www-form-urlencoded; charset=utf-8",
-            crossDomain: true,
-            context: this
-        }).done(data => {
-            this.successFunc(data, "rpcSendPost");
-            callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcSendPost"); 
-        });
-    }
-    
-    rpcPutPost(postData, callback) { // NOT TESTED
-        this.sendingFunc(postData, "rpcPutPost");
-        $.ajax({
-            headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "posts/hide/",
-            data: JSON.stringify(postData),
-            method: "DELETE",
-            contentType: "application/json; charset=utf-8",
-            crossDomain: true,
-            context: this
-        }).done(data => {
-            this.successFunc(data, "rpcHidePost");
-            callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcHidePost"); 
-        });
-    }
-    
-    rpcGetComment(commentFilterData, callback) { // NOT TESTED
-        this.sendingFunc(commentFilterData, "rpcGetComment");
-        $.ajax({
-            headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comment?postId=" + commentFilterData.postid,
-            method: "POST",
-            contentType: "application/x-www-form-urlencoded; charset=utf-8",
-            crossDomain: true,
-        }).done(data => {
-            this.successFunc(data, "rpcRetrieveComments");
+            this.successFunc(data, "rpcGetComment");
             callback(data);
         }).fail((msg, ajaxOpt, thrownError) => { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcRetrieveComments"); 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcGetComment"); 
         });
     }
     
-    rpcPostComment(commentData, callback) { // NOT TESTED
-        this.sendingFunc(commentData, "rpcPostComment");
-        $.ajax({
-            headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comment/create/",
-            data: JSON.stringify(commentData),
-            method: "GET",
-            contentType: "application/json; charset=utf-8",
-            crossDomain: true,
-            context: this
-        }).done(data => {
-            this.successFunc(data, "rpcSendComments");
-            callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcSendComments"); 
-        });
-    }
-    
-    rpcPutComment(commentData, callback) { // NOT TESTED
+    rpcPutComment(commentData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
         this.sendingFunc(commentData, "rpcPutComment");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "comment/hide/",
+            url: this.serverUrl + "comment/put/",
             data: JSON.stringify(commentData),
-            method: "DELETE",
+            method: "PUT",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this
         }).done(data => {
-            this.successFunc(data, "rpcHideComment");
+            this.successFunc(data, "rpcPutComment");
             callback(data);
         }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcHideComment"); 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcPutComment"); 
         });
     }
     
-    rpcGetGroup(groupFilterData, callback) { // NOT TESTED
+    rpcPostComment(commentPostData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        this.sendingFunc(commentPostData, "rpcPostComment");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "comment/post/",
+            data: JSON.stringify(commentPostData),
+            method: "GET",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcPostComment");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcPostComment"); 
+        });
+    }
+    
+    rpcGetGroup(groupFilterData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
         this.sendingFunc(groupFilterData, "rpcGetGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "group/",
+            url: this.serverUrl + "group/get/",
             data: JSON.stringify(groupFilterData),
             method: "GET",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this
         }).done(data => {
-            this.successFunc(data, "rpcRetrieveGroups");
+            this.successFunc(data, "rpcGetGroup");
             callback(data);
         }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcRetrieveGroups"); 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcGetGroup"); 
         });
     }
     
-    rpcPostGroup(groupData, callback) { // NOT TESTED
+    rpcPutGroup(groupData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        this.sendingFunc(groupData, "rpcPutGroup");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "group/put/",
+            data: JSON.stringify(groupData),
+            method: "PUT",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcPutGroup");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcPutGroup"); 
+        });
+    }
+    
+    rpcPostGroup(groupData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
         this.sendingFunc(groupData, "rpcPostGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "group/create/",
+            url: this.serverUrl + "group/post/",
             data: JSON.stringify(groupData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this
         }).done(data => {
-            this.successFunc(data, "rpcSendGroup");
+            this.successFunc(data, "rpcPostGroup");
             callback(data);
         }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcSendGroup"); 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcPostGroup"); 
         });
     }
     
-    rpcPutGroup(groupData, callback) { // NOT TESTED
-        this.sendingFunc(groupData, "rpcDeleteGroup");
+    rpcJoinGroup(groupData, callback) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+        this.sendingFunc(groupData, "rpcJoinGroup");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "group/hide/",
+            url: this.serverUrl + "group/join/",
             data: JSON.stringify(groupData),
-            method: "DELETE",
+            method: "POST",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this
         }).done(data => {
-            this.successFunc(data, "rpcRemoveGroup");
+            this.successFunc(data, "rpcJoinGroup");
             callback(data);
         }).fail(function (msg, ajaxOpt, thrownError) { 
-            this.errorFunc(msg, ajaxOpt, thrownError, "rpcRemoveGroup"); 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcJoinGroup"); 
+        });
+    }
+    
+    rpcInviteGroup(groupData, callback) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+        this.sendingFunc(groupData, "rpcInviteGroup");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "group/invite/",
+            data: JSON.stringify(groupData),
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcInviteGroup");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcInviteGroup"); 
+        });
+    }
+    
+    rpcGetPost(postFilterData, callback) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+        this.sendingFunc(postFilterData, "rpcGetPost");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "post/get/",
+            data: JSON.stringify(postFilterData),
+            method: "GET",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcGetPost");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcGetPost"); 
+        });
+    }
+    
+    rpcPutPost(postData, callback) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+        this.sendingFunc(postData, "rpcPutPost");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "post/put/",
+            data: JSON.stringify(postData),
+            method: "PUT",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcPutPost");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcPutPost"); 
+        });
+    }
+    
+    rpcPostPost(postData, callback) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+        this.sendingFunc(postData, "rpcPostPost");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "post/post/",
+            data: JSON.stringify(postData),
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcPostPost");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcPostPost"); 
         });
     }
 }

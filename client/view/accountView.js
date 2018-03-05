@@ -6,6 +6,8 @@ EVENT_ACCOUNT_VIEW_REGISTER,
 EVENT_ACCOUNT_LOGIN,
 EVENT_ACCOUNT_REGISTER,
 EVENT_ACCOUNT_LOGOUT,
+EVENT_ACCOUNT_GET,
+EVENT_ACCOUNT_PUT,
 eventBus as eB
 } from "../util/eventBus.js"
 import { setTitle, getTemplate } from "../util/general.js"
@@ -30,6 +32,12 @@ class AccountView {
             case EVENT_ACCOUNT_LOGOUT:
                 this.accountLogout(data);
                 break;
+            case EVENT_ACCOUNT_GET:
+                this.accountGet(data);
+                break;
+            case EVENT_ACCOUNT_PUT:
+                this.accountPut(data);
+                break;
         }
     }
 
@@ -53,6 +61,14 @@ class AccountView {
 
     accountLogout(data) {
         this.refreshHeader();
+    }
+    
+    accountGet(data) {
+        console.log("Unused event sent: EVENT_ACCOUNT_GET, with data: " + JSON.stringify(data));
+    }
+    
+    accountPut(data) {
+        console.log("Unused event sent: EVENT_ACCOUNT_PUT, with data: " + JSON.stringify(data));
     }
 
     refreshHeader() {

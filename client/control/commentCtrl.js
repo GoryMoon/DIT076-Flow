@@ -4,9 +4,9 @@ import {
 serverService as server
 } from "../model/serverService.js"
 import {
-EVENT_COMMENT_RETRIEVE,
-EVENT_COMMENT_SEND,
-EVENT_COMMENT_HIDE,
+EVENT_COMMENT_GET,
+EVENT_COMMENT_POST,
+EVENT_COMMENT_PUT,
 eventBus as eB
 } from "../util/eventBus.js"
 import {
@@ -24,34 +24,38 @@ COMMENT_HIDE_BUTTON
 } from "../util/general.js"
 
 class CommentCtrl {
-    retrieve(postid) {
-        let getCommentData = {userid: null, postid: null, from: null, count: null};
+    get(postid) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let getCommentData = {userid: null, ownerid: null, postid: null, nick: null, id: null, text: null, before: null, after: null, count: null};
+        getCommentData.userid = store.get('user').id;
         getCommentData.postid = postid;
-        server.rpcGetComment(getCommentData, data => { return eB.notify(EVENT_COMMENT_RETRIEVE, { id: postid, comments: data}); });
+        
+        server.rpcGetComment(getCommentData, data => { return eB.notify(EVENT_COMMENT_GET, data); });
     }
     
-    send(postid, text) { // NOT TESTED
-        let postCommentData = {userid: null, postid: null, commenttext: null};
+    put() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let putCommentData = {userid: null, id: null, text: null, status: null};
+        putCommentData.userid = store.get('user').id;
+        putCommentData.id = getData(COMMENT_ID);
+        putCommentData.status = 1; // 1 is hide, 0 is visible. null defaults to visible.
+        
+        server.rpcPutComment(putCommentData, data => { return eB.notify(EVENT_COMMENT_PUT, data); });
+    }
+    
+    post(postid, text) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let postCommentData = {userid: null, postid: null, text: null, status: null};
         postCommentData.userid = store.get('user').id;
         postCommentData.postid = postid;
-        postCommentData.commenttext = text;
-        server.rpcPostComment(postCommentData, data => { return eB.notify(EVENT_COMMENT_SEND, data); });
-    }
-    
-    hide() { // NOT TESTED
-        let putCommentData = {userid: null, commentid: null};
-        putCommentData.userid = getData(ACCOUNT_ID);
-        putCommentData.commentid = getData(COMMENT_ID);
-        server.rpcPutComment(putCommentData, data => { return eB.notify(EVENT_COMMENT_HIDE, data); });
+        postCommentData.text = text;
+        server.rpcPostComment(postCommentData, data => { return eB.notify(EVENT_COMMENT_POST, data); });
     }
 }
 
 export const commentCtrl = new CommentCtrl();
 
 $(document).ready(function () {
-    $(document).on("click", COMMENT_SEND_BUTTON, commentCtrl.send);
-    $(document).on("click", COMMENT_HIDE_BUTTON, commentCtrl.hide);
-    //$(COMMENT_RETRIEVE_BUTTON).on("click", commentCtrl.retrieve);
-    //$(COMMENT_SEND_BUTTON).on("click", commentCtrl.send);
-    //$(COMMENT_HIDE_BUTTON).on("click", commentCtrl.hide);
+    $(document).on("click", COMMENT_SEND_BUTTON, commentCtrl.post);
+    $(document).on("click", COMMENT_HIDE_BUTTON, commentCtrl.put);
+    //$(COMMENT_RETRIEVE_BUTTON).on("click", commentCtrl.get);
+    //$(COMMENT_SEND_BUTTON).on("click", commentCtrl.post);
+    //$(COMMENT_HIDE_BUTTON).on("click", commentCtrl.delete);
 });

@@ -1,9 +1,9 @@
 "use strict";
 
 import {
-EVENT_COMMENT_RETRIEVE,
-EVENT_COMMENT_SEND,
-EVENT_COMMENT_HIDE,
+EVENT_COMMENT_GET,
+EVENT_COMMENT_POST,
+EVENT_COMMENT_PUT,
 eventBus as eB
 } from "../util/eventBus.js"
 import { setTitle, getTemplate } from "../util/general.js"
@@ -12,12 +12,16 @@ import Mustache from 'mustache'
 class CommentView {
  
     onModelEvent(event, data) {
-        if (event === EVENT_COMMENT_RETRIEVE) {
-            this.commentRetrieve(data);
-        } else if (event === EVENT_COMMENT_SEND) {
-            this.commentSend(data);
-        } else if (event === EVENT_COMMENT_HIDE) {
-            this.commentHide(data);
+        switch(event) {
+            case EVENT_COMMENT_GET:
+                this.commentRetrieve(data);
+                break;
+            case EVENT_COMMENT_POST:
+                this.commentSend(data);
+                break;
+            case EVENT_COMMENT_PUT:
+                this.commentHide(data);
+                break;
         }
     }
   
@@ -37,11 +41,11 @@ class CommentView {
     }
     
     commentSend(data) { // NOT TESTED
-        
+        console.log("Unused event sent: EVENT_COMMENT_POST, with data: " + JSON.stringify(data));
     }
     
     commentHide(data) { // NOT TESTED
-        
+        console.log("Unused event sent: EVENT_COMMENT_PUT, with data: " + JSON.stringify(data));
     }
 }
 

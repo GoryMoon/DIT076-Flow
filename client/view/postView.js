@@ -1,9 +1,9 @@
 
 import {
 EVENT_POST_VIEW,
-EVENT_POST_RETRIEVE,
-EVENT_POST_SEND,
-EVENT_POST_HIDE,
+EVENT_POST_GET,
+EVENT_POST_POST,
+EVENT_POST_PUT,
 eventBus as eB
 } from "../util/eventBus.js"
 import { 
@@ -20,14 +20,28 @@ import { commentCtrl as cc } from "../control/commentCtrl.js"
 class CommentView {
  
     onModelEvent(event, data) {
-        if (event === EVENT_POST_RETRIEVE) {
+        if (event === EVENT_POST_GET) {
             this.postRetrieve(data);
         } else if (event === EVENT_POST_VIEW) {
             this.postView();
-        } else if (event === EVENT_POST_SEND) {
+        } else if (event === EVENT_POST_POST) {
             this.postSend(data);
-        } else if (event === EVENT_POST_HIDE) {
+        } else if (event === EVENT_POST_PUT) {
             this.postHide(data);
+        }
+        switch(event) {
+            case EVENT_POST_GET:
+                this.postRetrieve(data);
+                break;
+            case EVENT_POST_VIEW:
+                this.postView();
+                break;
+            case EVENT_POST_POST:
+                this.postSend(data);
+                break;
+            case EVENT_POST_PUT:
+                this.postHide(data);
+                break;
         }
     }
   
@@ -70,11 +84,11 @@ class CommentView {
     }
 
     postSend(data) { // NOT TESTED
-        
+      console.log("Unused event sent: EVENT_POST_POST, with data: " + JSON.stringify(data));
     }
     
     postHide(data) { // NOT TESTED
-        
+      console.log("Unused event sent: EVENT_POST_PUT, with data: " + JSON.stringify(data));
     }
 
     updateTime() {

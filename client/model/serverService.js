@@ -242,7 +242,7 @@ class ServerService {
             headers: {'Access-Control-Allow-Origin': '*'},
             url: this.serverUrl + "post/get/",
             data: JSON.stringify(postFilterData),
-            method: "GET",
+            method: "POST",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this

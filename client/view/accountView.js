@@ -60,6 +60,7 @@ class AccountView {
 
     accountRegister(data) {
         this.refreshHeader();
+        page('/');
     }
 
     accountLogout(data) {        

@@ -152,7 +152,7 @@ class ServerService {
             headers: {'Access-Control-Allow-Origin': '*'},
             url: this.serverUrl + "group/get/",
             data: JSON.stringify(groupFilterData),
-            method: "GET",
+            method: "POST",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this

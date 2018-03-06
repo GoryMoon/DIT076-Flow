@@ -90,16 +90,18 @@ public class PostResource {
         public Integer groupid;
         public Integer id;
         public String nick;
+        public String group;
         public String title;
         public String text;
         public Date time;
     
-        public GetDataOut(Post post)
+        public GetDataOut(Post post, String groupName)
         {
             this.ownerid = post.getPoster().getId();
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
+            this.group = groupName;
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime();            
@@ -139,7 +141,7 @@ public class PostResource {
                 {
                     for(Post post : memship.getUserGroup().getPosts())
                     {
-                        GetDataOutList.add(new GetDataOut(post));
+                        GetDataOutList.add(new GetDataOut(post, memship.getUserGroup().getName()));
                     }
                 }
             }
@@ -158,7 +160,7 @@ public class PostResource {
             }
             for(Post post : userGroup.getPosts())
             {
-                GetDataOutList.add(new GetDataOut(post));
+                GetDataOutList.add(new GetDataOut(post, userGroup.getName()));
             }
         }
 
@@ -194,7 +196,7 @@ public class PostResource {
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
-            this.group = "<Not Implemented>"; // TODO: implement
+            this.group = new String("<Not Implemented>");
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime(); 
@@ -221,7 +223,6 @@ public class PostResource {
         }
         
         UserGroup userGroup = uGroupReg.find(inData.groupid);
-        
         
         
         if(!user.isMemberOfGroup(userGroup))
@@ -263,7 +264,7 @@ public class PostResource {
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
-            this.group = "<Not Implemented>";
+            this.group = new String("<Not Implemented>");
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime();            

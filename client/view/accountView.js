@@ -90,9 +90,9 @@ class AccountView {
             let invites = 0;
             let owner = false;
             for (var i = 0; i < groupInfo.length; i++) {
-                if (groupInfo[i].status == 2) {
+                if (groupInfo[i].status === 2) {
                     invites++;
-                } else if (groupInfo[i].status == 0) {
+                } else if (groupInfo[i].status === 0) {
                     owner = true;
                 }
             };

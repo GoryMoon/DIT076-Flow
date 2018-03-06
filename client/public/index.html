@@ -1,47 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Flow</title>
-    <link rel="stylesheet" href="/css/bootstrap.css">
-    <link rel="stylesheet" href="/css/fa-svg-with-js.css">
-    <link rel="stylesheet" href="/css/custom.css">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Flow</title>
+        <link rel="stylesheet" href="/css/bootstrap.css">
+        <link rel="stylesheet" href="/css/fa-svg-with-js.css">
+        <link rel="stylesheet" href="/css/custom.css">
 
-    <!-- Fontawesome icons -->
-    <script defer src="/js/fontawesome-all.js"></script>
-  </head>
+        <!-- Fontawesome icons -->
+        <script defer src="/js/fontawesome-all.js"></script>
+    </head>
 
-  <body>
-    <nav class="navbar navbar-expand-sm navbar-dark sticky-top bg-dark">
-      <div class="container">
-        <a id="nav-user" class="navbar-brand col-sm-2 col-md-1 mr-0" href="/">Flow</a>
-      </div>
-    </nav>
+    <body>
+        <nav class="navbar navbar-expand-sm navbar-dark sticky-top bg-dark">
+            <div class="container">
+                <a id="nav-user" class="navbar-brand col-sm-2 col-md-1 mr-0" href="/">Flow</a>
+            </div>
+        </nav>
 
-    <div id="content" class="container flow-content">
-    </div>
-    <!-- jQuery library -->
-    <script src="/js/jquery.js"></script>
-    <!-- Bootstrap -->
-    <script src="/js/bootstrap.bundle.js"></script>
-    <!-- Page router -->
-    <script src="/js/page.js"></script>
-    <!-- Storage plugin -->
-    <script src="/js/store.legacy.min.js"></script>
-    <!-- Middleware -->
-    <script src="/js/dist/middleware.js"></script>
-    <!-- Main program -->
-    <script src="/js/dist/bundle.js"></script>
-    <!-- Not found page -->
-    <script src="/js/dist/notfound.js"></script>
-    <script>
-      // Ugly hack, but must create global reference to jquery
-      // to be accsessible in ES6 modules. JQuery doesn't
-      // support ES6 module loading
-      // window is "the global" object
-      window.$ = $;
-      page();
-    </script>
-  </body>
+        <div id="content" class="container flow-content"></div>
+
+        <div class="modal fade" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                          <div class="modal-header">
+                                <h5 class="modal-title" id="groupModalTitle">Group</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                          </div>
+                          <div id="modal-content" class="modal-body"></div>
+                    </div>
+              </div>
+        </div>
+
+        <!-- jQuery library -->
+        <script src="/js/jquery.js"></script>
+        <!-- Bootstrap -->
+        <script src="/js/bootstrap.bundle.js"></script>
+        <!-- Page router -->
+        <script src="/js/page.js"></script>
+        <!-- Storage plugin -->
+        <script src="/js/store.legacy.min.js"></script>
+        <!-- Middleware -->
+        <script src="/js/dist/middleware.js"></script>
+        <!-- Main program -->
+        <script src="/js/dist/bundle.js"></script>
+        <!-- Not found page -->
+        <script src="/js/dist/notfound.js"></script>
+        <script>
+            // Ugly hack, but must create global reference to jquery
+            // to be accsessible in ES6 modules. JQuery doesn't
+            // support ES6 module loading
+            // window is "the global" object
+            window.$ = $;
+            page();
+        </script>
+    </body>
 </html>

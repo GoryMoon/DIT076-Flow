@@ -40,6 +40,7 @@ class CommentView {
                     comments.append(rendered);
                 }
             }
+            $('[data-toggle="tooltip"]').tooltip();
         });
     }
     

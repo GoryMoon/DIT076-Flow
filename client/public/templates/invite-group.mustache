@@ -1,0 +1,8 @@
+<ul id="group-invite-list" class="list-group list-group-flush">
+    {{#invites}}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{name}}
+        <button class="btn btn-success group_accept_invite_button group-invite-{{id}}" data-id="{{id}}">Accept</button>
+    </li>
+    {{/invites}}
+</ul>

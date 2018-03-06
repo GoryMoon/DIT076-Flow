@@ -152,7 +152,7 @@ class ServerService {
             headers: {'Access-Control-Allow-Origin': '*'},
             url: this.serverUrl + "group/get/",
             data: JSON.stringify(groupFilterData),
-            method: "GET",
+            method: "POST",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this
@@ -215,6 +215,24 @@ class ServerService {
             callback(data);
         }).fail(function (msg, ajaxOpt, thrownError) { 
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcJoinGroup"); 
+        });
+    }
+    
+    rpcLeaveGroup(groupData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        this.sendingFunc(groupData, "rpcLeaveGroup");
+        $.ajax({
+            headers: {'Access-Control-Allow-Origin': '*'},
+            url: this.serverUrl + "group/leave/",
+            data: JSON.stringify(groupData),
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            context: this
+        }).done(data => {
+            this.successFunc(data, "rpcLeaveGroup");
+            callback(data);
+        }).fail(function (msg, ajaxOpt, thrownError) { 
+            this.errorFunc(msg, ajaxOpt, thrownError, "rpcLeaveGroup"); 
         });
     }
     

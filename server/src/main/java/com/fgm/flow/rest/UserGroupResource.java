@@ -70,7 +70,7 @@ public class UserGroupResource {
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
     
     
-    static class GetData
+    public static class GetData
     {
         public Integer userid;
         public Integer id;
@@ -80,7 +80,7 @@ public class UserGroupResource {
         public Integer count;
     }
     
-    static class GetDataOut
+    public static class GetDataOut
     {
         public Integer id;
         public String name;
@@ -169,13 +169,13 @@ public class UserGroupResource {
         return Response.status(NOT_IMPLEMENTED).build();
     }
     
-    static class PostData
+    public static class PostData
     {
         public Integer userid;
         public String name;
     }
     
-    static class PostDataOut
+    public static class PostDataOut
     {
         public Integer id;
         public String name;
@@ -224,13 +224,13 @@ public class UserGroupResource {
         return Response.ok(gson.toJson(new PostDataOut(userGroup))).build();
     }
 
-    static class JoinData
+    public static class JoinData
     {
         public Integer userid;
         public Integer id;
     }
 
-    static class JoinDataOut
+    public static class JoinDataOut
     {
         public Integer userid;
         public Integer id;

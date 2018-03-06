@@ -1,16 +1,22 @@
 "use strict";
 
 import {
-EVENT_ACCOUNT_VIEW_LOGIN,
-EVENT_ACCOUNT_VIEW_REGISTER,
-EVENT_ACCOUNT_LOGIN,
-EVENT_ACCOUNT_REGISTER,
-EVENT_ACCOUNT_LOGOUT,
-EVENT_ACCOUNT_GET,
-EVENT_ACCOUNT_PUT,
-eventBus as eB
+    EVENT_ACCOUNT_VIEW_LOGIN,
+    EVENT_ACCOUNT_VIEW_REGISTER,
+    EVENT_ACCOUNT_LOGIN,
+    EVENT_ACCOUNT_REGISTER,
+    EVENT_ACCOUNT_LOGOUT,
+    EVENT_ACCOUNT_GET,
+    EVENT_ACCOUNT_PUT,
+    EVENT_UPDATE_GROUPINFO,
+    eventBus as eB
 } from "../util/eventBus.js"
-import { setTitle, getTemplate } from "../util/general.js"
+import { groupCtrl as gc } from "../control/groupCtrl.js"
+import { 
+    setTitle, 
+    getTemplate, 
+    GROUP_UPDATE_BUTTON 
+} from "../util/general.js"
 import Mustache from 'mustache'
 
 class AccountView {
@@ -70,18 +76,42 @@ class AccountView {
     accountPut(data) {
         console.log("Unused event sent: EVENT_ACCOUNT_PUT, with data: " + JSON.stringify(data));
     }
+    
+    updateHeader() {
+        $("#nav-group").remove();
+        $("#nav-drop").remove();
+
+        var userData = store.get('user');
+        if (userData !== undefined) {
+            let groupInfo = gc.getGroupInfo();
+            let invites = 0;
+            let owner = false;
+            for (var i = 0; i < groupInfo.length; i++) {
+                if (groupInfo[i].status === 2) {
+                    invites++;
+                } else if (groupInfo[i].status === 0) {
+                    owner = true;
+                }
+            };
+            var data = {user: userData, group: {info: groupInfo, isOwner: owner}};
+            if (invites > 0) {
+                data.group.invites = invites;
+            }
+            getTemplate('/templates/nav-user.mustache', (template) => $(Mustache.render(template, data)).insertAfter('#nav-user'));
+        }
+    }
 
     refreshHeader() {
-        var user = store.get('user');
-        if (user !== undefined) {
-            getTemplate('/templates/nav-user.mustache', (template) => $(Mustache.render(template, user)).insertAfter('#nav-user'));
-        } else {
-            $("#nav-group").remove();
-            $("#nav-drop").remove();
-        }
+        gc.get(() => {
+            accountView.updateHeader();
+        });
     }
 }
 
-const accountView = new AccountView();
+export const accountView = new AccountView();
 eB.register(accountView);
 accountView.refreshHeader();
+
+$(document).ready(function () {    
+    $(document).on("click", GROUP_UPDATE_BUTTON, accountView.refreshHeader);
+});

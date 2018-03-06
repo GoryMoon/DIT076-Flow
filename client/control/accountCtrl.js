@@ -71,6 +71,7 @@ class AccountCtrl {
             accountRegisterData.nick = getInput(ACCOUNT_REGISTER_NICK);
             accountRegisterData.password = getInput(ACCOUNT_REGISTER_PASSWORD);
             server.rpcRegisterAccount(accountRegisterData, data => {
+                store.set('user', data);
                 eB.notify(EVENT_ACCOUNT_REGISTER, data);
                 page('/');
             });
@@ -88,7 +89,7 @@ class AccountCtrl {
     }
 }
 
-const accountCtrl = new AccountCtrl();
+export const accountCtrl = new AccountCtrl();
 
 page('/login', accountCtrl.viewLogin);
 page('/register', accountCtrl.viewRegister);

@@ -5,7 +5,11 @@
  */
 package com.fgm.flow.rest;
 
+import com.fgm.flow.core.Membership;
 import com.fgm.flow.core.User;
+import com.fgm.flow.core.UserGroup;
+import com.fgm.flow.dao.MembershipRegistry;
+import com.fgm.flow.dao.UserGroupRegistry;
 import com.fgm.flow.dao.UserRegistry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,11 +33,19 @@ import com.google.gson.annotations.Expose;
 @Path("account")
 public class AccountResource
 {
+    // Should probably live in it's own file with the related get method -
+    // only get it with getPublicGroup
+    private static UserGroup publicGroup; 
+    
     @Context
     private UriInfo uriInfo;
 
     @EJB
     private UserRegistry userReg;
+    @EJB
+    private UserGroupRegistry uGroupReg;
+    @EJB
+    private MembershipRegistry memshipReg;
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
@@ -155,9 +167,41 @@ public class AccountResource
         User user = new User(inData.email, inData.nick, inData.password);    
         
         userReg.create(user);
-
+        
+        // Give the user membership in the public user group
+        Membership pubMembership = 
+            new Membership(user, getPublicGroup(uGroupReg), 1);
+        memshipReg.create(pubMembership);
+        
         // Respond with status 'ok' and only the ID if the
         // nick did not already exists
         return Response.ok(gson.toJson(new RegisterDataOut(user))).build();
+    }
+    
+    // For getting the 'Public' user group
+    private static synchronized UserGroup getPublicGroup(UserGroupRegistry uGroupReg)
+    {
+        if(publicGroup == null)
+        {
+            List<UserGroup> groupsWithNamePublic = uGroupReg.findByName("Public");
+            
+            switch(groupsWithNamePublic.size())
+            {
+                case 0:
+                publicGroup = new UserGroup("Public");
+                uGroupReg.create(publicGroup);
+                break;
+                
+                case 1:
+                publicGroup = groupsWithNamePublic.get(0);
+                break;
+                
+                default:
+                throw new IllegalStateException("More than one user group with"
+                        + "the name 'Public'");
+            }
+        }
+        
+        return publicGroup;
     }
 }

@@ -90,11 +90,6 @@ public class User implements Serializable
     @Getter
     private Set<HiddenPost> hiddenPosts;
     
-    public void addPost(Post post)
-    {
-        posts.add(post);
-    }
-    
     public boolean isMemberOfGroup(UserGroup userGroup)
     {
         if(userGroup == null)

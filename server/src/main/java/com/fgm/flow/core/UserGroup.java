@@ -78,11 +78,6 @@ public class UserGroup implements Serializable
     @Getter
     private List<Post> posts;
     
-    public void addPost(Post post)
-    {
-        posts.add(post);
-    }
-    
     public UserGroup(String name)
     {
         this.id = 0;

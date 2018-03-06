@@ -124,6 +124,7 @@ export const GROUP_RETRIEVE_BUTTON = "#group_retrieve_button";
 export const GROUP_SEND_BUTTON = "#group_send_button";
 export const GROUP_ACCEPT_INVITE_BUTTON = ".group_accept_invite_button";
 export const GROUP_UPDATE_BUTTON = "#group_update_button";
+export const GROUP_LEAVE_BUTTON = "#group_leave_button";
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////

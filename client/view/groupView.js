@@ -8,6 +8,7 @@ EVENT_GROUP_GET,
 EVENT_GROUP_POST,
 EVENT_GROUP_PUT,
 EVENT_GROUP_JOIN,
+EVENT_GROUP_LEAVE,
 EVENT_GROUP_INVITE,
 eventBus as eB
 } from "../util/eventBus.js"
@@ -40,6 +41,9 @@ class GroupView {
                 break;
             case EVENT_GROUP_JOIN:
                 this.groupJoin(data);
+                break;
+            case EVENT_GROUP_LEAVE:
+                this.groupLeave(data);
                 break;
             case EVENT_GROUP_INVITE:
                 this.groupInvite(data);
@@ -103,6 +107,10 @@ class GroupView {
             $('#groupModal').modal('hide');
         }
         av.refreshHeader();
+    }
+    
+    groupLeave(data) {
+        console.log("Unused event sent: EVENT_GROUP_PUT, with data: " + JSON.stringify(data));
     }
     
     groupInvite(data) {

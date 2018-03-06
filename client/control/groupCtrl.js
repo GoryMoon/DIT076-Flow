@@ -11,6 +11,7 @@ EVENT_GROUP_GET,
 EVENT_GROUP_POST,
 EVENT_GROUP_PUT,
 EVENT_GROUP_JOIN,
+EVENT_GROUP_LEAVE,
 EVENT_GROUP_INVITE,
 EVENT_UPDATE_HEADER,
 eventBus as eB
@@ -29,7 +30,8 @@ GROUP_INVITE_VIEW_BUTTON,
 GROUP_OWNER_VIEW_BUTTON,
 GROUP_RETRIEVE_BUTTON,
 GROUP_SEND_BUTTON,
-GROUP_ACCEPT_INVITE_BUTTON
+GROUP_ACCEPT_INVITE_BUTTON,
+GROUP_LEAVE_BUTTON
 } from "../util/general.js"
 
 class GroupCtrl {
@@ -92,6 +94,16 @@ class GroupCtrl {
         );
     }
     
+    leave() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let leaveGroupData = {userid: null, leaveid: null, id: null};
+        leaveGroupData.userid = store.get('user').id;
+        leaveGroupData.leaveid = store.get('user').id; // id of user to leave or kick
+        leaveGroupData.id = $(event.target).data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
+        server.rpcLeaveGroup(leaveGroupData, data => { 
+            return eB.notify(EVENT_GROUP_LEAVE, data);}
+        );
+    }
+    
     invite() { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
         let inviteGroupData = {userid: null, inviteid: null, id: null};
         inviteGroupData.userid = store.get('user').id; // id of inviter
@@ -108,6 +120,7 @@ $(document).ready(function () {
     $(document).on("click", GROUP_INVITE_VIEW_BUTTON, groupCtrl.inviteView);
     $(document).on("click", GROUP_OWNER_VIEW_BUTTON, groupCtrl.ownerView);
     $(document).on("click", GROUP_SEND_BUTTON, groupCtrl.post);
+    $(document).on("click", GROUP_LEAVE_BUTTON, groupCtrl.leave);
     $(document).on("click", GROUP_ACCEPT_INVITE_BUTTON, groupCtrl.join);
    // $(GROUP_RETRIEVE_BUTTON).on("click", groupCtrl.retrieve);
    // $(GROUP_SEND_BUTTON).on("click", groupCtrl.send);

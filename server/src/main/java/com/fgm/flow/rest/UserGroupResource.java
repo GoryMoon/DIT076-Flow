@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.ArrayList;
 import static java.util.Collections.sort;
 import java.util.Comparator;
+import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
 
 /**
  *
@@ -50,9 +51,11 @@ public class UserGroupResource {
 
     //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
+    /*
     @Context
     private UriInfo uriInfo;
-
+    */
+    
     //@EJB
     //private PostRegistry postReg;
     @EJB
@@ -411,7 +414,7 @@ public class UserGroupResource {
     
     
     
-    
+    /*
     @POST
     @Path("create")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
@@ -444,12 +447,19 @@ public class UserGroupResource {
         return Response.status(403).build();
         
     }
+    */
    
     
+    // For testing
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
-    {        
+    {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         List<UserGroup> userGroups = uGroupReg.findAll();
 
         return Response.ok(gsonEWE.toJson(userGroups)).build();

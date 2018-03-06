@@ -1,9 +1,19 @@
-<div class="card">
+<div id="create_post_card" class="card">
     <form class="status-upload">
         <input type="text" id="post_send_title" placeholder="Title" required>
         <textarea id="post_send_text" placeholder="What do you want to share" required></textarea>
         <div id="post-submit">
             <a class="btn btn-light mr-auto disabled" title="Picture" data-toggle="tooltip" data-placement="bottom"><i class="far fa-image"></i></a></li>
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="post_send_group_id">Group</label>
+                </div>
+                <select class="custom-select" name="Group" id="post_send_group_id">
+                    {{#groups}}
+                    <option value="{{id}}">{{name}}</option>
+                    {{/groups}}
+                </select>
+            </div>
             <button id="post_send_button" type="submit" class="btn btn-primary"><i class="fa fa-share"></i> Post</button>
         </div>
     </form>

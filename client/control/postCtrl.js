@@ -25,14 +25,17 @@ POST_RETRIEVE_BUTTON,
 POST_SEND_BUTTON,
 POST_HIDE_BUTTON
 } from "../util/general.js"
+import { groupCtrl as gc } from "../control/groupCtrl.js"
 
 class PostCtrl {
     get() {
         if (hasUser()) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
-            eB.notify(EVENT_POST_VIEW);
-            let getPostData = {userid: null, ownerid: null, groupid: null, nick: null, id: null, title: null, text: null, before: null, after: null, count: null};
-            getPostData.userid = store.get('user').id; // verify user can access this info.
-            server.rpcGetPost(getPostData, data => { return eB.notify(EVENT_POST_GET, data); });
+            gc.get(() => {
+                eB.notify(EVENT_POST_VIEW);
+                let getPostData = {userid: null, ownerid: null, groupid: null, nick: null, id: null, title: null, text: null, before: null, after: null, count: null};
+                getPostData.userid = store.get('user').id; // verify user can access this info.
+                server.rpcGetPost(getPostData, data => { return eB.notify(EVENT_POST_GET, data); });
+            });
         }
     }
     
@@ -49,11 +52,11 @@ class PostCtrl {
     }
     
     post(event) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
-        if (validate(POST_SEND_TITLE, POST_SEND_TEXT)) {
+        if (validate(POST_SEND_TITLE, POST_SEND_TEXT, POST_SEND_GROUP_ID)) {
             event.preventDefault();
             let postPostData = {userid: null, groupid: null, title: null, text: null, status: null};
             postPostData.userid = store.get('user').id;
-            postPostData.groupid = 0;//getInput(POST_SEND_GROUP_ID);
+            postPostData.groupid = getInput(POST_SEND_GROUP_ID);
             postPostData.title = getInput(POST_SEND_TITLE);
             postPostData.text = getInput(POST_SEND_TEXT);
             postPostData.status = 0;

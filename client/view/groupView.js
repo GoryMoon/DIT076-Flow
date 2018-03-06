@@ -103,7 +103,7 @@ class GroupView {
     groupJoin(data) {
         $('.group-invite-' + data.id).parent().remove();
         let list = $('#group-invite-list');
-        if (list.children().length === 0) {
+        if ($('#group-invite-list').children().length === 0) {
             $('#groupModal').modal('hide');
         }
         av.refreshHeader();

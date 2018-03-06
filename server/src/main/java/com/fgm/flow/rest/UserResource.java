@@ -59,6 +59,11 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response register(User user)
     {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         // Check user object
         if(user.getEmail() == null || user.getNick() == null  || user.getPassword() == null)
         {
@@ -88,6 +93,11 @@ public class UserResource {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response login(User userEmailAndPass)
     {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         // Check user object
         if(userEmailAndPass.getEmail() == null || userEmailAndPass.getPassword() == null)
         {
@@ -124,8 +134,13 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response countPosts(
             @PathParam("userid") int userId
-        ) 
+    ) 
     {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         User user = userReg.find(userId);
 
         if(user == null)
@@ -142,6 +157,11 @@ public class UserResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
     {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         List<User> users = userReg.findAll();
         return Response.ok(gsonEWE.toJson(users)).build();
     }
@@ -151,8 +171,7 @@ public class UserResource {
     
     
     
-    @XmlRootElement
-    static class GetData {
+    public static class GetData {
         public Integer userid;
         public Integer groupid;
         public Integer id;
@@ -166,7 +185,13 @@ public class UserResource {
     @Path("get")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getRequest(GetData in) {
+    public Response getRequest(GetData in)
+    {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         if (in == null) return Response.status(BAD_REQUEST).build();
         if (in.groupid != null || in.email != null || in.nick != null || in.count != null) 
             return Response.status(NOT_IMPLEMENTED).build();

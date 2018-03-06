@@ -101,6 +101,14 @@
     flex-wrap: wrap;
 }
 
+#post-submit select {
+    margin-right: 10px;
+}
+
+#post-submit .input-group {
+    width: inherit;
+}
+
 .status-upload textarea {
     border: medium none;
     color: #777777;

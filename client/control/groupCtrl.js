@@ -4,34 +4,35 @@ import {
 serverService as server
 } from "../model/serverService.js"
 import {
-EVENT_GROUP_CREATE_VIEW,
-EVENT_GROUP_INVITE_VIEW,
-EVENT_GROUP_OWNER_VIEW,
-EVENT_GROUP_GET,
-EVENT_GROUP_POST,
-EVENT_GROUP_PUT,
-EVENT_GROUP_JOIN,
-EVENT_GROUP_LEAVE,
-EVENT_GROUP_INVITE,
-EVENT_UPDATE_HEADER,
-eventBus as eB
+    EVENT_GROUP_CREATE_VIEW,
+    EVENT_GROUP_INVITE_VIEW,
+    EVENT_GROUP_OWNER_VIEW,
+    EVENT_GROUP_GET,
+    EVENT_GROUP_POST,
+    EVENT_GROUP_PUT,
+    EVENT_GROUP_JOIN,
+    EVENT_GROUP_LEAVE,
+    EVENT_GROUP_INVITE,
+    EVENT_UPDATE_HEADER,
+    EVENT_UPDATE_GROUP_INFO,
+    eventBus as eB
 } from "../util/eventBus.js"
 import {
-getInput,
-hasUser,
-validate,
-ACCOUNT_ID,
-GROUP_FILTER_TEXT,
-GROUP_FILTER_TIME,
-GROUP_FILTER_COUNT,
-GROUP_SEND_NAME,
-GROUP_CREATE_VIEW_BUTTON,
-GROUP_INVITE_VIEW_BUTTON,
-GROUP_OWNER_VIEW_BUTTON,
-GROUP_RETRIEVE_BUTTON,
-GROUP_SEND_BUTTON,
-GROUP_ACCEPT_INVITE_BUTTON,
-GROUP_LEAVE_BUTTON
+    getInput,
+    hasUser,
+    validate,
+    ACCOUNT_ID,
+    GROUP_FILTER_TEXT,
+    GROUP_FILTER_TIME,
+    GROUP_FILTER_COUNT,
+    GROUP_SEND_NAME,
+    GROUP_CREATE_VIEW_BUTTON,
+    GROUP_INVITE_VIEW_BUTTON,
+    GROUP_OWNER_VIEW_BUTTON,
+    GROUP_RETRIEVE_BUTTON,
+    GROUP_SEND_BUTTON,
+    GROUP_ACCEPT_INVITE_BUTTON,
+    GROUP_LEAVE_BUTTON
 } from "../util/general.js"
 
 class GroupCtrl {
@@ -47,6 +48,7 @@ class GroupCtrl {
             server.rpcGetGroup(getGroupData, data => { 
                 this.groupInfo = data;
                 eB.notify(EVENT_GROUP_GET, data);
+                eB.notify(EVENT_UPDATE_GROUP_INFO, data);
                 callback();
             });
         } else {

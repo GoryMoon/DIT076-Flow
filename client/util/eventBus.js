@@ -49,5 +49,6 @@ export const EVENT_GROUP_PUT = "GROUP_PUT";
 export const EVENT_GROUP_JOIN = "GROUP_JOIN";
 export const EVENT_GROUP_LEAVE = "GROUP_LEAVE";
 export const EVENT_GROUP_INVITE = "GROUP_INVITE";
+export const EVENT_UPDATE_GROUP_INFO = "GROUP_UPDATE_INFO"
 
 export const eventBus = new EventBus();

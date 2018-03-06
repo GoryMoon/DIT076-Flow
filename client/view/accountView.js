@@ -8,7 +8,7 @@ import {
     EVENT_ACCOUNT_LOGOUT,
     EVENT_ACCOUNT_GET,
     EVENT_ACCOUNT_PUT,
-    EVENT_UPDATE_HEADER,
+    EVENT_UPDATE_GROUPINFO,
     eventBus as eB
 } from "../util/eventBus.js"
 import { groupCtrl as gc } from "../control/groupCtrl.js"
@@ -43,9 +43,6 @@ class AccountView {
                 break;
             case EVENT_ACCOUNT_PUT:
                 this.accountPut(data);
-                break;
-            case EVENT_UPDATE_HEADER:
-                this.refreshHeader();
                 break;
         }
     }

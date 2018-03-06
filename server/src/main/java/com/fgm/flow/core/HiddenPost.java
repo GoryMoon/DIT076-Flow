@@ -22,6 +22,7 @@ import javax.persistence.Embeddable;
  *
  * @author fgm
  */
+@EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name="hiddenpost")
 public class HiddenPost

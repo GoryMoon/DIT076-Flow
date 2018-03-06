@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.HashSet;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
@@ -23,6 +24,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import com.google.gson.annotations.Expose;
+import static java.lang.System.out;
 
 /**
  * A Flow user
@@ -82,26 +84,16 @@ public class User implements Serializable
     @Setter
     @Getter
     private List<Membership> memberships;
-    //new ArrayList<>();
     
-    /*
-    public List<Post> getPosts()
-    {
-        return posts;
-    }
-    */
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @Setter
+    @Getter
+    private Set<HiddenPost> hiddenPosts;
     
     public void addPost(Post post)
     {
         posts.add(post);
     }
-   
-    /* temp
-    public void addUserGroup(Membership membership)
-    {
-        memberships.add(membership);
-    }
-    */
     
     public boolean isMemberOfGroup(UserGroup userGroup)
     {
@@ -188,6 +180,16 @@ public class User implements Serializable
         return null;
     }
     
+    public boolean isHidingPost(Post post)
+    {
+        if(post == null)
+        {
+            return false;
+        }
+                
+        return hiddenPosts.contains(new HiddenPost(this, post));
+    }
+    
     public List<UserGroup> getUserGroups()
     {
         List<UserGroup> userGroupList = new ArrayList<>(); 
@@ -202,23 +204,26 @@ public class User implements Serializable
     
     public User(String email, String nick, String password)
     {
-        this.id = 0;
         this.email = email;
         this.nick = nick;
         this.password = password;
-        this.posts = new ArrayList<>();
-        this.memberships = new ArrayList<>();
-        this.time = new Date();
+        initialise();
     }
     
     public User(User user)
     {
-        this.id = 0;
         this.email = user.getEmail();
         this.nick = user.getNick();
         this.password = user.getPassword();
+        initialise();
+    }
+    
+    private final void initialise()
+    {
+        this.id = 0;
         this.posts = new ArrayList<>();
         this.memberships = new ArrayList<>();
+        this.hiddenPosts = new HashSet<>();
         this.time = new Date();
     }
 }

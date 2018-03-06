@@ -24,6 +24,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import com.google.gson.annotations.Expose;
+import java.util.ArrayList;
 
 /**
  * A post
@@ -72,24 +73,22 @@ public class Post implements Serializable
     @Setter
     private UserGroup userGroup;
     
+    @OneToMany(mappedBy="post", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @Setter
+    @Getter
+    private List<Comment> comments;
+    
+    @OneToMany(mappedBy="post", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @Setter
+    @Getter
+    private List<HiddenPost> hidingUsers;
+
     @Getter
     @Setter
     @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     @Expose
     private Date time;
-    
-    @OneToMany(mappedBy="post", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-    @Setter
-    @Getter
-    private List<Comment> comments;
-    
-    /*
-    public void addComment(Comment comment)
-    {
-        comments.add(comment);
-    }
-    */
     
     public Post(String title, String text, UserGroup userGroup, User poster)
     {
@@ -98,6 +97,8 @@ public class Post implements Serializable
         this.text = text;
         this.userGroup = userGroup;
         this.poster = poster;
+        this.comments = new ArrayList<>();
+        this.hidingUsers = new ArrayList<>();
         this.time = new Date();
     }
     

@@ -48,8 +48,11 @@ import static javax.ws.rs.core.Response.Status.*;
  * @author fgm
  */
 @Path("post")
-public class PostResource {
-
+public class PostResource
+{
+    // For disabling test services
+    private final boolean TEST_SERVICES_DISABLED = true;
+    
     //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     @Context
@@ -128,7 +131,7 @@ public class PostResource {
         }
         
         //List<Post> posts = new ArrayList<>();
-        List<GetDataOut> GetDataOutList = new ArrayList<>();
+        List<GetDataOut> getDataOutList = new ArrayList<>();
         
         // Get posts for all groups the user is an owner of active member of
         if(inData.groupid == null)
@@ -139,7 +142,13 @@ public class PostResource {
                 {
                     for(Post post : memship.getUserGroup().getPosts())
                     {
-                        GetDataOutList.add(new GetDataOut(post));
+                        // Add the post to the list to return if the post isn't
+                        // hidden, is posted after a given after date and
+                        // is posted before a given before date
+                        if(postIsRequested(user, post, inData))
+                        {
+                            getDataOutList.add(new GetDataOut(post));
+                        }
                     }
                 }
             }
@@ -158,14 +167,52 @@ public class PostResource {
             }
             for(Post post : userGroup.getPosts())
             {
-                GetDataOutList.add(new GetDataOut(post));
+                if(postIsRequested(user, post, inData))
+                {
+                    getDataOutList.add(new GetDataOut(post));
+                }
             }
         }
 
         // Newest post first
-        sort(GetDataOutList, new GDOComparator());
+        sort(getDataOutList, new GDOComparator());
+        
+        int lSize = getDataOutList.size();
+        
+        // Reduce the number of posts in the list if count is given and the number
+        // of posts is greater than count
+        if(inData.count != null && lSize > inData.count)
+        {
+            // Negative count is not allowed
+            if(inData.count < 0)
+            {
+                return Response.status(BAD_REQUEST).build();
+            }
+            
+            // If only after is given up to count number of the oldest posts are
+            // retained, otherwise up to count number of the newest
+            if(inData.after != null && inData.before == null)
+            {
+                getDataOutList = getDataOutList.subList(lSize - inData.count, lSize);
+            }
+            else
+            {
+                getDataOutList = getDataOutList.subList(0, inData.count);
+            }
+        }
 
-        return Response.ok(gson.toJson(GetDataOutList)).build();
+        return Response.ok(gson.toJson(getDataOutList)).build();
+    }
+    
+    // Checks that the post isn't hidden, is posted after a given after date
+    // and is posted before a given before date
+    private boolean postIsRequested(User user, Post post, GetData inData)
+    {        
+        return !user.isHidingPost(post)
+                            && (inData.after == null || 
+                                post.getTime().after(inData.after))
+                            && (inData.before == null ||
+                                post.getTime().before(inData.before));
     }
     
     public static class PostData
@@ -205,7 +252,7 @@ public class PostResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(PostData inData)
     {
-        if(inData.userid == null)
+        if(inData.userid == null || inData.groupid == null)
         {
             return Response.status(BAD_REQUEST).build();
         }
@@ -333,11 +380,21 @@ public class PostResource {
         return Response.ok(gson.toJson(new PutDataOut(post))).build();
     }
     
+    private class GDOComparator implements Comparator<GetDataOut>
+    {
+        @Override
+        public int compare(GetDataOut lGDO, GetDataOut rGDO)
+        {
+            // Order inverted by switch of lPost and rPost
+            return  rGDO.time.compareTo(lGDO.time);
+        }
+    }
     
     
     
     
     
+    /*
     @POST
     @Path("create")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
@@ -384,6 +441,7 @@ public class PostResource {
         return Response.status(403).build();
         
     }
+    */
     
     /*
     @POST
@@ -418,7 +476,7 @@ public class PostResource {
 
     
 
-    
+    /*
     @POST
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @Produces({MediaType.APPLICATION_JSON})
@@ -453,16 +511,6 @@ public class PostResource {
         return Response.ok(gsonEWE.toJson(posts)).build();
     }
     
-    private class GDOComparator implements Comparator<GetDataOut>
-    {
-        @Override
-        public int compare(GetDataOut lGDO, GetDataOut rGDO)
-        {
-            // Order inverted by switch of lPost and rPost
-            return  rGDO.time.compareTo(lGDO.time);
-        }
-    }
-    
     private class postComparator implements Comparator<Post>
     {
         @Override
@@ -472,12 +520,18 @@ public class PostResource {
             return rPost.getTime().compareTo(lPost.getTime());
         }
     }
+*/
    
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
-    {        
+    {
+        if(TEST_SERVICES_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         List<Post> posts = postReg.findAll();
         
         return Response.ok(gsonEWE.toJson(posts)).build();

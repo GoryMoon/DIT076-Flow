@@ -30,10 +30,11 @@ import javax.persistence.MapsId;
 import javax.persistence.Embeddable;
 
 /**
- * A Flow user
+ * A user's membership in a group
  *
  * @author fgm
  */
+@EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name="membership")
 public class Membership

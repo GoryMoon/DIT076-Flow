@@ -73,7 +73,7 @@ public class PostResource
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
     
-    public static class GetData
+    public static class GetData // 3.1 Compliant
     {
         public Integer userid;
         public Integer ownerid;
@@ -87,22 +87,24 @@ public class PostResource
         public Integer count;
     }
     
-    public static class GetDataOut
+    public static class GetDataOut // 3.1 Compliant
     {
         public Integer ownerid;
         public Integer groupid;
         public Integer id;
         public String nick;
+        public String group;
         public String title;
         public String text;
         public Date time;
     
-        public GetDataOut(Post post)
+        public GetDataOut(Post post, String groupName)
         {
             this.ownerid = post.getPoster().getId();
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
+            this.group = groupName;
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime();            
@@ -147,7 +149,7 @@ public class PostResource
                         // is posted before a given before date
                         if(postIsRequested(user, post, inData))
                         {
-                            getDataOutList.add(new GetDataOut(post));
+                            getDataOutList.add(new GetDataOut(post, memship.getUserGroup().getName()));
                         }
                     }
                 }
@@ -169,7 +171,7 @@ public class PostResource
             {
                 if(postIsRequested(user, post, inData))
                 {
-                    getDataOutList.add(new GetDataOut(post));
+                    getDataOutList.add(new GetDataOut(post, userGroup.getName()));
                 }
             }
         }
@@ -215,20 +217,22 @@ public class PostResource
                                 post.getTime().before(inData.before));
     }
     
-    public static class PostData
+    public static class PostData // 3.1 Compliant
     {
         public Integer userid;
         public Integer groupid;
         public String title;
         public String text;
+        public Integer status;
     }
     
-    public static class PostDataOut
+    public static class PostDataOut // 3.1 Compliant
     {
         public Integer ownerid;
         public Integer groupid;
         public Integer id;
         public String nick;
+        public String group;    // name of group
         public String title;
         public String text;
         public Date time;
@@ -239,6 +243,7 @@ public class PostResource
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
+            this.group = new String("<Not Implemented>");
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime(); 
@@ -267,7 +272,6 @@ public class PostResource
         UserGroup userGroup = uGroupReg.find(inData.groupid);
         
         
-        
         if(!user.isMemberOfGroup(userGroup))
         {
              return Response.status(UNAUTHORIZED).build();           
@@ -281,31 +285,33 @@ public class PostResource
     }
 
 
-    static class PutData
+    public static class PutData // 3.1 Compliant
     {
         public Integer userid;
         public Integer id;
         public String title;
         public String text;
-        public String status;
+        public Integer status;
     }
     
-    static class PutDataOut
+    public static class PutDataOut // 3.1 Compliant
     {
         public Integer ownerid;
         public Integer groupid;
         public Integer id;
         public String nick;
+        public String group;
         public String title;
         public String text;
         public Date time;
     
-        public PutDataOut(Post post)
+        public PutDataOut(Post post) // 3.1 Compliant
         {
             this.ownerid = post.getPoster().getId();
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
+            this.group = new String("<Not Implemented>");
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime();            
@@ -354,9 +360,9 @@ public class PostResource
             
             HiddenPostId hiddenPostId = new HiddenPostId(inData.userid, inData.id);
             
-            switch(inData.status.toLowerCase())
+            switch(inData.status)
             {
-                case "hidden":
+                case 1:
                 // Do nothing if the hidden relationship between the user 
                 // and the post exist already
                 if(hidePostReg.find(hiddenPostId) == null)
@@ -364,7 +370,7 @@ public class PostResource
                     hidePostReg.create(new HiddenPost(user, post));   
                 }
                 break;
-                case "visible":
+                case 0:
                 // Do nothing if it is already the case that the hidden
                 // relationship between the user and the post does not exist
                 if(hidePostReg.find(hiddenPostId) != null)

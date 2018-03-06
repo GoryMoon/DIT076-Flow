@@ -40,10 +40,15 @@ export const EVENT_POST_GET = "POST_RETRIEVE";
 export const EVENT_POST_POST = "POST_SEND";
 export const EVENT_POST_PUT = "POST_HIDE";
 
+export const EVENT_GROUP_CREATE_VIEW = "GROUP_CREATE_VIEW"
+export const EVENT_GROUP_INVITE_VIEW = "GROUP_INVITE_VIEW"
+export const EVENT_GROUP_OWNER_VIEW = "GROUP_OWNER_VIEW"
 export const EVENT_GROUP_GET = "GROUP_RETRIEVE";
 export const EVENT_GROUP_POST = "GROUP_SEND";
 export const EVENT_GROUP_PUT = "GROUP_PUT";
 export const EVENT_GROUP_JOIN = "GROUP_JOIN";
+export const EVENT_GROUP_LEAVE = "GROUP_LEAVE";
 export const EVENT_GROUP_INVITE = "GROUP_INVITE";
+export const EVENT_UPDATE_GROUP_INFO = "GROUP_UPDATE_INFO"
 
 export const eventBus = new EventBus();

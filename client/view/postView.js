@@ -1,10 +1,11 @@
 
 import {
-EVENT_POST_VIEW,
-EVENT_POST_GET,
-EVENT_POST_POST,
-EVENT_POST_PUT,
-eventBus as eB
+    EVENT_POST_VIEW,
+    EVENT_POST_GET,
+    EVENT_POST_POST,
+    EVENT_POST_PUT,
+    EVENT_UPDATE_GROUP_INFO,
+    eventBus as eB
 } from "../util/eventBus.js"
 import { 
     setTitle, 
@@ -16,19 +17,11 @@ import {
 } from "../util/general.js"
 import Mustache from 'mustache'
 import { commentCtrl as cc } from "../control/commentCtrl.js"
+import { groupCtrl as gc } from "../control/groupCtrl.js"
 
 class CommentView {
  
     onModelEvent(event, data) {
-        if (event === EVENT_POST_GET) {
-            this.postRetrieve(data);
-        } else if (event === EVENT_POST_VIEW) {
-            this.postView();
-        } else if (event === EVENT_POST_POST) {
-            this.postSend(data);
-        } else if (event === EVENT_POST_PUT) {
-            this.postHide(data);
-        }
         switch(event) {
             case EVENT_POST_GET:
                 this.postRetrieve(data);
@@ -41,6 +34,9 @@ class CommentView {
                 break;
             case EVENT_POST_PUT:
                 this.postHide(data);
+                break;
+            case EVENT_UPDATE_GROUP_INFO:
+                this.updateCreatePostView(data);
                 break;
         }
     }
@@ -80,16 +76,34 @@ class CommentView {
   
     postView() {
         setTitle('Feed');
-        getTemplate('/templates/create-post.mustache', (template) => $('#content').html(Mustache.render(template)));
+        let info = gc.getGroupInfo();
+        let g = [];
+        for (var i = 0; i < info.length; i++) {
+            console.log(info[i].status != 2);
+            if (info[i].status != 2) {
+                g.push(info[i]);
+            }
+        }
+        getTemplate('/templates/create-post.mustache', (template) => $('#content').html(Mustache.render(template, {groups: g})));
     }
 
-    postSend(data) { // NOT TESTED
-      console.log("Unused event sent: EVENT_POST_POST, with data: " + JSON.stringify(data));
+    updateCreatePostView(data) {
+        if ($("#create_post_card") != undefined) {
+            setTitle('Feed');
+            let g = [];
+            for (var i = 0; i < data.length; i++) {
+                console.log(data[i].status != 2);
+                if (data[i].status != 2) {
+                    g.push(data[i]);
+                }
+            }
+            getTemplate('/templates/create-post.mustache', (template) => $('#create_post_card').replaceWith(Mustache.render(template, {groups: g})));
+        }
     }
+
+    postSend(data) {}
     
-    postHide(data) { // NOT TESTED
-      console.log("Unused event sent: EVENT_POST_PUT, with data: " + JSON.stringify(data));
-    }
+    postHide(data) {}
 
     updateTime() {
         let times = $('.live-time');

@@ -89,7 +89,7 @@ class AccountCtrl {
     }
 }
 
-const accountCtrl = new AccountCtrl();
+export const accountCtrl = new AccountCtrl();
 
 page('/login', accountCtrl.viewLogin);
 page('/register', accountCtrl.viewRegister);

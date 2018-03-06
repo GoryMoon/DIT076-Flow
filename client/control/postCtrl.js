@@ -65,7 +65,7 @@ class PostCtrl {
     }
 }
 
-const postCtrl = new PostCtrl();
+export const postCtrl = new PostCtrl();
 
 //TODO add pathes for the data loading
 page('/', postCtrl.get);

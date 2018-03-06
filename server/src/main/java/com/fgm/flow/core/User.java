@@ -175,6 +175,11 @@ public class User implements Serializable
         return null;
     }
     
+    public boolean hasAnyMembershipStatus(UserGroup userGroup)
+    {
+        return getMembershipStatus(userGroup) != null;
+    }
+    
     public boolean isHidingPost(Post post)
     {
         if(post == null)

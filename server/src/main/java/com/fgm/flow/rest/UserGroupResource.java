@@ -9,6 +9,7 @@ import com.fgm.flow.core.Post;
 import com.fgm.flow.core.User;
 import com.fgm.flow.core.UserGroup;
 import com.fgm.flow.core.Membership;
+import com.fgm.flow.core.Membership.MembershipId;
 import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.UserRegistry;
 import com.fgm.flow.dao.UserGroupRegistry;
@@ -275,14 +276,14 @@ public class UserGroupResource {
         return Response.ok(gson.toJson(new JoinDataOut(membership))).build();
     }
 
-    static class InviteData
+    public static class InviteData
     {
         public Integer userid;
         public Integer invitedid;
         public Integer id;
     }
 
-    static class InviteDataOut
+    public static class InviteDataOut
     {
         public Integer invitedid;
         public Integer id;
@@ -303,7 +304,7 @@ public class UserGroupResource {
     {
         // Respond with status 'bad request' if userid, invitedid 
         // and id haven't been supplied
-        if(inData.userid == null || inData.userid == null || inData.id == null)
+        if(inData.userid == null || inData.invitedid == null || inData.id == null)
         {
             return Response.status(BAD_REQUEST).build();
         }
@@ -313,7 +314,7 @@ public class UserGroupResource {
         UserGroup userGroup = uGroupReg.find(inData.id);
 
         // Respond with status 'not found' if the user, invited user 
-        // and user group corresponding to the id:s supplied do not exist
+        // or user group corresponding to the id supplied doesn't exist
         if(user == null || invited == null || userGroup == null)
         {
             return Response.status(NOT_FOUND).build();
@@ -332,6 +333,77 @@ public class UserGroupResource {
         
         return Response.ok(gson.toJson(new InviteDataOut(membership))).build();
     }
+    
+    public static class LeaveData
+    {
+        public Integer userid;
+        public Integer leaveid;
+        public Integer id;
+    }
+
+    public static class LeaveDataOut
+    {
+        public Integer leaveid;
+        public Integer id;
+        
+        public LeaveDataOut(User exUser, UserGroup userGroup)
+        {
+            this.leaveid = exUser.getId();
+            this.id = userGroup.getId();
+        }
+    }
+    
+    @POST
+    @Path("leave")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response leaveRequest(LeaveData inData)
+    {
+        // Respond with status 'bad request' if userid, leaveid or id hasn't been
+        // supplied
+        if(inData.userid == null || inData.leaveid == null || inData.id == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        User user = userReg.find(inData.userid);
+        User exUser = userReg.find(inData.leaveid);
+        UserGroup userGroup = uGroupReg.find(inData.id);
+
+        // Respond with status 'not found' if the user, user to be exclude or 
+        // user group corresponding to the id supplied does not exist
+        if(user == null || exUser == null || userGroup == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        // Respond with status 'not found' if the given user to be excluded 
+        // hasn't got any membership status in the given user group
+        if(!exUser.hasAnyMembershipStatus(userGroup))
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        // Respond with status 'unauthorized' if the given user isn't the
+        // same as the one to be excluded or isn't the owner of the group
+        if(!user.equals(exUser) && !user.isOwnerOfGroup(userGroup))
+        {
+            return Response.status(UNAUTHORIZED).build();
+        }
+        
+        // Update the membership to status 'active member'
+        MembershipId membershipId =
+            new MembershipId(exUser.getId(), userGroup.getId());
+        memshipReg.delete(membershipId);
+        
+        return Response.ok(gson.toJson(new LeaveDataOut(exUser, userGroup))).build();
+    }
+
+    
+    
+    
+    
+    
     
     
     

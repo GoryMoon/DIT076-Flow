@@ -134,6 +134,16 @@
     margin: 0 auto;
 }
 
+.group-rename {
+    max-width: inherit;
+    padding: 0px;
+}
+
+.form-custom.group-rename .form-label-group {
+    width: 100%;
+    margin-bottom: 0rem;
+}
+
 .form-custom .form-label-group {
     position: relative;
     margin-bottom: 1rem;
@@ -195,11 +205,11 @@
     cursor: pointer;
 }
 
-.show_hide-comment {
+.show_hide {
     cursor: pointer;
     border-bottom: 1px hidden var(--dark);
 }
 
-.show_hide-comment:hover {
+.show_hide:hover {
     border-bottom-style: solid;
 }

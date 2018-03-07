@@ -115,6 +115,8 @@ export const GROUP_FILTER_TEXT = "#group_filter_text";
 export const GROUP_FILTER_TIME = "#group_filter_time";
 export const GROUP_FILTER_COUNT = "#group_filter_count";
 export const GROUP_SEND_NAME = "#group_send_name";
+export const GROUP_CHANGE_NAME = ".group_change_name";
+export const GROUP_INVITE = ".group_invite";
 
 // GROUP BUTTONS
 export const GROUP_CREATE_VIEW_BUTTON = "#group_create_view_button";
@@ -122,9 +124,12 @@ export const GROUP_INVITE_VIEW_BUTTON = "#group_invite_view_button";
 export const GROUP_OWNER_VIEW_BUTTON = "#group_owner_view_button";
 export const GROUP_RETRIEVE_BUTTON = "#group_retrieve_button";
 export const GROUP_SEND_BUTTON = "#group_send_button";
+export const GROUP_CHANGE_NAME_BUTTON = ".group_change_name_button";
+export const GROUP_INVITE_BUTTON = ".group_invite_button";
 export const GROUP_ACCEPT_INVITE_BUTTON = ".group_accept_invite_button";
-export const GROUP_UPDATE_BUTTON = "#group_update_button";
+export const GROUP_UPDATE_BUTTON = ".group_update_button";
 export const GROUP_LEAVE_BUTTON = "#group_leave_button";
+export const GROUP_KICK_BUTTON = "#group_kick_button";
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +147,7 @@ export const POST_SEND_TEXT = "#post_send_text";
 export const POST_HIDE_ID = "#post_hide_id";
 
 // POST BUTTONS
-export const POST_RETRIEVE_BUTTON = "#post_retrieve_button";
+export const POST_RETRIEVE_BUTTON = ".post_retrieve_button";
 export const POST_SEND_BUTTON = "#post_send_button";
 export const POST_HIDE_BUTTON = ".post_hide_button";
 

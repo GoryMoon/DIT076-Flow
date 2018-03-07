@@ -139,14 +139,14 @@ public class UserGroupResource {
         }
     }
 
-    static class PutData
+    public static class PutData
     {
         public Integer userid;
         public Integer id;
         public String name;
     }
     
-    static class PutDataOut
+    public static class PutDataOut
     {
         public Integer id;
         public String name;

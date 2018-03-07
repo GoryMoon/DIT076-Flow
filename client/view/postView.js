@@ -48,7 +48,7 @@ class CommentView {
             }
             $('[data-toggle="tooltip"]').tooltip();
             //Show/hide toggle
-            $(".show_hide-comment.outer").click((event) => {
+            $(".show_hide.comment_link.outer").click((event) => {
                 let self = $(event.target);
                 let drawer = self.next();
                 if (drawer.hasClass('show')) {
@@ -62,7 +62,7 @@ class CommentView {
                 drawer.collapse('toggle');
             });
             //Bottom hide comments button
-            $(".show_hide-comment.inner").click((event) => {
+            $(".show_hide.comment_link.inner").click((event) => {
                 let drawer = $(event.target).parent();
                 if (drawer.hasClass('show')) {
                     drawer.prev().html("Show comments <i class=\"fas fa-angle-down\"></i>");
@@ -79,7 +79,6 @@ class CommentView {
         let info = gc.getGroupInfo();
         let g = [];
         for (var i = 0; i < info.length; i++) {
-            console.log(info[i].status != 2);
             if (info[i].status != 2) {
                 g.push(info[i]);
             }
@@ -92,7 +91,6 @@ class CommentView {
             setTitle('Feed');
             let g = [];
             for (var i = 0; i < data.length; i++) {
-                console.log(data[i].status != 2);
                 if (data[i].status != 2) {
                     g.push(data[i]);
                 }

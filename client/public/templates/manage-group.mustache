@@ -1,0 +1,82 @@
+<h1 class="mt-4">Joined Groups:</h1>
+<hr>
+<div>
+    <ul id="group-leave-list" class="list-group list-group-flush">
+        {{#leave}}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h3 class="mr-auto">{{name}}</h3>
+            <button class="btn btn-warning group-leave-{{id}}" data-id="{{id}}" data-name="{{name}}"  data-toggle="modal" data-target="#leaveModal">Leave</button>
+        </li>
+        {{/leave}}
+        {{^leave}}
+        <li class="list-group-item">
+            No group to leave
+        </li>
+        {{/leave}}
+    </ul>
+</div>
+
+{{#isOwner}}
+<h1 class="mt-5">Owned Groups:</h1>
+<hr>
+<div>
+    {{#owner}}
+    <div id="groupid-{{id}}" data-id="{{id}}" class="card">
+        <div class="card-header">
+            <form class="form-custom group-rename d-flex justify-content-between align-items-center">
+                <div class="form-label-group mr-3">
+                    <input type="text" id="change_name-{{id}}" class="form-control" placeholder="Group Name" value="{{name}}" required>
+                    <label for="change_name-{{id}}">Group Name</label>
+                </div>
+                <button disabled class="group_change_name_button btn btn-lg btn-primary" type="submit" data-id="{{id}}">Rename Group</button>
+            </form>
+        </div>
+        <div class="card-body">
+            <h5>Invite user:</h5>
+            <form class="form-custom group-rename d-flex justify-content-between align-items-center">
+                <div class="form-label-group mr-3">
+                    <input type="text" id="invite_user-{{id}}" class="group_invite form-control" placeholder="Group Name" required>
+                    <label for="invite_user-{{id}}">User Id</label>
+                </div>
+                <button class="group_invite_button btn btn-lg btn-primary" type="submit" data-id="{{id}}">Invite</button>
+            </form>
+            <hr>
+            <h5>User list:</h5>
+            <div>
+                <a class="show_hide user_link outer" data-id="{{id}}">Show Users <i class="fas fa-angle-down"></i></a>
+                <div class="panel-collapse collapse out users-collapse">
+                    <button class="users_retrieve_button mb-2 btn btn-outline-info btn-small"><i class="fas fa-sync"></i></button>
+                    <ul class="users list-group list-group-flush">
+
+                    </ul>
+                    <a class="show_hide user_link inner">Hide Users <i class="fas fa-angle-up"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/owner}}
+</div>
+{{/isOwner}}
+
+
+<div class="modal fade" id="kickModal" tabindex="-1" role="dialog" aria-labelledby="kickModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="kickModalLabel">Kick user from group?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <strong>Are you sure you want to kick <em id="kickModalUserName"></em>?</strong><br>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="group_kick_button" type="button" class="btn btn-danger">Kick</button>
+            </div>
+        </div>
+    </div>
+</div>

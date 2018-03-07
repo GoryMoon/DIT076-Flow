@@ -6,13 +6,14 @@ serverService as server
 import {
     EVENT_GROUP_CREATE_VIEW,
     EVENT_GROUP_INVITE_VIEW,
-    EVENT_GROUP_OWNER_VIEW,
+    EVENT_GROUP_MANAGE_VIEW,
     EVENT_GROUP_GET,
     EVENT_GROUP_POST,
     EVENT_GROUP_PUT,
     EVENT_GROUP_JOIN,
     EVENT_GROUP_LEAVE,
     EVENT_GROUP_INVITE,
+    EVENT_GROUP_KICK,
     EVENT_UPDATE_HEADER,
     EVENT_UPDATE_GROUP_INFO,
     eventBus as eB
@@ -26,13 +27,17 @@ import {
     GROUP_FILTER_TIME,
     GROUP_FILTER_COUNT,
     GROUP_SEND_NAME,
+    GROUP_CHANGE_NAME,
     GROUP_CREATE_VIEW_BUTTON,
     GROUP_INVITE_VIEW_BUTTON,
     GROUP_OWNER_VIEW_BUTTON,
     GROUP_RETRIEVE_BUTTON,
     GROUP_SEND_BUTTON,
     GROUP_ACCEPT_INVITE_BUTTON,
-    GROUP_LEAVE_BUTTON
+    GROUP_LEAVE_BUTTON,
+    GROUP_CHANGE_NAME_BUTTON,
+    GROUP_INVITE_BUTTON,
+    GROUP_KICK_BUTTON
 } from "../util/general.js"
 
 class GroupCtrl {
@@ -64,14 +69,23 @@ class GroupCtrl {
         eB.notify(EVENT_GROUP_INVITE_VIEW);
     }
 
-    ownerView() {
-        eB.notify(EVENT_GROUP_OWNER_VIEW);
+    manageView() {
+        eB.notify(EVENT_GROUP_MANAGE_VIEW);
     }
     
-    put() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
-        let commentPutData = {userid: null, id: null, name: null};
-        commentPutData.userid = store.get('user').id;
-        server.rpcPutGroup(commentPutData, data => { return eB.notify(EVENT_GROUP_PUT, data); });
+    put(event) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let id = $(event.target).data('id');
+        if (validate("#change_name-" + id)) {
+            event.preventDefault();
+            let putGroupData = {userid: null, id: null, name: null};
+            putGroupData.userid = store.get('user').id;
+            putGroupData.id = id;
+            putGroupData.name = $("#change_name-" + id).val();
+            server.rpcPutGroup(putGroupData, data => { 
+                eB.notify(EVENT_GROUP_PUT, data);
+                this.get(() => {});
+            });
+        }
     }
     
     post(event) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
@@ -105,26 +119,42 @@ class GroupCtrl {
             return eB.notify(EVENT_GROUP_LEAVE, data);}
         );
     }
+
+    kick() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+        let leaveGroupData = {userid: null, leaveid: null, id: null};
+        leaveGroupData.userid = store.get('user').id;
+        let id = $(event.target).data('id');
+        leaveGroupData.leaveid = id.id; // id of user to leave or kick
+        leaveGroupData.id = id.groupid; // ID OF GROUP THE USER TRIES TO JOIN.
+        server.rpcLeaveGroup(leaveGroupData, data => { 
+            return eB.notify(EVENT_GROUP_KICK, data);}
+        );
+    }
     
     invite() { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
-        let inviteGroupData = {userid: null, inviteid: null, id: null};
-        inviteGroupData.userid = store.get('user').id; // id of inviter
-        inviteGroupData.inviteid = 0; // id of user to be invited
-        inviteGroupData.id = 0; // id of group
-        server.rpcInviteGroup(inviteGroupData, data => { return eB.notify(EVENT_GROUP_INVITE, data);});
+        let id = $(event.target).data('id');
+        if (validate("#invite_user-" + id)) {
+            event.preventDefault();
+            let inviteGroupData = {userid: null, inviteid: null, id: null};
+            inviteGroupData.userid = store.get('user').id; // id of inviter
+            inviteGroupData.invitedid = parseInt($('#invite_user-' + id).val());
+            inviteGroupData.id = id; // id of group
+            server.rpcInviteGroup(inviteGroupData, data => { return eB.notify(EVENT_GROUP_INVITE, data);});
+        }
     }
 }
 
 export const groupCtrl = new GroupCtrl();
 
+page('/group', groupCtrl.manageView);
+
 $(document).ready(function () {    
     $(document).on("click", GROUP_CREATE_VIEW_BUTTON, groupCtrl.createView);
     $(document).on("click", GROUP_INVITE_VIEW_BUTTON, groupCtrl.inviteView);
-    $(document).on("click", GROUP_OWNER_VIEW_BUTTON, groupCtrl.ownerView);
     $(document).on("click", GROUP_SEND_BUTTON, groupCtrl.post);
     $(document).on("click", GROUP_LEAVE_BUTTON, groupCtrl.leave);
+    $(document).on("click", GROUP_KICK_BUTTON, groupCtrl.kick);
     $(document).on("click", GROUP_ACCEPT_INVITE_BUTTON, groupCtrl.join);
-   // $(GROUP_RETRIEVE_BUTTON).on("click", groupCtrl.retrieve);
-   // $(GROUP_SEND_BUTTON).on("click", groupCtrl.send);
-//    $(COMMENT_HIDE_BUTTON).on("click", commentCtrl.hide);
+    $(document).on("click", GROUP_CHANGE_NAME_BUTTON, groupCtrl.put);
+    $(document).on("click", GROUP_INVITE_BUTTON, groupCtrl.invite);
 });

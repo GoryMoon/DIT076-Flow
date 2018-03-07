@@ -69,13 +69,9 @@ class AccountView {
         this.refreshHeader();
     }
     
-    accountGet(data) {
-        console.log("Unused event sent: EVENT_ACCOUNT_GET, with data: " + JSON.stringify(data));
-    }
+    accountGet(data) {}
     
-    accountPut(data) {
-        console.log("Unused event sent: EVENT_ACCOUNT_PUT, with data: " + JSON.stringify(data));
-    }
+    accountPut(data) {}
     
     updateHeader() {
         $("#nav-group").remove();
@@ -93,11 +89,11 @@ class AccountView {
                     owner = true;
                 }
             };
-            var data = {user: userData, group: {info: groupInfo, isOwner: owner}};
+            let data = {user: userData, group: {hasGroups: groupInfo.length > 0,info: groupInfo, isOwner: owner}};
             if (invites > 0) {
                 data.group.invites = invites;
             }
-            getTemplate('/templates/nav-user.mustache', (template) => $(Mustache.render(template, data)).insertAfter('#nav-user'));
+            getTemplate('/templates/nav-user.mustache', (template) => $('#navBarNav').append($(Mustache.render(template, data))));
         }
     }
 

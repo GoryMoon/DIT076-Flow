@@ -36,10 +36,11 @@ class AccountCtrl {
         eB.notify(EVENT_ACCOUNT_VIEW_REGISTER, ctx);
     }
     
-    get() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+    get(groupid) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
         let accountGetData = {userid: null, groupid: null, id: null, email: null, nick: null, count: null};
         accountGetData.userid = store.get('user').id; // verify this user CAN access this information.
-        server.rpcGetAccount(accountGetData, data => { eB.notify(EVENT_ACCOUNT_GET, data); });
+        accountGetData.groupid = groupid;
+        server.rpcGetAccount(accountGetData, data => { eB.notify(EVENT_ACCOUNT_GET, {id: groupid, users: data}); });
     }
 
     login(event) { // PROTOCOL 3.0 COMPLIANT - TODO CLEANUP - NOT TESTED

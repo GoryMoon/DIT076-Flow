@@ -28,6 +28,12 @@ POST_HIDE_BUTTON
 import { groupCtrl as gc } from "../control/groupCtrl.js"
 
 class PostCtrl {
+
+    refresh() {
+        if (location.pathname == '/') {
+            postCtrl.get();
+        }
+    }
     get() {
         if (hasUser()) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
             gc.get(() => {
@@ -74,7 +80,7 @@ export const postCtrl = new PostCtrl();
 page('/', postCtrl.get);
 
 $(document).ready(function () {
-    $(document).on("click", POST_RETRIEVE_BUTTON, postCtrl.get);
+    $(document).on("click", POST_RETRIEVE_BUTTON, postCtrl.refresh);
     $(document).on("click", POST_SEND_BUTTON, postCtrl.post);
     $(document).on("click", POST_HIDE_BUTTON, postCtrl.put);
 });

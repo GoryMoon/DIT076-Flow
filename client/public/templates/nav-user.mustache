@@ -8,17 +8,19 @@
       {{#group.invites}}
       <a class="dropdown-item pointer" id="group_invite_view_button">Manage invites <span class="badge badge-dark">{{group.invites}}</span></a>
       {{/group.invites}}
-      {{#group.isOwner}}
-      <a class="dropdown-item pointer" id="group_owner_view_button">Manage owned groups</a>
-      {{/group.isOwner}}
-      <a class="dropdown-item pointer" id="group_update_button">Update group info</a>
+      {{#group.hasGroups}}
+      <a class="dropdown-item pointer" href="/group" id="group_owner_view_button">Manage groups</a>
+      {{/group.hasGroups}}
     </div>
+  </li>
+  <li class="nav-item">
+    <a class="group_update_button post_retrieve_button nav-link pointer" title="Refresh"><i class="fas fa-sync"></i></a>
   </li>
 </ul>
 
 <ul id="nav-drop" class="navbar-nav">
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarProfileLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a class="nav-link dropdown-toggle pointer" id="navbarProfileLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {{user.nick}}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarProfileLink">

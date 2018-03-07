@@ -234,11 +234,13 @@ public class UserGroupResource {
     {
         public Integer userid;
         public Integer id;
+        public String nick;
         
-        public JoinDataOut(Membership membership)
+        public JoinDataOut(Membership membership, String nick)
         {
             this.userid = membership.getUser().getId();
             this.id = membership.getUserGroup().getId();
+            this.nick = nick;
         }
     }
     
@@ -276,7 +278,7 @@ public class UserGroupResource {
         Membership membership = new Membership(user, userGroup, 1);
         memshipReg.update(membership);
         
-        return Response.ok(gson.toJson(new JoinDataOut(membership))).build();
+        return Response.ok(gson.toJson(new JoinDataOut(membership, user.getNick()))).build();
     }
 
     public static class InviteData
@@ -290,11 +292,13 @@ public class UserGroupResource {
     {
         public Integer invitedid;
         public Integer id;
+        public String nick;
         
-        public InviteDataOut(Membership membership)
+        public InviteDataOut(Membership membership, String nick)
         {
             this.invitedid = membership.getUser().getId();
             this.id = membership.getUserGroup().getId();
+            this.nick = nick;
         }
     }
     
@@ -334,7 +338,7 @@ public class UserGroupResource {
         Membership membership = new Membership(invited, userGroup, 2);
         memshipReg.create(membership);
         
-        return Response.ok(gson.toJson(new InviteDataOut(membership))).build();
+        return Response.ok(gson.toJson(new InviteDataOut(membership, invited.getNick()))).build();
     }
     
     public static class LeaveData
@@ -348,11 +352,13 @@ public class UserGroupResource {
     {
         public Integer leaveid;
         public Integer id;
+        public String nick;
         
         public LeaveDataOut(User exUser, UserGroup userGroup)
         {
             this.leaveid = exUser.getId();
             this.id = userGroup.getId();
+            this.nick = exUser.getNick();
         }
     }
     

@@ -79,11 +79,18 @@ export const ACCOUNT_REGISTER_EMAIL = "#account_register_email";
 export const ACCOUNT_REGISTER_NICK = "#account_register_nick";
 export const ACCOUNT_REGISTER_PASSWORD = "#account_register_password";
 export const ACCOUNT_REGISTER_PASSWORD_CONFIRM = "#account_register_password_confirm";
+export const ACCOUNT_CHANGE_PASSWORD = "#account_change_password";
+export const ACCOUNT_CHANGE_PASSWORD_CONFIRM = "#account_change_password_confirm";
+export const ACCOUNT_CHANGE_EMAIL = "#account_change_email";
+export const ACCOUNT_CHANGE_NICK = "#account_change_nick";
 
 // ACCOUNT BUTTONS
 export const ACCOUNT_LOGIN_BUTTON = "#account_login_button";
 export const ACCOUNT_LOGOUT_BUTTON = "#account_logout_button";
 export const ACCOUNT_REGISTER_BUTTON = "#account_register_button";
+export const ACCOUNT_PROFILE_BUTTON = "#account_profile_button";
+export const ACCOUNT_UPDATE_INFO_BUTTON = "#account_update_info_button";
+export const ACCOUNT_UPDATE_PASSWORD_BUTTON = "#account_update_password_button";
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////

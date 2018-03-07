@@ -73,7 +73,7 @@ class ServerService {
         this.sendingFunc(putAccountData, "rpcPutAccount");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "account/login/",
+            url: this.serverUrl + "account/put/",
             data: JSON.stringify(putAccountData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
@@ -82,7 +82,12 @@ class ServerService {
         }).done(data => {
             this.successFunc(data, "rpcPutAccount");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail(function (msg, ajaxOpt, thrownError) {
+            $.notify({
+                message: thrownError
+            },{
+                type: 'warning'
+            });
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcPutAccount"); 
         });
     }

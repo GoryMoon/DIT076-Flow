@@ -61,18 +61,18 @@ class GroupView {
     }
 
     groupCreateView() {
-        $("#groupModalTitle").text("Create Group");
+        $("#mainModalTitle").text("Create Group");
         getTemplate('/templates/create-group.mustache', (template) => {
             $('#modal-content').html(Mustache.render(template));
-            $('#groupModal').modal('show');
-            $('#groupModal').on('shown.bs.modal', function () {
+            $('#mainModal').modal('show');
+            $('#mainModal').on('shown.bs.modal', function () {
                 $('#group_send_name').trigger('focus')
             });
         });
     }
     
     groupInviteView() {
-        $("#groupModalTitle").text("Group Invites");
+        $("#mainModalTitle").text("Group Invites");
         gc.get(() => {
             av.updateHeader();
             getTemplate('/templates/invite-group.mustache', (template) => {
@@ -85,7 +85,7 @@ class GroupView {
                 };
                 $('#modal-content').html(Mustache.render(template, { invites: inviteList}));
                 
-                $('#groupModal').modal('show');
+                $('#mainModal').modal('show');
             });
         });
     }
@@ -173,7 +173,7 @@ class GroupView {
     
     groupPost(data) {
         av.refreshHeader();
-        $('#groupModal').modal('hide');
+        $('#mainModal').modal('hide');
         if (location.pathname == '/group') {
             page('/group');
         }
@@ -186,7 +186,7 @@ class GroupView {
     groupJoin(data) {
         $('.group-invite-' + data.id).parent().remove();
         if ($('#group-invite-list').children().length === 0) {
-            $('#groupModal').modal('hide');
+            $('#mainModal').modal('hide');
         }
         av.refreshHeader();
     }
@@ -228,8 +228,8 @@ class GroupView {
 const groupView = new GroupView();
 eB.register(groupView);
 
-$('#groupModal').on('hidden.bs.modal', function (e) {
+$('#mainModal').on('hidden.bs.modal', function (e) {
     $('#modal-content').empty();
-    $("#groupModalTitle").text("Group");
+    $("#mainModalTitle").text("Group");
 })
 

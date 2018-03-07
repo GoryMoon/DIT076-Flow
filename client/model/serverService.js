@@ -51,7 +51,20 @@ class ServerService {
         }).done(data => {
             this.successFunc(data, "rpcLoginAccount");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail(function (msg, ajaxOpt, thrownError) {
+            if (ajaxOpt == 401) {
+                $.notify({
+                    message: 'Email or password was wrong. Try again' 
+                },{
+                    type: 'danger'
+                });
+            } else if (ajaxOpt == 'error') {
+                $.notify({
+                    message: 'Can\'t reach the server. Try again later' 
+                },{
+                    type: 'warning'
+                });
+            }
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcLoginAccount"); 
         });
     }
@@ -249,7 +262,14 @@ class ServerService {
         }).done(data => {
             this.successFunc(data, "rpcInviteGroup");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail(function (msg, ajaxOpt, thrownError) {
+            if (ajaxOpt == 'error') {
+                $.notify({
+                    message: 'Couldn\'t find a user with that id'
+                },{
+                    type: 'danger'
+                });
+            };
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcInviteGroup"); 
         });
     }

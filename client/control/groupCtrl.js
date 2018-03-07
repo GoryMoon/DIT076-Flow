@@ -39,8 +39,15 @@ import {
     GROUP_INVITE_BUTTON,
     GROUP_KICK_BUTTON
 } from "../util/general.js"
+import { accountCtrl as ac } from "../control/accountCtrl.js"
 
 class GroupCtrl {
+
+    refresh(event) {
+        event.preventDefault();
+        let id = $(event.target).parents('.card').data('id');
+        ac.get(id);
+    }
 
     getGroupInfo() {
         return this.groupInfo;
@@ -135,7 +142,7 @@ class GroupCtrl {
         let id = $(event.target).data('id');
         if (validate("#invite_user-" + id)) {
             event.preventDefault();
-            let inviteGroupData = {userid: null, inviteid: null, id: null};
+            let inviteGroupData = {userid: null, invitedid: null, id: null};
             inviteGroupData.userid = store.get('user').id; // id of inviter
             inviteGroupData.invitedid = parseInt($('#invite_user-' + id).val());
             inviteGroupData.id = id; // id of group
@@ -149,6 +156,7 @@ export const groupCtrl = new GroupCtrl();
 page('/group', groupCtrl.manageView);
 
 $(document).ready(function () {    
+    $(document).on("click", GROUP_RETRIEVE_BUTTON, groupCtrl.refresh);
     $(document).on("click", GROUP_CREATE_VIEW_BUTTON, groupCtrl.createView);
     $(document).on("click", GROUP_INVITE_VIEW_BUTTON, groupCtrl.inviteView);
     $(document).on("click", GROUP_SEND_BUTTON, groupCtrl.post);

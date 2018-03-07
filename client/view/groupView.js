@@ -199,16 +199,27 @@ class GroupView {
         $('#leaveModal').modal('hide');
     }
 
-    groupLeave(data) {
-        $('.group-kick-' + data.id).parent().remove();
-        if (data.id == store.get('user').id) {
+    groupKick(data) {
+        $('.group-kick-' + data.leaveid).parent().remove();
+        if (data.leaveid == store.get('user').id) {
             $('#groupid-{{id}}').remove();
         }
-        $('#leaveModal').modal('hide');
+        $('#kickModal').modal('hide');
+
+        $.notify({
+            message: 'Kick was successfullt'
+        },{
+            type: 'success'
+        });
     }
     
     groupInvite(data) {
         $("#invite_user-" + data.id).val("");
+        $.notify({
+            message: 'You have invited ' + data.nick 
+        },{
+            type: 'success'
+        });
     }
   
 }

@@ -181,7 +181,7 @@ public class CommentResource {
         }
     }
     
-    @POST
+    @PUT
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})

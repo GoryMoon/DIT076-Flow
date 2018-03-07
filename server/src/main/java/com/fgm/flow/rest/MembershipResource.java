@@ -13,6 +13,7 @@ import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.UserRegistry;
 import com.fgm.flow.dao.UserGroupRegistry;
 import com.fgm.flow.dao.MembershipRegistry;
+import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
@@ -33,7 +34,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
+import static javax.ws.rs.core.Response.Status.GONE;
 
 /**
  *
@@ -64,8 +65,14 @@ public class MembershipResource {
     public Response create(
             @FormParam("userId") int userId,
             @FormParam("userGroupId") int userGroupId
-        ) 
+    ) 
     {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
+        
         User user = userReg.find(userId);
         UserGroup userGroup = uGroupReg.find(userId);
         
@@ -101,6 +108,11 @@ public class MembershipResource {
             @FormParam("inviteeId") int inviteeId
         ) 
     {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         User owner = userReg.find(ownerId);
         User invitee = userReg.find(inviteeId);
         UserGroup userGroup = uGroupReg.find(userGroupId);
@@ -144,6 +156,11 @@ public class MembershipResource {
             @FormParam("userGroupId") int userGroupId
         ) 
     {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         User joiner = userReg.find(joinerId);
         UserGroup userGroup = uGroupReg.find(userGroupId);
         // Check if joiner, invitee and user group exist
@@ -178,7 +195,12 @@ public class MembershipResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
-    {        
+    {   
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         List<Membership> memberships = memshipReg.findAll();
         
         return Response.ok(gson.toJson(memberships)).build();

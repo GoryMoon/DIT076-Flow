@@ -14,7 +14,6 @@ import com.fgm.flow.dao.UserRegistry;
 import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.CommentRegistry;
 import com.fgm.flow.dao.MembershipRegistry;
-import com.fgm.flow.rest.ResponseComment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -41,6 +40,7 @@ import java.util.Date;
 import java.util.Comparator;
 import static java.util.Collections.sort;
 import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
+import java.io.Serializable;
 
 /**
  *
@@ -307,7 +307,12 @@ public class CommentResource {
             @FormParam("commenterId") int commenterId,
             @FormParam("status") int status
     ) 
-    {        
+    {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         Post post = postReg.find(postId);
         User commenter = userReg.find(commenterId);
 
@@ -347,7 +352,12 @@ public class CommentResource {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @Produces({MediaType.APPLICATION_JSON})
     public Response findForId(@FormParam("postId") int postId) 
-    {    
+    {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         JPAQueryFactory qf = new JPAQueryFactory(cmntReg.getEntityManager());
         QComment comment = QComment.comment;
         Post post = postReg.find(postId);
@@ -377,9 +387,33 @@ public class CommentResource {
         return Response.ok(gson.toJson(commentsOnPostFormatted)).build();
     }
 
+    private class ResponseComment
+    {
+        private final int id;
+        private final String nick;
+        private final String text;
+        private final int status;
+        private final Date time;
+
+        public ResponseComment(Comment comment)
+        {
+            this.id = comment.getId();
+            this.nick = comment.getCommenter().getNick();
+            this.text = comment.getText();
+            this.status = comment.getStatus();
+            this.time = comment.getTime();
+        }
+    }
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findAll() {
+    public Response findAll()
+    {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         List<Comment> comments = cmntReg.findAll();
 
         return Response.ok(gsonEWE.toJson(comments)).build();

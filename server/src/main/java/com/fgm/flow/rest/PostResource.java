@@ -45,15 +45,13 @@ import static javax.ws.rs.core.Response.Status.*;
 import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
 
 /**
- *
+ * A flow post
+ * 
  * @author fgm
  */
 @Path("post")
 public class PostResource
-{
-    // For disabling test services
-    private final boolean TEST_SERVICES_DISABLED = true;
-    
+{   
     //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
     @Context
@@ -400,8 +398,6 @@ public class PostResource
     
     
     
-    
-    /*
     @POST
     @Path("create")
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
@@ -410,10 +406,12 @@ public class PostResource
             @FormParam("text") String text,
             @FormParam("usergroupId") int userGroupId,
             @FormParam("posterId") int posterId
-        ) 
+    ) 
     {
-        //User poster = userReg.find(posterId);
-        //UserGroup userGroup = uGroupReg.find(userGroupId);
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
         
                     
         Membership membership = 
@@ -430,11 +428,6 @@ public class PostResource
             Post post = new Post(title, text, userGroup, poster);
             
             postReg.create(post);
-            
-            //userGroup.addPost(post);
-            //poster.addPost(post);
-            
-            //poster.addUserGroup(userGroup);
         
             URI postUri = uriInfo
                     .getAbsolutePathBuilder()
@@ -448,14 +441,18 @@ public class PostResource
         return Response.status(403).build();
         
     }
-    */
-    
+
     /*
     @POST
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getPostsForUser(@FormParam("userId") int userId) 
     {
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         User user = userReg.find(userId);
         
         // Return bad request 400 if user does not exist
@@ -474,14 +471,11 @@ public class PostResource
             }
         }
         
-       
         sort(posts, new postComparator());
         
         return Response.ok(gsonEWE.toJson(posts)).build();
     }
     */
-
-    
 
     /*
     @POST
@@ -493,6 +487,11 @@ public class PostResource
             @FormParam("count") int count
     ) 
     {   
+        if(TESTING_DISABLED)
+        {
+            return Response.status(GONE).build();
+        }
+        
         User user = userReg.find(userId);
         
         // Return bad request 400 if user does not exist
@@ -517,6 +516,7 @@ public class PostResource
 
         return Response.ok(gsonEWE.toJson(posts)).build();
     }
+
     
     private class postComparator implements Comparator<Post>
     {
@@ -527,14 +527,13 @@ public class PostResource
             return rPost.getTime().compareTo(lPost.getTime());
         }
     }
-*/
-   
+    */
     
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll()
     {
-        if(TEST_SERVICES_DISABLED)
+        if(TESTING_DISABLED)
         {
             return Response.status(GONE).build();
         }

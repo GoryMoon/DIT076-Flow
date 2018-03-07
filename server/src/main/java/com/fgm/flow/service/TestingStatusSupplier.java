@@ -7,6 +7,9 @@ package com.fgm.flow.service;
 
 /**
  *
+ * Merely keeps track of whether the web service's test functionality
+ * should be disabled
+ * 
  * @author fgm
  */
 public class TestingStatusSupplier

@@ -34,6 +34,7 @@ import {
     GROUP_RETRIEVE_BUTTON,
     GROUP_SEND_BUTTON,
     GROUP_ACCEPT_INVITE_BUTTON,
+    GROUP_DECLINE_INVITE_BUTTON,
     GROUP_LEAVE_BUTTON,
     GROUP_CHANGE_NAME_BUTTON,
     GROUP_INVITE_BUTTON,
@@ -53,7 +54,7 @@ class GroupCtrl {
         return this.groupInfo;
     }
 
-    get(callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+    get(callback) {
         if (hasUser()) {
             let getGroupData = {userid: null, ownerid: null, id: null, name: null, before: null, after: null, count: null};
             getGroupData.userid = store.get('user').id; // used to verify user CAN access this info.
@@ -80,7 +81,7 @@ class GroupCtrl {
         eB.notify(EVENT_GROUP_MANAGE_VIEW);
     }
     
-    put(event) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+    put(event) {
         let id = $(event.target).data('id');
         if (validate("#change_name-" + id)) {
             event.preventDefault();
@@ -95,7 +96,7 @@ class GroupCtrl {
         }
     }
     
-    post(event) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+    post(event) {
         if (validate(GROUP_SEND_NAME)) {
             event.preventDefault();
             let postGroupData = {userid: null, name: null};
@@ -108,7 +109,7 @@ class GroupCtrl {
         }
     }
     
-    join(event) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+    join(event) {
         let joinGroupData = {userid: null, id: null};
         joinGroupData.userid = store.get('user').id;
         joinGroupData.id = $(event.target).data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
@@ -116,8 +117,18 @@ class GroupCtrl {
             return eB.notify(EVENT_GROUP_JOIN, data);}
         );
     }
+
+    decline(event) {
+        let leaveGroupData = {userid: null, leaveid: null, id: null};
+        leaveGroupData.userid = store.get('user').id;
+        leaveGroupData.leaveid = store.get('user').id; // id of user to leave or kick
+        leaveGroupData.id = $(event.target).data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
+        server.rpcLeaveGroup(leaveGroupData, data => { 
+            return eB.notify(EVENT_GROUP_JOIN, data);}
+        );
+    }
     
-    leave() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+    leave(event) {
         let leaveGroupData = {userid: null, leaveid: null, id: null};
         leaveGroupData.userid = store.get('user').id;
         leaveGroupData.leaveid = store.get('user').id; // id of user to leave or kick
@@ -127,7 +138,7 @@ class GroupCtrl {
         );
     }
 
-    kick() { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
+    kick() {
         let leaveGroupData = {userid: null, leaveid: null, id: null};
         leaveGroupData.userid = store.get('user').id;
         let id = $(event.target).data('id');
@@ -138,7 +149,7 @@ class GroupCtrl {
         );
     }
     
-    invite() { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
+    invite() {
         let id = $(event.target).data('id');
         if (validate("#invite_user-" + id)) {
             event.preventDefault();
@@ -163,6 +174,7 @@ $(document).ready(function () {
     $(document).on("click", GROUP_LEAVE_BUTTON, groupCtrl.leave);
     $(document).on("click", GROUP_KICK_BUTTON, groupCtrl.kick);
     $(document).on("click", GROUP_ACCEPT_INVITE_BUTTON, groupCtrl.join);
+    $(document).on("click", GROUP_DECLINE_INVITE_BUTTON, groupCtrl.decline);
     $(document).on("click", GROUP_CHANGE_NAME_BUTTON, groupCtrl.put);
     $(document).on("click", GROUP_INVITE_BUTTON, groupCtrl.invite);
 });

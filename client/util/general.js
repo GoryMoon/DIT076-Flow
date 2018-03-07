@@ -127,6 +127,7 @@ export const GROUP_SEND_BUTTON = "#group_send_button";
 export const GROUP_CHANGE_NAME_BUTTON = ".group_change_name_button";
 export const GROUP_INVITE_BUTTON = ".group_invite_button";
 export const GROUP_ACCEPT_INVITE_BUTTON = ".group_accept_invite_button";
+export const GROUP_DECLINE_INVITE_BUTTON = ".group_decline_invite_button";
 export const GROUP_UPDATE_BUTTON = ".group_update_button";
 export const GROUP_LEAVE_BUTTON = "#group_leave_button";
 export const GROUP_KICK_BUTTON = "#group_kick_button";

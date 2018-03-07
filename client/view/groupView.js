@@ -172,6 +172,7 @@ class GroupView {
     groupGet(data) {}
     
     groupPost(data) {
+        av.refreshHeader();
         $('#groupModal').modal('hide');
         if (location.pathname == '/group') {
             page('/group');

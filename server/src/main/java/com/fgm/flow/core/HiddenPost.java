@@ -18,7 +18,7 @@ import javax.persistence.MapsId;
 import javax.persistence.Embeddable;
 
 /**
- * Hidden post keeps track of wether a user wants to hide, or ignore, a post
+ * Hidden post keeps track of whether a user wants to hide, or ignore, a post
  *
  * @author fgm
  */

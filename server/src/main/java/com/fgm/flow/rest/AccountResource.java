@@ -32,18 +32,18 @@ import java.util.Comparator;
 
 /**
  *
+ * Handles requests related to user accounts
+ * 
  * @author fgm
  */
 @Path("account")
 public class AccountResource
 {
-    // Should probably live in it's own file with the related get method -
-    // only get it with getPublicGroup
-    private static UserGroup publicGroup; 
-    
+    /*
     @Context
     private UriInfo uriInfo;
-
+    */
+    
     @EJB
     private UserRegistry userReg;
     @EJB
@@ -69,11 +69,13 @@ public class AccountResource
     {
         public Integer id; 
         public String nick;
+        public String email;
         
         public GetDataOut(User user)
         {
             this.id = user.getId();
             this.nick = user.getNick();
+            this.email = user.getEmail();
         }
     }
     
@@ -127,15 +129,13 @@ public class AccountResource
         {   
             List<User> usrList = userReg.findByEmail(inData.email);
             
-            User usr = null;
-            
             switch(usrList.size())
             {
                 case 0:
                 return Response.status(NOT_FOUND).build();
                 
                 case 1:
-                usr = usrList.get(0);
+                User usr = usrList.get(0);
                 if(inData.nick != null && !usr.getNick().equals(inData.nick))
                 {
                     return Response.status(NOT_FOUND).build();
@@ -152,8 +152,6 @@ public class AccountResource
         if(inData.nick != null)
         {
             List<User> usrList = userReg.findByNick(inData.nick);
-            
-            User usr = null;
             
             switch(usrList.size())
             {
@@ -270,12 +268,20 @@ public class AccountResource
         
         List<User> usersWithEmail = userReg.findByEmail(inData.email);
         
-        // Respond with status 'internal server error' if more than one use
-        // is registered with the same email - shouldn't be possible
-        if(usersWithEmail.size() != 1)
+        // Respond with status 'internal server error' if more than one user
+        // is registered with the given email - shouldn't be possible
+        if(usersWithEmail.size() > 1)
         {
             return Response.status(INTERNAL_SERVER_ERROR).build();
         }
+        
+        // Respond with status 'unauthorized' if no user
+        // is registered with the given email
+        if(usersWithEmail.size() == 0)
+        {
+            return Response.status(UNAUTHORIZED).build();
+        }
+        
         
         User user = usersWithEmail.get(0);
         
@@ -357,7 +363,7 @@ public class AccountResource
         
         // Give the user membership in the public user group
         Membership pubMembership = 
-            new Membership(user, getPublicGroup(uGroupReg), 1);
+            new Membership(user, PublicGroupSingle.getInstance(uGroupReg), 1);
         memshipReg.create(pubMembership);
         
         // Respond with status 'ok' and only the ID if the
@@ -365,30 +371,46 @@ public class AccountResource
         return Response.ok(gson.toJson(new RegisterDataOut(user))).build();
     }
     
-    // For getting the 'Public' user group
-    private static synchronized UserGroup getPublicGroup(UserGroupRegistry uGroupReg)
-    {
-        if(publicGroup == null)
+
+    /**
+     * Handles the singular 'Public' group
+     * 
+     * @author fgm
+     * 
+     */
+    private static class PublicGroupSingle 
+    { 
+        private static UserGroup publicGroup;
+
+        // For getting the 'Public' user group
+        private static synchronized UserGroup getInstance(UserGroupRegistry uGroupReg)
         {
-            List<UserGroup> groupsWithNamePublic = uGroupReg.findByName("Public");
-            
-            switch(groupsWithNamePublic.size())
+            // Initialise publicGroup if necessary
+            if(publicGroup == null)
             {
-                case 0:
-                publicGroup = new UserGroup("Public");
-                uGroupReg.create(publicGroup);
-                break;
-                
-                case 1:
-                publicGroup = groupsWithNamePublic.get(0);
-                break;
-                
-                default:
-                throw new IllegalStateException("More than one user group with"
-                        + "the name 'Public'");
+                List<UserGroup> groupsWithNamePublic = uGroupReg.findByName("Public");
+
+                switch(groupsWithNamePublic.size())
+                {
+                    // Create user group 'Public' if it does not exist
+                    case 0:
+                    publicGroup = new UserGroup("Public");
+                    uGroupReg.create(publicGroup);
+                    break;
+
+                    case 1:
+                    publicGroup = groupsWithNamePublic.get(0);
+                    break;
+                    
+                    // Throw IllegalStateException if there is more than one
+                    // 'Public' user group, which shouldn't be possible
+                    default:
+                    throw new IllegalStateException("More than one user group with"
+                            + "the name 'Public'");
+                }
             }
+
+            return publicGroup;
         }
-        
-        return publicGroup;
     }
 }

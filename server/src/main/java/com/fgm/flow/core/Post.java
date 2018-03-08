@@ -27,7 +27,7 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 
 /**
- * A post
+ * A Flow post
  *
  * @author fgm
  */

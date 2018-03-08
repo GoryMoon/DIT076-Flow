@@ -29,6 +29,8 @@ import javax.ws.rs.core.UriInfo;
 import static java.util.Collections.sort;
 import java.util.Comparator;
 
+import static java.lang.System.out;
+
 
 /**
  *
@@ -38,12 +40,7 @@ import java.util.Comparator;
  */
 @Path("account")
 public class AccountResource
-{
-    /*
-    @Context
-    private UriInfo uriInfo;
-    */
-    
+{    
     @EJB
     private UserRegistry userReg;
     @EJB
@@ -53,7 +50,6 @@ public class AccountResource
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
-    Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
 
     public static class GetData 
     {

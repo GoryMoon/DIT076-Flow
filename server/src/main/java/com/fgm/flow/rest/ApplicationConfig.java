@@ -13,7 +13,7 @@ import javax.ws.rs.core.Application;
  *
  * @author fgm
  */
-@ApplicationPath("/") // rest
+@ApplicationPath("")
 public class ApplicationConfig extends Application {
 
     @Override

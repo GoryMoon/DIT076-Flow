@@ -3,6 +3,7 @@
   <persistence-unit name="flow_pu" transaction-type="JTA">
     <jta-data-source>java:app/jdbc/flow</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
     </properties>

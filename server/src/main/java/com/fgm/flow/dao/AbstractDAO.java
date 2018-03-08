@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
  *
  * @param <T> Type
  * @param <K> Primary key (id)
- * @author hajos
+ * @author hajo
  */
 public abstract class AbstractDAO<T, K> {
 
@@ -42,8 +42,6 @@ public abstract class AbstractDAO<T, K> {
     }
 
     public T find(K id) {
-        // Unsure if this is a great idea, but is used to ensure that
-        // the objects are synchronized
         return getEntityManager().find(clazz, id);
     }
 

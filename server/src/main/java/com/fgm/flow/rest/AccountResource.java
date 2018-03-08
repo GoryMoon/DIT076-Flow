@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -25,7 +26,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.*;
 import javax.ws.rs.core.UriInfo;
-import com.google.gson.annotations.Expose;
 import static java.util.Collections.sort;
 import java.util.Comparator;
 
@@ -79,6 +79,7 @@ public class AccountResource
         }
     }
     
+    // For retrieving user account data
     @POST
     @Path("get")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -143,8 +144,9 @@ public class AccountResource
                 return Response.ok(gson.toJson(new GetDataOut(usr))).build(); 
                 
                 default:
-                throw new IllegalStateException("More than one user with the"
-                        + "same email");
+                // Respond with status 'internal server error' if there is more
+                // than one user with the same email - should not be possible
+                return Response.status(INTERNAL_SERVER_ERROR).build();
             }
         }
         
@@ -162,8 +164,9 @@ public class AccountResource
                 return Response.ok(gson.toJson(new GetDataOut(usrList.get(0)))).build();  
                 
                 default:
-                throw new IllegalStateException("More than one user with the"
-                        + "same nickname");
+                // Respond with status 'internal server error' if there is more
+                // than one user with the same nick - should not be possible
+                return Response.status(INTERNAL_SERVER_ERROR).build();
             }
         }
          
@@ -254,6 +257,7 @@ public class AccountResource
         }
     }
     
+    // Handles logging in
     @POST
     @Path("login")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -299,20 +303,126 @@ public class AccountResource
     public static class PutData 
     {
         public Integer userid;
-        public Integer id;
+        public Integer id; // For further development - ie admin functionality
         public String email;
         public String nick;
         public String password;
     }
     
-    // Intended for updating user data
-    @POST
+    public static class PutDataOut 
+    {
+        public Integer id;
+        public String nick;
+        
+        public PutDataOut(User user)
+        {
+            this.id = user.getId();
+            this.nick = user.getNick();
+        }
+    }
+    
+    // For updating user account data
+    @PUT
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response putRequest(PutData inData)
     {
-        return Response.status(NOT_IMPLEMENTED).build();
+        
+        if(inData.userid == null || inData.id == null
+                || (inData.email == null && inData.nick == null 
+                    && inData.password == null)
+        )
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        // Currently the only one allowed to change user data is the user
+        // themselves - could be expanded into admin functionality
+        if(!inData.userid.equals(inData.id))
+        {
+            return Response.status(UNAUTHORIZED).build();
+        }
+        
+        User user = userReg.find(inData.userid);
+        
+        // Return status 'not found' if user does not exist
+        if(user == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        if(inData.email != null)
+        {
+            List<User> usrList = userReg.findByEmail(inData.email);
+            
+            switch(usrList.size())
+            {
+                // Update the user object with the given email if that email
+                // isn't registered already
+                case 0:
+                user.setEmail(inData.email);
+                break;
+                
+                // Respond with status 'conflict' if there already is a user
+                // with the give email.
+                case 1:
+                // Allows "updating" to the same email
+                if(usrList.get(0).equals(user))
+                {
+                    break;
+                }
+                return Response.status(CONFLICT).build(); 
+                
+                default:
+                // Respond with status 'internal server error' if there is more
+                // than one user with the same email - should not be possible
+                return Response.status(INTERNAL_SERVER_ERROR).build();
+            }   
+        }
+                
+        if(inData.nick != null)
+        {
+            if(inData.nick != null)
+            {
+                List<User> usrList = userReg.findByNick(inData.nick);
+
+                switch(usrList.size())
+                {
+                    // Update the user object with the given nick if that nick
+                    // isn't registered already
+                    case 0:
+                    // Allows "updating" to the same nick
+                    user.setNick(inData.nick);
+                    break;
+
+                    // Respond with status 'conflict' if there already is a user
+                    // with the given nick. Note that 'conflict' will be given
+                    // also if the user is trying to change to the nick they 
+                    // already have
+                    case 1:
+                    if(usrList.get(0).equals(user))
+                    {
+                        break;
+                    }
+                    return Response.status(CONFLICT).build(); 
+
+                    default:
+                    // Respond with status 'internal server error' if there is more
+                    // than one user with the same nick name - should not be possible
+                    return Response.status(INTERNAL_SERVER_ERROR).build();
+                }   
+            }
+        }
+        
+        if(inData.password != null)
+        {
+            user.setPassword(inData.password);
+        }
+        
+        userReg.update(user);
+        
+        return Response.ok(gson.toJson(new PutDataOut(user))).build();
     }
     
     public static class RegisterData 

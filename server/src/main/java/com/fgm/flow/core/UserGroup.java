@@ -26,7 +26,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
- * A Flow user
+ * A Flow group
  *
  * @author fgm
  */

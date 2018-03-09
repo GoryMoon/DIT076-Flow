@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
 import com.google.gson.annotations.Expose;
 
 /**
- * A post comment
+ * A FLow post comment
  *
  * @author fgm
  */

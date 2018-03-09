@@ -42,20 +42,10 @@ public abstract class AbstractDAO<T, K> {
     }
 
     public T find(K id) {
-        // Unsure if this is a great idea, but it is used to ensure that
-        // the objects are synchronized
-        refresh();
         return getEntityManager().find(clazz, id);
     }
 
     protected void flush() {
         getEntityManager().flush();
-    }
-    
-    // Unsure if this is a great idea, but it is used to ensure that
-    // the objects are synchronized
-    public void refresh()
-    {
-        getEntityManager().getEntityManagerFactory().getCache().evictAll();
     }
 }

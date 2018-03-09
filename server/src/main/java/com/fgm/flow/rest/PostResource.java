@@ -97,13 +97,13 @@ public class PostResource
         public String text;
         public Date time;
     
-        public GetDataOut(Post post, String groupName)
+        public GetDataOut(Post post)
         {
             this.ownerid = post.getPoster().getId();
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
-            this.group = groupName;
+            this.group = post.getUserGroup().getName();
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime();            
@@ -118,6 +118,7 @@ public class PostResource
     public Response getRequest(GetData inData)
     {
         // Most GetData fields are currentlty ignored 
+        
         if(inData.userid == null)
         {
             return Response.status(BAD_REQUEST).build();
@@ -131,7 +132,6 @@ public class PostResource
             return Response.status(NOT_FOUND).build();
         }
         
-        //List<Post> posts = new ArrayList<>();
         List<GetDataOut> getDataOutList = new ArrayList<>();
         
         // Get posts for all groups the user is an owner of active member of
@@ -148,7 +148,7 @@ public class PostResource
                         // is posted before a given before date
                         if(postIsRequested(user, post, inData))
                         {
-                            getDataOutList.add(new GetDataOut(post, memship.getUserGroup().getName()));
+                            getDataOutList.add(new GetDataOut(post));
                         }
                     }
                 }
@@ -170,7 +170,7 @@ public class PostResource
             {
                 if(postIsRequested(user, post, inData))
                 {
-                    getDataOutList.add(new GetDataOut(post, userGroup.getName()));
+                    getDataOutList.add(new GetDataOut(post));
                 }
             }
         }
@@ -242,7 +242,7 @@ public class PostResource
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
-            this.group = new String("<Not Implemented>");
+            this.group = post.getUserGroup().getName();
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime(); 
@@ -310,7 +310,7 @@ public class PostResource
             this.groupid = post.getUserGroup().getId();
             this.id = post.getId();
             this.nick = post.getPoster().getNick();
-            this.group = new String("<Not Implemented>");
+            this.group = post.getUserGroup().getName();
             this.title = post.getTitle();
             this.text = post.getText();
             this.time = post.getTime();            

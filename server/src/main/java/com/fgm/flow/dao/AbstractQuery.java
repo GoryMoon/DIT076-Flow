@@ -27,7 +27,6 @@ public abstract class AbstractQuery<T, K> extends AbstractDAO<T, K>{
 
     public void clear() {
         JPAQueryFactory qf = new JPAQueryFactory(getEntityManager());
-        // delete all customers
         qf.delete(queryObject).execute();
     }
 

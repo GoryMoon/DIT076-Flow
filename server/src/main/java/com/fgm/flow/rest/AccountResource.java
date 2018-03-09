@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -25,25 +26,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.*;
 import javax.ws.rs.core.UriInfo;
-import com.google.gson.annotations.Expose;
 import static java.util.Collections.sort;
 import java.util.Comparator;
+
+import static java.lang.System.out;
 
 
 /**
  *
+ * Handles requests related to user accounts
+ * 
  * @author fgm
  */
 @Path("account")
 public class AccountResource
-{
-    // Should probably live in it's own file with the related get method -
-    // only get it with getPublicGroup
-    private static UserGroup publicGroup; 
-    
-    @Context
-    private UriInfo uriInfo;
-
+{    
     @EJB
     private UserRegistry userReg;
     @EJB
@@ -53,7 +50,6 @@ public class AccountResource
     private final Gson gson = new Gson();
     
     GsonBuilder gb = new GsonBuilder();
-    Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
 
     public static class GetData 
     {
@@ -69,14 +65,17 @@ public class AccountResource
     {
         public Integer id; 
         public String nick;
+        public String email;
         
         public GetDataOut(User user)
         {
             this.id = user.getId();
             this.nick = user.getNick();
+            this.email = user.getEmail();
         }
     }
     
+    // For retrieving user account data
     @POST
     @Path("get")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -127,15 +126,13 @@ public class AccountResource
         {   
             List<User> usrList = userReg.findByEmail(inData.email);
             
-            User usr = null;
-            
             switch(usrList.size())
             {
                 case 0:
                 return Response.status(NOT_FOUND).build();
                 
                 case 1:
-                usr = usrList.get(0);
+                User usr = usrList.get(0);
                 if(inData.nick != null && !usr.getNick().equals(inData.nick))
                 {
                     return Response.status(NOT_FOUND).build();
@@ -143,8 +140,9 @@ public class AccountResource
                 return Response.ok(gson.toJson(new GetDataOut(usr))).build(); 
                 
                 default:
-                throw new IllegalStateException("More than one user with the"
-                        + "same email");
+                // Respond with status 'internal server error' if there is more
+                // than one user with the same email - should not be possible
+                return Response.status(INTERNAL_SERVER_ERROR).build();
             }
         }
         
@@ -152,8 +150,6 @@ public class AccountResource
         if(inData.nick != null)
         {
             List<User> usrList = userReg.findByNick(inData.nick);
-            
-            User usr = null;
             
             switch(usrList.size())
             {
@@ -164,8 +160,9 @@ public class AccountResource
                 return Response.ok(gson.toJson(new GetDataOut(usrList.get(0)))).build();  
                 
                 default:
-                throw new IllegalStateException("More than one user with the"
-                        + "same nickname");
+                // Respond with status 'internal server error' if there is more
+                // than one user with the same nick - should not be possible
+                return Response.status(INTERNAL_SERVER_ERROR).build();
             }
         }
          
@@ -256,6 +253,7 @@ public class AccountResource
         }
     }
     
+    // Handles logging in
     @POST
     @Path("login")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -270,12 +268,20 @@ public class AccountResource
         
         List<User> usersWithEmail = userReg.findByEmail(inData.email);
         
-        // Respond with status 'internal server error' if more than one use
-        // is registered with the same email - shouldn't be possible
-        if(usersWithEmail.size() != 1)
+        // Respond with status 'internal server error' if more than one user
+        // is registered with the given email - shouldn't be possible
+        if(usersWithEmail.size() > 1)
         {
             return Response.status(INTERNAL_SERVER_ERROR).build();
         }
+        
+        // Respond with status 'unauthorized' if no user
+        // is registered with the given email
+        if(usersWithEmail.size() == 0)
+        {
+            return Response.status(UNAUTHORIZED).build();
+        }
+        
         
         User user = usersWithEmail.get(0);
         
@@ -293,20 +299,126 @@ public class AccountResource
     public static class PutData 
     {
         public Integer userid;
-        public Integer id;
+        public Integer id; // For further development - ie admin functionality
         public String email;
         public String nick;
         public String password;
     }
     
-    // Intended for updating user data
-    @POST
+    public static class PutDataOut 
+    {
+        public Integer id;
+        public String nick;
+        
+        public PutDataOut(User user)
+        {
+            this.id = user.getId();
+            this.nick = user.getNick();
+        }
+    }
+    
+    // For updating user account data
+    @PUT
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response putRequest(PutData inData)
     {
-        return Response.status(NOT_IMPLEMENTED).build();
+        
+        if(inData.userid == null || inData.id == null
+                || (inData.email == null && inData.nick == null 
+                    && inData.password == null)
+        )
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        // Currently the only one allowed to change user data is the user
+        // themselves - could be expanded into admin functionality
+        if(!inData.userid.equals(inData.id))
+        {
+            return Response.status(UNAUTHORIZED).build();
+        }
+        
+        User user = userReg.find(inData.userid);
+        
+        // Return status 'not found' if user does not exist
+        if(user == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        if(inData.email != null)
+        {
+            List<User> usrList = userReg.findByEmail(inData.email);
+            
+            switch(usrList.size())
+            {
+                // Update the user object with the given email if that email
+                // isn't registered already
+                case 0:
+                user.setEmail(inData.email);
+                break;
+                
+                // Respond with status 'conflict' if there already is a user
+                // with the give email.
+                case 1:
+                // Allows "updating" to the same email
+                if(usrList.get(0).equals(user))
+                {
+                    break;
+                }
+                return Response.status(CONFLICT).build(); 
+                
+                default:
+                // Respond with status 'internal server error' if there is more
+                // than one user with the same email - should not be possible
+                return Response.status(INTERNAL_SERVER_ERROR).build();
+            }   
+        }
+                
+        if(inData.nick != null)
+        {
+            if(inData.nick != null)
+            {
+                List<User> usrList = userReg.findByNick(inData.nick);
+
+                switch(usrList.size())
+                {
+                    // Update the user object with the given nick if that nick
+                    // isn't registered already
+                    case 0:
+                    // Allows "updating" to the same nick
+                    user.setNick(inData.nick);
+                    break;
+
+                    // Respond with status 'conflict' if there already is a user
+                    // with the given nick. Note that 'conflict' will be given
+                    // also if the user is trying to change to the nick they 
+                    // already have
+                    case 1:
+                    if(usrList.get(0).equals(user))
+                    {
+                        break;
+                    }
+                    return Response.status(CONFLICT).build(); 
+
+                    default:
+                    // Respond with status 'internal server error' if there is more
+                    // than one user with the same nick name - should not be possible
+                    return Response.status(INTERNAL_SERVER_ERROR).build();
+                }   
+            }
+        }
+        
+        if(inData.password != null)
+        {
+            user.setPassword(inData.password);
+        }
+        
+        userReg.update(user);
+        
+        return Response.ok(gson.toJson(new PutDataOut(user))).build();
     }
     
     public static class RegisterData 
@@ -357,7 +469,7 @@ public class AccountResource
         
         // Give the user membership in the public user group
         Membership pubMembership = 
-            new Membership(user, getPublicGroup(uGroupReg), 1);
+            new Membership(user, PublicGroupSingle.getInstance(uGroupReg), 1);
         memshipReg.create(pubMembership);
         
         // Respond with status 'ok' and only the ID if the
@@ -365,30 +477,46 @@ public class AccountResource
         return Response.ok(gson.toJson(new RegisterDataOut(user))).build();
     }
     
-    // For getting the 'Public' user group
-    private static synchronized UserGroup getPublicGroup(UserGroupRegistry uGroupReg)
-    {
-        if(publicGroup == null)
+
+    /**
+     * Handles the singular 'Public' group
+     * 
+     * @author fgm
+     * 
+     */
+    private static class PublicGroupSingle 
+    { 
+        private static UserGroup publicGroup;
+
+        // For getting the 'Public' user group
+        private static synchronized UserGroup getInstance(UserGroupRegistry uGroupReg)
         {
-            List<UserGroup> groupsWithNamePublic = uGroupReg.findByName("Public");
-            
-            switch(groupsWithNamePublic.size())
+            // Initialise publicGroup if necessary
+            if(publicGroup == null)
             {
-                case 0:
-                publicGroup = new UserGroup("Public");
-                uGroupReg.create(publicGroup);
-                break;
-                
-                case 1:
-                publicGroup = groupsWithNamePublic.get(0);
-                break;
-                
-                default:
-                throw new IllegalStateException("More than one user group with"
-                        + "the name 'Public'");
+                List<UserGroup> groupsWithNamePublic = uGroupReg.findByName("Public");
+
+                switch(groupsWithNamePublic.size())
+                {
+                    // Create user group 'Public' if it does not exist
+                    case 0:
+                    publicGroup = new UserGroup("Public");
+                    uGroupReg.create(publicGroup);
+                    break;
+
+                    case 1:
+                    publicGroup = groupsWithNamePublic.get(0);
+                    break;
+                    
+                    // Throw IllegalStateException if there is more than one
+                    // 'Public' user group, which shouldn't be possible
+                    default:
+                    throw new IllegalStateException("More than one user group with"
+                            + "the name 'Public'");
+                }
             }
+
+            return publicGroup;
         }
-        
-        return publicGroup;
     }
 }

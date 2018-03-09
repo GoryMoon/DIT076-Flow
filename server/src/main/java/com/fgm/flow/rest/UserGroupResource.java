@@ -480,7 +480,8 @@ public class UserGroupResource {
 
         MembershipId membershipId =
             new MembershipId(inData.leaveid, inData.id);
-                
+          
+        
         memshipReg.delete(membershipId);
         
         return Response.ok(gson.toJson(new LeaveDataOut(exUser, userGroup))).build();

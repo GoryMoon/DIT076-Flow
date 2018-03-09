@@ -50,6 +50,9 @@ class CommentView {
             //Show/hide toggle
             $(".show_hide.comment_link.outer").click((event) => {
                 let self = $(event.target);
+                if (self.is('svg') || self.is('path')) {
+                    self = self.parents('a');
+                }
                 let drawer = self.next();
                 if (drawer.hasClass('show')) {
                     self.html("Show comments <i class=\"fas fa-angle-down\"></i>");
@@ -63,7 +66,11 @@ class CommentView {
             });
             //Bottom hide comments button
             $(".show_hide.comment_link.inner").click((event) => {
-                let drawer = $(event.target).parent();
+                let target = $(event.target);
+                if (target.is('svg') || target.is('path')) {
+                    target = target.parents('a');
+                }
+                let drawer = target.parent();
                 if (drawer.hasClass('show')) {
                     drawer.prev().html("Show comments <i class=\"fas fa-angle-down\"></i>");
                 } else {

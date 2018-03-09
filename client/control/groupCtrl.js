@@ -110,19 +110,27 @@ class GroupCtrl {
     }
     
     join(event) {
+        let target = $(event.target);
+        if (target.is('svg') || target.is('path')) {
+            target = target.parents('button');
+        }
         let joinGroupData = {userid: null, id: null};
         joinGroupData.userid = store.get('user').id;
-        joinGroupData.id = $(event.target).data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
+        joinGroupData.id = target.data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
         server.rpcJoinGroup(joinGroupData, data => { 
             return eB.notify(EVENT_GROUP_JOIN, data);}
         );
     }
 
     decline(event) {
+        let target = $(event.target);
+        if (target.is('svg') || target.is('path')) {
+            target = target.parents('button');
+        }
         let leaveGroupData = {userid: null, leaveid: null, id: null};
         leaveGroupData.userid = store.get('user').id;
         leaveGroupData.leaveid = store.get('user').id; // id of user to leave or kick
-        leaveGroupData.id = $(event.target).data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
+        leaveGroupData.id = target.data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
         server.rpcLeaveGroup(leaveGroupData, data => { 
             return eB.notify(EVENT_GROUP_JOIN, data);}
         );

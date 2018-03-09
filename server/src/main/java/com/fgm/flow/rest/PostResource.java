@@ -95,9 +95,10 @@ public class PostResource
         public String group;
         public String title;
         public String text;
+        public Integer status;
         public Date time;
     
-        public GetDataOut(Post post)
+        public GetDataOut(Post post, User user)
         {
             this.ownerid = post.getPoster().getId();
             this.groupid = post.getUserGroup().getId();
@@ -106,6 +107,7 @@ public class PostResource
             this.group = post.getUserGroup().getName();
             this.title = post.getTitle();
             this.text = post.getText();
+            this.status = user.isHidingPost(post) ? 1 : 0;
             this.time = post.getTime();            
         }
     }
@@ -148,7 +150,7 @@ public class PostResource
                         // is posted before a given before date
                         if(postIsRequested(user, post, inData))
                         {
-                            getDataOutList.add(new GetDataOut(post));
+                            getDataOutList.add(new GetDataOut(post, user));
                         }
                     }
                 }
@@ -170,7 +172,7 @@ public class PostResource
             {
                 if(postIsRequested(user, post, inData))
                 {
-                    getDataOutList.add(new GetDataOut(post));
+                    getDataOutList.add(new GetDataOut(post, user));
                 }
             }
         }
@@ -216,7 +218,7 @@ public class PostResource
                                 post.getTime().before(inData.before));
     }
     
-    public static class PostData // 3.1 Compliant
+    public static class PostData // 3.2 Compliant
     {
         public Integer userid;
         public Integer groupid;
@@ -225,7 +227,7 @@ public class PostResource
         public Integer status;
     }
     
-    public static class PostDataOut // 3.1 Compliant
+    public static class PostDataOut // 3.2 Compliant
     {
         public Integer ownerid;
         public Integer groupid;
@@ -284,7 +286,7 @@ public class PostResource
     }
 
 
-    public static class PutData // 3.1 Compliant
+    public static class PutData // 3.2 Compliant
     {
         public Integer userid;
         public Integer id;
@@ -293,7 +295,7 @@ public class PostResource
         public Integer status;
     }
     
-    public static class PutDataOut // 3.1 Compliant
+    public static class PutDataOut // 3.2 Compliant
     {
         public Integer ownerid;
         public Integer groupid;
@@ -302,9 +304,10 @@ public class PostResource
         public String group;
         public String title;
         public String text;
+        public Integer status;
         public Date time;
     
-        public PutDataOut(Post post) // 3.1 Compliant
+        public PutDataOut(Post post, User user) // 3.2 Compliant
         {
             this.ownerid = post.getPoster().getId();
             this.groupid = post.getUserGroup().getId();
@@ -313,12 +316,13 @@ public class PostResource
             this.group = post.getUserGroup().getName();
             this.title = post.getTitle();
             this.text = post.getText();
+            this.status = user.isHidingPost(post) ? 1 : 0;
             this.time = post.getTime();            
         }
     }
     
-    // Only for hiding posts currently, could be expanded to updating posts
-    @PUT
+    // Only for hiding posts currently, could be expanded to updating posts     
+    @POST
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -382,7 +386,7 @@ public class PostResource
             }
         }
         
-        return Response.ok(gson.toJson(new PutDataOut(post))).build();
+        return Response.ok(gson.toJson(new PutDataOut(post, user))).build();
     }
     
     private class GDOComparator implements Comparator<GetDataOut>
@@ -393,6 +397,15 @@ public class PostResource
             // Order inverted by switch of lPost and rPost
             return  rGDO.time.compareTo(lGDO.time);
         }
+    }
+    
+    @PUT
+    @Path("put")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response putRequestPUT(PutData inData)
+    {
+        return putRequest(inData);
     }
     
     

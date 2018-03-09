@@ -18,14 +18,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
 import java.util.List;
-import static java.lang.System.out;
-import static java.lang.System.err;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -41,6 +37,8 @@ import java.util.ArrayList;
 import static java.util.Collections.sort;
 import java.util.Comparator;
 import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
+import static java.lang.System.out;
+import static java.lang.System.err;
 
 /**
  *
@@ -51,13 +49,6 @@ public class UserGroupResource {
 
     //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
-    /*
-    @Context
-    private UriInfo uriInfo;
-    */
-    
-    //@EJB
-    //private PostRegistry postReg;
     @EJB
     private UserRegistry userReg;
     @EJB
@@ -73,6 +64,7 @@ public class UserGroupResource {
     public static class GetData
     {
         public Integer userid;
+        public Integer ownerid;
         public Integer id;
         public String name;
         public Date before;
@@ -160,13 +152,22 @@ public class UserGroupResource {
         }
     }
     
-    @PUT
+    @POST
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response putRequest(PutData inData)
     {
         return Response.status(NOT_IMPLEMENTED).build();
+    }
+    
+    @PUT
+    @Path("put")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response putRequestPUT(PutData inData)
+    {
+        return putRequest(inData);
     }
     
     public static class PostData
@@ -234,11 +235,13 @@ public class UserGroupResource {
     {
         public Integer userid;
         public Integer id;
+        public String nick;
         
         public JoinDataOut(Membership membership)
         {
             this.userid = membership.getUser().getId();
             this.id = membership.getUserGroup().getId();
+            this.nick = membership.getUser().getNick();
         }
     }
     
@@ -290,11 +293,13 @@ public class UserGroupResource {
     {
         public Integer invitedid;
         public Integer id;
+        public String nick;
         
         public InviteDataOut(Membership membership)
         {
             this.invitedid = membership.getUser().getId();
             this.id = membership.getUserGroup().getId();
+            this.nick = membership.getUser().getNick();
         }
     }
     
@@ -348,11 +353,13 @@ public class UserGroupResource {
     {
         public Integer leaveid;
         public Integer id;
+        public String nick;
         
         public LeaveDataOut(User exUser, UserGroup userGroup)
         {
             this.leaveid = exUser.getId();
             this.id = userGroup.getId();
+            this.nick = exUser.getNick();
         }
     }
     

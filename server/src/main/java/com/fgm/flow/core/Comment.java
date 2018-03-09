@@ -89,7 +89,7 @@ public class Comment implements Serializable
         this.text = text;
         this.post = post;
         this.commenter = commenter;
-        this.status = 0; // O = visible, currently. May get replaced with enums
+        this.status = 0; // 0 = visible, currently. May get replaced with enums
         timeStamp();
     }
     

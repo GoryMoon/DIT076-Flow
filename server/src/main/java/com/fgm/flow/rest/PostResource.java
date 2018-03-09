@@ -321,7 +321,8 @@ public class PostResource
         }
     }
     
-    // Only for hiding posts currently, could be expanded to updating posts     
+    // Only for hiding and unhiding posts currently,
+    // could be expanded to updating posts     
     @POST
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -378,7 +379,7 @@ public class PostResource
                 // relationship between the user and the post does not exist
                 if(hidePostReg.find(hiddenPostId) != null)
                 {
-                    hidePostReg.delete(new HiddenPostId(inData.userid, inData.id));
+                    hidePostReg.delete(hiddenPostId);
                 }
                 break;
                 default:

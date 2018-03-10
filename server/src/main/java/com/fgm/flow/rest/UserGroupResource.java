@@ -371,6 +371,7 @@ public class UserGroupResource {
     {
         public Integer userid;
         public Integer inviteid;
+        public String invitenick;
         public Integer id;
     }
 
@@ -395,19 +396,58 @@ public class UserGroupResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response inviteRequest(InviteData inData)
     {
-        // Respond with status 'bad request' if userid, invitedid 
-        // and id haven't been supplied
-        if(inData.userid == null || inData.inviteid == null || inData.id == null)
+        // Respond with status 'bad request' if userid or
+        // id or either invited users id or haven't been supplied
+        if(inData.userid == null || inData.id == null
+            || (inData.inviteid == null && inData.invitenick == null)
+        )
         {
             return Response.status(BAD_REQUEST).build();
+        }         
+            
+        User user = userReg.find(inData.userid);
+        UserGroup userGroup = uGroupReg.find(inData.id);
+        
+        User invited = null;
+        
+        if(inData.inviteid != null)
+        {
+            invited = userReg.find(inData.inviteid);
+            
+            if(invited == null)
+            {
+                return Response.status(NOT_FOUND).build();
+            }
         }
         
-        User user = userReg.find(inData.userid);
-        User invited = userReg.find(inData.inviteid);
-        UserGroup userGroup = uGroupReg.find(inData.id);
-
+        if(inData.invitenick != null)
+        {
+            List<User> usersWNick = userReg.findByNick(inData.invitenick);
+            
+            switch(usersWNick.size())
+            {
+                case 0:
+                return Response.status(NOT_FOUND).build();
+                
+                case 1:
+                if(invited == null)
+                {
+                    invited = usersWNick.get(0);
+                    break;
+                }
+                if(!usersWNick.get(0).equals(invited))
+                {
+                    return Response.status(NOT_FOUND).build();
+                }
+                break;
+                    
+                default:
+                return Response.status(INTERNAL_SERVER_ERROR).build();
+            }
+        }
+        
         // Respond with status 'not found' if the user, invited user 
-        // or user group corresponding to the id supplied doesn't exist
+        // or user group corresponding to the id, or nick, supplied doesn't exist
         if(user == null || invited == null || userGroup == null)
         {
             return Response.status(NOT_FOUND).build();
@@ -418,6 +458,13 @@ public class UserGroupResource {
         if(!user.isOwnerOfGroup(userGroup))
         {
             return Response.status(UNAUTHORIZED).build();
+        }
+        
+        // Disallowing inviting onseself and inviting someone who already
+        // has a membership status in the group
+        if(user.equals(invited) || invited.hasAnyMembershipStatus(userGroup))
+        {
+            return Response.status(FORBIDDEN).build();
         }
         
         // Create a membership with the 'invited' status for the invited

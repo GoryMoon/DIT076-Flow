@@ -39,6 +39,7 @@ public class CommentRegistry extends AbstractQuery<Comment, Integer>
     
     public List<Comment> findById(int id)
     {
+        evictClassEntities();
         QComment comment = QComment.comment;
         JPAQueryFactory qf = new JPAQueryFactory(em);
         List<Comment> found = qf.select(comment)

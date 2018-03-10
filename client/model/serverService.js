@@ -52,7 +52,7 @@ class ServerService {
             this.successFunc(data, "rpcLoginAccount");
             callback(data);
         }).fail(function (msg, ajaxOpt, thrownError) {
-            if (ajaxOpt == 401) {
+            if (msg.status == 401) {
                 $.notify({
                     message: 'Email or password was wrong. Try again' 
                 },{
@@ -270,7 +270,7 @@ class ServerService {
         }).fail(function (msg, ajaxOpt, thrownError) {
             if (ajaxOpt === 'error') {
                 $.notify({
-                    message: 'Couldn\'t find a user with that id'
+                    message: 'Couldn\'t find a user with that nick'
                 },{
                     type: 'danger'
                 });

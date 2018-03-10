@@ -221,9 +221,15 @@ class GroupView {
             $('#groupid-{{id}}').remove();
         }
         $('#kickModal').modal('hide');
-
+        let name = 'the group';
+        for (var i = 0; i < gc.getGroupInfo().length; i++) {
+            if (gc.getGroupInfo()[i].id == data.id) {
+                name = gc.getGroupInfo()[i].name;
+                break;
+            }
+        };
         $.notify({
-            message: 'You have kicked ' + data.nick + ' from ' + gc.getGroupInfo[data.id].name
+            message: 'You have kicked <b>' + data.nick + '</b> from <b>' + name + '</b>'
         },{
             type: 'success'
         });
@@ -232,7 +238,7 @@ class GroupView {
     groupInvite(data) {
         $("#invite_user-" + data.id).val("");
         $.notify({
-            message: 'You have invited ' + data.nick 
+            message: 'You have invited <b>' + data.nick + '</b>'
         },{
             type: 'success'
         });

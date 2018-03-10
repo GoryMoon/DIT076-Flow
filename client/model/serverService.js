@@ -75,7 +75,7 @@ class ServerService {
             headers: {'Access-Control-Allow-Origin': '*'},
             url: this.serverUrl + "account/put/",
             data: JSON.stringify(putAccountData),
-            method: "POST",
+            method: "PUT",
             contentType: "application/json; charset=utf-8",
             crossDomain: true,
             context: this
@@ -268,7 +268,7 @@ class ServerService {
             this.successFunc(data, "rpcInviteGroup");
             callback(data);
         }).fail(function (msg, ajaxOpt, thrownError) {
-            if (ajaxOpt == 'error') {
+            if (ajaxOpt === 'error') {
                 $.notify({
                     message: 'Couldn\'t find a user with that id'
                 },{

@@ -40,16 +40,12 @@ class CommentCtrl {
     }
     
     put(event) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
-        let id = $(event.target).parents('.comment').data('comid');
+        let target = $(event.target).parents('.comment');
+        let id = target.data('comid');
         let putCommentData = {userid: null, id: null, text: null, status: null};
         putCommentData.userid = store.get('user').id;
         putCommentData.id = id;
-        let status = $(event.target).parents('.comments').find('.comment-text').text().trim();
-        if (status == "Hidden") {
-            status = 'visible';
-        } else {
-            status = 'hidden';
-        }
+        let status = target.data('status') == 0 ? 'hidden': 'visible';
         putCommentData.status = status; // 1 is hide, 0 is visible. null defaults to visible.
         server.rpcPutComment(putCommentData, data => { return eB.notify(EVENT_COMMENT_PUT, data); });
     }

@@ -191,7 +191,8 @@ class GroupView {
         $.notify({
             message: 'Updated group name' 
         },{
-            type: 'success'
+            type: 'success',
+            z_index: 1100
         });
     }
     
@@ -231,7 +232,8 @@ class GroupView {
         $.notify({
             message: 'You have kicked <b>' + data.nick + '</b> from <b>' + name + '</b>'
         },{
-            type: 'success'
+            type: 'success',
+            z_index: 1100
         });
     }
     
@@ -241,7 +243,8 @@ class GroupView {
         $.notify({
             message: 'You have invited <b>' + data.nick + '</b>'
         },{
-            type: 'success'
+            type: 'success',
+            z_index: 1100
         });
     }
   

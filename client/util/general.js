@@ -18,7 +18,7 @@ export function setTitle(title) {
 
 export function validate() {
     for (var i = 0; i < arguments.length; i++) {
-        if ($(arguments[i])[0].checkValidity() === false)
+        if ($(arguments[i]).length <= 0 || $(arguments[i])[0].checkValidity() === false)
             return false;
     };
     return true;

@@ -237,6 +237,7 @@ class GroupView {
     
     groupInvite(data) {
         $("#invite_user-" + data.id).val("");
+        $("#groupid-" + data.id + " .group_retrieve_button").click();
         $.notify({
             message: 'You have invited <b>' + data.nick + '</b>'
         },{

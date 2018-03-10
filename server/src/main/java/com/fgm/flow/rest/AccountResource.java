@@ -317,8 +317,8 @@ public class AccountResource
         }
     }
     
-    // For updating user account data
-    @PUT
+    // For updating user account data    
+    @POST
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -419,6 +419,15 @@ public class AccountResource
         userReg.update(user);
         
         return Response.ok(gson.toJson(new PutDataOut(user))).build();
+    }
+    
+    @PUT
+    @Path("put")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response putRequestPUT(PutData inData)
+    {
+        return putRequest(inData);
     }
     
     public static class RegisterData 

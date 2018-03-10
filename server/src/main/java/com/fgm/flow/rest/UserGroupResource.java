@@ -18,14 +18,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
 import java.util.List;
-import static java.lang.System.out;
-import static java.lang.System.err;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -41,6 +37,8 @@ import java.util.ArrayList;
 import static java.util.Collections.sort;
 import java.util.Comparator;
 import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
+import static java.lang.System.out;
+import static java.lang.System.err;
 
 /**
  *
@@ -51,13 +49,6 @@ public class UserGroupResource {
 
     //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
 
-    /*
-    @Context
-    private UriInfo uriInfo;
-    */
-    
-    //@EJB
-    //private PostRegistry postReg;
     @EJB
     private UserRegistry userReg;
     @EJB
@@ -73,6 +64,7 @@ public class UserGroupResource {
     public static class GetData
     {
         public Integer userid;
+        public Integer ownerid;
         public Integer id;
         public String name;
         public Date before;
@@ -92,24 +84,28 @@ public class UserGroupResource {
             this.id = membership.getUserGroup().getId();
             this.name = membership.getUserGroup().getName();
             this.status = membership.getStatus();
-            this.time = membership.getTime();
+            this.time = membership.getUserGroup().getTime();
         }
     }
     
+    // For retrieving user groups
     @POST
     @Path("get")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(GetData inData)
     {
-        // Most GetData fields ignored currently
-        
         if(inData.userid == null)
         {
             return Response.status(BAD_REQUEST).build();
         }
         
         User user = userReg.find(inData.userid);
+        
+        if(inData.before != null || inData.after != null || inData.count != null)
+        {
+            return Response.status(NOT_IMPLEMENTED).build();        
+        }
         
         // Return status 'not found' if user does not exist
         if(user == null)
@@ -118,17 +114,60 @@ public class UserGroupResource {
         }
         
         List<GetDataOut> getDataOutList = new ArrayList<>();
-                
+        
         for(Membership membership : user.getMemberships())
         {
-            getDataOutList.add(new GetDataOut(membership));
+            // A user is currently only allowed to filter, search among,
+            // and get info about groups they have a status in
+            // (owner, active member or invited)
+            if(filterGroups(inData.ownerid, inData.id, inData.name, membership))
+            {
+                getDataOutList.add(new GetDataOut(membership));
+            }
+        }
+        
+        // Respond with status 'not found' of the user requested groups with 
+        // a specific owner or name but there wasn't any
+        if((inData.name != null || inData.id != null || inData.ownerid != null) 
+                && getDataOutList.size() == 0
+        )
+        {
+            return Response.status(NOT_FOUND).build();
         }
                 
         // Sort the groups based on their names
         sort(getDataOutList, new GDOComparator());
         
         return Response.ok(gson.toJson(getDataOutList)).build();
-    }    
+    }
+    
+    // Filter, or searches, user group results.
+    // A user is currently only allowed to filter, search among,
+    // and get info about groups they have a status in
+    // (owner, active member or invited)
+    private boolean filterGroups(
+            Integer ownerId, Integer id, String name, Membership membership
+    )
+    {
+        if(name != null && !membership.getUserGroup().getName().equals(name)
+                || id != null && membership.getUserGroup().getId() != id
+        )
+        {
+            return false;
+        }
+        
+        if(ownerId != null)
+        {
+            User user = userReg.find(ownerId);
+         
+            if(user == null || !user.isOwnerOfGroup(membership.getUserGroup()))
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
     
     private class GDOComparator implements Comparator<GetDataOut>
     {
@@ -160,13 +199,50 @@ public class UserGroupResource {
         }
     }
     
-    @PUT
+    // For changing the name of a group
+    @POST
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response putRequest(PutData inData)
     {
-        return Response.status(NOT_IMPLEMENTED).build();
+        if(inData.userid == null || inData.id == null || inData.name == null)
+        {
+            return Response.status(BAD_REQUEST).build();
+        }
+        
+        User user = userReg.find(inData.userid);
+        UserGroup userGroup = uGroupReg.find(inData.id);
+        
+        // Respond with status 'not found' if user does not exist
+        if(user == null || userGroup == null)
+        {
+            return Response.status(NOT_FOUND).build();
+        }
+        
+        // Respond with status 'UNAUTHORIZED' if the user is not an owner
+        // of the group corresponding to the given id
+        if(!user.isOwnerOfGroup(userGroup))
+        {
+            return Response.status(UNAUTHORIZED).build();           
+        }
+        
+        userGroup.setName(inData.name);
+        // Also updating the timestamp, perhaps not really for any truly solid
+        // reason
+        userGroup.setTime(new Date());
+        uGroupReg.update(userGroup);
+        
+        return Response.ok(gson.toJson(userGroup)).build();
+    }
+    
+    @PUT
+    @Path("put")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response putRequestPUT(PutData inData)
+    {   
+        return putRequest(inData);
     }
     
     public static class PostData
@@ -240,7 +316,7 @@ public class UserGroupResource {
         {
             this.userid = membership.getUser().getId();
             this.id = membership.getUserGroup().getId();
-            this.nick = nick;
+            this.nick = membership.getUser().getNick();
         }
     }
     
@@ -284,21 +360,21 @@ public class UserGroupResource {
     public static class InviteData
     {
         public Integer userid;
-        public Integer invitedid;
+        public Integer inviteid;
         public Integer id;
     }
 
     public static class InviteDataOut
     {
-        public Integer invitedid;
+        public Integer inviteid;
         public Integer id;
         public String nick;
         
         public InviteDataOut(Membership membership, String nick)
         {
-            this.invitedid = membership.getUser().getId();
+            this.inviteid = membership.getUser().getId();
             this.id = membership.getUserGroup().getId();
-            this.nick = nick;
+            this.nick = membership.getUser().getNick();
         }
     }
     
@@ -311,13 +387,13 @@ public class UserGroupResource {
     {
         // Respond with status 'bad request' if userid, invitedid 
         // and id haven't been supplied
-        if(inData.userid == null || inData.invitedid == null || inData.id == null)
+        if(inData.userid == null || inData.inviteid == null || inData.id == null)
         {
             return Response.status(BAD_REQUEST).build();
         }
         
         User user = userReg.find(inData.userid);
-        User invited = userReg.find(inData.invitedid);
+        User invited = userReg.find(inData.inviteid);
         UserGroup userGroup = uGroupReg.find(inData.id);
 
         // Respond with status 'not found' if the user, invited user 
@@ -400,9 +476,12 @@ public class UserGroupResource {
             return Response.status(UNAUTHORIZED).build();
         }
         
-        // Update the membership to status 'active member'
+        // Delete the membership
+
         MembershipId membershipId =
-            new MembershipId(exUser.getId(), userGroup.getId());
+            new MembershipId(inData.leaveid, inData.id);
+          
+        
         memshipReg.delete(membershipId);
         
         return Response.ok(gson.toJson(new LeaveDataOut(exUser, userGroup))).build();

@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
  *
  * @param <T> Type
  * @param <K> Primary key (id)
- * @author hajo
+ * @author hajo, modified by fgm
  */
 public abstract class AbstractDAO<T, K> {
 
@@ -42,6 +42,9 @@ public abstract class AbstractDAO<T, K> {
     }
 
     public T find(K id) {
+        // Evicting cache for the entity to ensure that the data isn't stale.
+        // Might not be the best way, but it will have to do.
+        getEntityManager().getEntityManagerFactory().getCache().evict(clazz, id);
         return getEntityManager().find(clazz, id);
     }
 

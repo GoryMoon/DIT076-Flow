@@ -73,7 +73,7 @@ public class CommentResource {
         public Integer ownerid;
         public Integer postid;
         public String nick;
-        public Integer id;
+        public Integer groupid;
         public String text;
         public Date before;
         public Date after;
@@ -87,6 +87,7 @@ public class CommentResource {
         public Integer id;
         public String nick;
         public String text;
+        public Integer status;
         public Date time;
     
         public GetDataOut(Comment comment)
@@ -96,21 +97,31 @@ public class CommentResource {
             this.id = comment.getId();
             this.nick = comment.getCommenter().getNick();
             this.text = comment.getText();
+            this.status  = comment.getStatus();
             this.time = comment.getTime();
         }
     }
-        
+     
+    // For retrieving comments for a post.
+    // Could be expanded to return a filtered list of comments. 
     @POST
     @Path("get")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(GetData inData)
-    {
-        // Most GetData fields are ignored currently
-        
+    {        
         if(inData.postid == null || inData.userid == null)
         {
             return Response.status(BAD_REQUEST).build();
+        }
+        
+        if(inData.ownerid != null || inData.nick != null
+                || inData.groupid != null || inData.text != null
+                || inData.before != null || inData.after != null
+                || inData.count != null
+        )
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
         }
         
         Post post =  postReg.find(inData.postid);
@@ -168,6 +179,7 @@ public class CommentResource {
         public Integer id;
         public String nick;
         public String text;
+        public Integer status;
         public Date time;
     
         public PutDataOut(Comment comment)
@@ -177,21 +189,29 @@ public class CommentResource {
             this.id = comment.getId();
             this.nick = comment.getCommenter().getNick();
             this.text = comment.getText();
+            this.status = comment.getStatus();
             this.time = comment.getTime();
         }
     }
     
-    @PUT
+    // Primarily for hiding comments, which only the poster of the
+    // post the comment is associated with is allowed to do.
+    // Could potentially be expanded to allow for editing of comment
+    // text.
+    @POST
     @Path("put")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response putRequest(PutData inData)
-    {
-        // Most PutData fields are ignored
-        
+    {        
         if(inData.id == null || inData.userid == null)
         {
             return Response.status(BAD_REQUEST).build();
+        }
+        
+        if(inData.text != null)
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
         }
         
         Comment comment =  cmntReg.find(inData.id);
@@ -227,6 +247,15 @@ public class CommentResource {
         return Response.ok(gson.toJson(new PutDataOut(comment))).build();
     }
     
+    @PUT
+    @Path("put")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response putRequestPUT(PutData inData)
+    {
+        return putRequest(inData);
+    }
+    
     public static class PostData
     {
         public Integer userid;
@@ -242,6 +271,7 @@ public class CommentResource {
         public Integer id;
         public String nick;
         public String text;
+        public Integer status;
         public Date time;
     
         public PostDataOut(Comment comment)
@@ -251,10 +281,12 @@ public class CommentResource {
             this.id = comment.getId();
             this.nick = comment.getCommenter().getNick();
             this.text = comment.getText();
+            this.status = comment.getStatus();
             this.time = comment.getTime();
         }
     }
     
+    // For creating comments
     @POST
     @Path("post")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -265,6 +297,11 @@ public class CommentResource {
                 || inData.text == null)
         {
             return Response.status(BAD_REQUEST).build();
+        }
+        
+        if(inData.status != null)
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
         }
         
         Post post = postReg.find(inData.postid);

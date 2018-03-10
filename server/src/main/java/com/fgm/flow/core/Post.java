@@ -71,12 +71,12 @@ public class Post implements Serializable
     @Setter
     private UserGroup userGroup;
     
-    @OneToMany(mappedBy="post", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="post", fetch=FetchType.LAZY)
     @Setter
     @Getter
     private List<Comment> comments;
     
-    @OneToMany(mappedBy="post", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="post", fetch=FetchType.LAZY)
     @Setter
     @Getter
     private List<HiddenPost> hidingUsers;

@@ -40,6 +40,7 @@ public class HiddenPostRegistry extends AbstractQuery<HiddenPost, HiddenPostId>
     
     public List<HiddenPost> findByUser(User user)
     {
+        evictClassEntities();
         QHiddenPost hiddenPost = QHiddenPost.hiddenPost;
         JPAQueryFactory qf = new JPAQueryFactory(em);
         List<HiddenPost> found = qf.select(hiddenPost)

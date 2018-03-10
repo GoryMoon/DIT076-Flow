@@ -41,6 +41,7 @@ public class MembershipRegistry extends AbstractQuery<Membership, MembershipId>
     
     public List<Membership> findByUser(User user)
     {
+        evictClassEntities();
         QMembership membership = QMembership.membership;
         JPAQueryFactory qf = new JPAQueryFactory(em);
         List<Membership> found = qf.select(membership)

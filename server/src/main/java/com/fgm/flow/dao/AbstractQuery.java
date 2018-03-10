@@ -31,6 +31,7 @@ public abstract class AbstractQuery<T, K> extends AbstractDAO<T, K>{
     }
 
     public List<T> findAll() {
+        evictClassEntities();
         JPAQueryFactory qf = new JPAQueryFactory(getEntityManager());
         List<T> found = qf.select(queryObject)
                 .from(queryObject)
@@ -39,6 +40,7 @@ public abstract class AbstractQuery<T, K> extends AbstractDAO<T, K>{
     }
 
     public List<T> findRange(int start, int nRecords) {
+        evictClassEntities();
         JPAQueryFactory qf = new JPAQueryFactory(getEntityManager());
         List<T> found = qf.select(queryObject)
                 .from(queryObject)

@@ -163,7 +163,7 @@ class GroupCtrl {
             event.preventDefault();
             let inviteGroupData = {userid: null, inviteid: null, invitenick: null, id: null};
             inviteGroupData.userid = store.get('user').id; // id of inviter
-            inviteGroupData.invitenick = parseInt($('#invite_user-' + id).val());
+            inviteGroupData.invitenick = $('#invite_user-' + id).val();
             inviteGroupData.id = id; // id of group
             server.rpcInviteGroup(inviteGroupData, data => { return eB.notify(EVENT_GROUP_INVITE, data);});
         }

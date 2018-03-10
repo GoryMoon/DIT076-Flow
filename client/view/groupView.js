@@ -201,6 +201,9 @@ class GroupView {
             $('#mainModal').modal('hide');
         }
         av.refreshHeader();
+        if (location.pathname == '/group') {
+            page('/group');
+        }
     }
     
     groupLeave(data) {
@@ -220,7 +223,7 @@ class GroupView {
         $('#kickModal').modal('hide');
 
         $.notify({
-            message: 'Kick was successfullt'
+            message: 'You have kicked ' + data.nick + ' from ' + gc.getGroupInfo[data.id].name
         },{
             type: 'success'
         });

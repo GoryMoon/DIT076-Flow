@@ -161,9 +161,9 @@ class GroupCtrl {
         let id = $(event.target).data('id');
         if (validate("#invite_user-" + id)) {
             event.preventDefault();
-            let inviteGroupData = {userid: null, invitedid: null, id: null};
+            let inviteGroupData = {userid: null, inviteid: null, id: null};
             inviteGroupData.userid = store.get('user').id; // id of inviter
-            inviteGroupData.invitedid = parseInt($('#invite_user-' + id).val());
+            inviteGroupData.inviteid = parseInt($('#invite_user-' + id).val());
             inviteGroupData.id = id; // id of group
             server.rpcInviteGroup(inviteGroupData, data => { return eB.notify(EVENT_GROUP_INVITE, data);});
         }

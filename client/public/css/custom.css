@@ -142,11 +142,16 @@
 .form-custom.group-rename .form-label-group {
     width: 100%;
     margin-bottom: 0rem;
+    cursor: text;
 }
 
 .form-custom .form-label-group {
     position: relative;
     margin-bottom: 1rem;
+}
+
+.form-custom .form-label-group label {
+    cursor: text;
 }
 
 .form-custom .form-label-group > input,

@@ -47,12 +47,6 @@ public abstract class AbstractDAO<T, K> {
         getEntityManager().getEntityManagerFactory().getCache().evict(clazz, id);
         return getEntityManager().find(clazz, id);
     }
-    
-    /*
-    public T find(K id) {
-        return getEntityManager().find(clazz, id);
-    }
-    */
 
     protected void flush() {
         getEntityManager().flush();

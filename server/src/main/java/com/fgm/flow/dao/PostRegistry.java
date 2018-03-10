@@ -39,7 +39,7 @@ public class PostRegistry extends AbstractQuery<Post, Integer>
     
     public List<Post> findById(int id)
     {
-        evictClassEntities
+        evictClassEntities();
         QPost post = QPost.post;
         JPAQueryFactory qf = new JPAQueryFactory(em);
         List<Post> found = qf.select(post)

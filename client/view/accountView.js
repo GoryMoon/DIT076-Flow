@@ -16,7 +16,8 @@ import { groupCtrl as gc } from "../control/groupCtrl.js"
 import { 
     setTitle, 
     getTemplate, 
-    GROUP_UPDATE_BUTTON 
+    GROUP_UPDATE_BUTTON,
+    POST_RETRIEVE_BUTTON
 } from "../util/general.js"
 import Mustache from 'mustache'
 
@@ -83,7 +84,17 @@ class AccountView {
     
     accountGet(data) {}
     
-    accountPut(data) {}
+    accountPut(data) {
+        this.refreshHeader();
+        page('/');
+        $(POST_RETRIEVE_BUTTON).click();
+        $('#mainModal').modal('hide');
+        $.notify({
+            message: 'Successfully updated info'
+        },{
+            type: 'success'
+        });
+    }
     
     updateHeader() {
         $("#nav-group").remove();

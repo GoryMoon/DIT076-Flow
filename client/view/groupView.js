@@ -128,6 +128,9 @@ class GroupView {
 
                 $(".show_hide.user_link.outer").click((event) => {
                     let self = $(event.target);
+                    if (self.is('svg') || self.is('path')) {
+                        self = self.parents('a');
+                    }
                     let drawer = self.next();
                     if (drawer.hasClass('show')) {
                         self.html("Show Users <i class=\"fas fa-angle-down\"></i>");
@@ -141,7 +144,11 @@ class GroupView {
                 });
                 //Bottom hide users button
                 $(".show_hide.user_link.inner").click((event) => {
-                    let drawer = $(event.target).parent();
+                    let target = $(event.target);
+                    if (target.is('svg') || target.is('path')) {
+                        target = target.parents('a');
+                    }
+                    let drawer = target.parent();
                     if (drawer.hasClass('show')) {
                         drawer.prev().html("Show Users <i class=\"fas fa-angle-down\"></i>");
                     } else {
@@ -181,6 +188,11 @@ class GroupView {
     
     groupPut(data) {
         av.refreshHeader();
+        $.notify({
+            message: 'Updated group name' 
+        },{
+            type: 'success'
+        });
     }
     
     groupJoin(data) {

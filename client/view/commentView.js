@@ -37,12 +37,7 @@ class CommentView {
             } else {
                 for (var i = 0; i < data.comments.length; i++) {
                     let d = getFancyTimeData(data.comments[i]);
-                    let status = d.text.trim();
-                    if (status == "Hidden") {
-                        status = 'Show';
-                    } else {
-                        status = 'Hide';
-                    }
+                    let status = d.status == 0 ? 'Hide': 'Show';
                     d.toggle_comment = status;
                     var rendered = Mustache.render(template, d);
                     comments.append(rendered);

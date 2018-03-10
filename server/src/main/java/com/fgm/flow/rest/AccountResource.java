@@ -196,7 +196,7 @@ public class AccountResource
             
             for(User usr : userReg.findAll())
             {
-                if(usr.isMemberOfGroup(userGroup))
+                if(usr.hasAnyMembershipStatus(userGroup))
                 {
                     getDataOutList.add(new GetDataOut(usr));
                 }

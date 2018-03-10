@@ -51,4 +51,9 @@ public abstract class AbstractDAO<T, K> {
     protected void flush() {
         getEntityManager().flush();
     }
+    
+    public void evictClassEntities()
+    {
+        getEntityManager().getEntityManagerFactory().getCache().evict(clazz);
+    }
 }

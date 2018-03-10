@@ -39,6 +39,7 @@ public class UserRegistry extends AbstractQuery<User, Integer>
     
     public List<User> findByNick(String nick)
     {
+        evictClassEntities();
         QUser user = QUser.user;
         JPAQueryFactory qf = new JPAQueryFactory(em);
         List<User> found = qf.select(user)
@@ -50,6 +51,7 @@ public class UserRegistry extends AbstractQuery<User, Integer>
     
     public List<User> findByEmail(String email)
     {
+        evictClassEntities();
         QUser user = QUser.user;
         JPAQueryFactory qf = new JPAQueryFactory(em);
         List<User> found = qf.select(user)

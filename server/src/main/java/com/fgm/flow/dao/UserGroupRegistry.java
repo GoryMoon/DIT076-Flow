@@ -39,6 +39,7 @@ public class UserGroupRegistry extends AbstractQuery<UserGroup, Integer>
     
     public List<UserGroup> findByName(String name)
     {
+        evictClassEntities();
         QUserGroup uGroup = QUserGroup.userGroup;
         JPAQueryFactory qf = new JPAQueryFactory(em);
         List<UserGroup> found = qf.select(uGroup)

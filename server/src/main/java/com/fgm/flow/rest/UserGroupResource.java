@@ -243,7 +243,7 @@ public class UserGroupResource {
         userGroup.setTime(new Date());
         uGroupReg.update(userGroup);
         
-        return Response.ok(gson.toJson(userGroup)).build();
+        return Response.ok(gson.toJson(new PutDataOut(userGroup))).build();
     }
     
     @PUT

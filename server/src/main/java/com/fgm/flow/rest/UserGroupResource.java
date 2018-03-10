@@ -45,10 +45,8 @@ import static java.lang.System.err;
  * @author fgm
  */
 @Path("group")
-public class UserGroupResource {
-
-    //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
-
+public class UserGroupResource
+{
     @EJB
     private UserRegistry userReg;
     @EJB

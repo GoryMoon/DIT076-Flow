@@ -29,9 +29,6 @@ import javax.ws.rs.core.UriInfo;
 import static java.util.Collections.sort;
 import java.util.Comparator;
 
-import static java.lang.System.out;
-
-
 /**
  *
  * Handles requests related to user accounts
@@ -40,7 +37,7 @@ import static java.lang.System.out;
  */
 @Path("account")
 public class AccountResource
-{    
+{
     @EJB
     private UserRegistry userReg;
     @EJB
@@ -48,8 +45,6 @@ public class AccountResource
     @EJB
     private MembershipRegistry memshipReg;
     private final Gson gson = new Gson();
-    
-    GsonBuilder gb = new GsonBuilder();
 
     public static class GetData 
     {
@@ -82,8 +77,6 @@ public class AccountResource
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(GetData inData)
     {
-        // The fields id, email and nick are currentlty ignored 
-        
         if(inData.userid == null)
         {
             return Response.status(BAD_REQUEST).build();
@@ -456,7 +449,8 @@ public class AccountResource
     @Produces({MediaType.APPLICATION_JSON})
     public Response registerRequest(RegisterData inData)
     {
-        // Check user object
+        // Respond with status 'bad request' if email, nick or password
+        // hasn't been supplied
         if(inData.email == null || inData.nick == null  || inData.password == null)
         {
             return Response.status(BAD_REQUEST).build();

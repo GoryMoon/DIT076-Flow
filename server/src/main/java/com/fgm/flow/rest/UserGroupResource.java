@@ -227,13 +227,23 @@ public class UserGroupResource {
             return Response.status(UNAUTHORIZED).build();           
         }
         
+        List<UserGroup> groupWNameList = uGroupReg.findByName(inData.name);
+        
+        // Respond with status 'conflict' if there already is a group with 
+        // the given name, and that group isn't the one the name change is
+        // being requested for
+        if(groupWNameList.size() != 0 && !userGroup.equals(groupWNameList.get(0)))
+        {
+             return Response.status(CONFLICT).build();           
+        }
+        
         userGroup.setName(inData.name);
         // Also updating the timestamp, perhaps not really for any truly solid
         // reason
         userGroup.setTime(new Date());
         uGroupReg.update(userGroup);
         
-        return Response.ok(gson.toJson(userGroup)).build();
+        return Response.ok(gson.toJson(new PutDataOut(userGroup))).build();
     }
     
     @PUT

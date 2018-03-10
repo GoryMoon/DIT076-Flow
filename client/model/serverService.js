@@ -51,7 +51,20 @@ class ServerService {
         }).done(data => {
             this.successFunc(data, "rpcLoginAccount");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail(function (msg, ajaxOpt, thrownError) {
+            if (ajaxOpt == 401) {
+                $.notify({
+                    message: 'Email or password was wrong. Try again' 
+                },{
+                    type: 'danger'
+                });
+            } else if (ajaxOpt == 'error') {
+                $.notify({
+                    message: 'Can\'t reach the server. Try again later' 
+                },{
+                    type: 'warning'
+                });
+            }
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcLoginAccount"); 
         });
     }
@@ -60,7 +73,7 @@ class ServerService {
         this.sendingFunc(putAccountData, "rpcPutAccount");
         $.ajax({
             headers: {'Access-Control-Allow-Origin': '*'},
-            url: this.serverUrl + "account/login/",
+            url: this.serverUrl + "account/put/",
             data: JSON.stringify(putAccountData),
             method: "POST",
             contentType: "application/json; charset=utf-8",
@@ -69,7 +82,12 @@ class ServerService {
         }).done(data => {
             this.successFunc(data, "rpcPutAccount");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail(function (msg, ajaxOpt, thrownError) {
+            $.notify({
+                message: thrownError
+            },{
+                type: 'warning'
+            });
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcPutAccount"); 
         });
     }
@@ -249,7 +267,14 @@ class ServerService {
         }).done(data => {
             this.successFunc(data, "rpcInviteGroup");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail(function (msg, ajaxOpt, thrownError) {
+            if (ajaxOpt == 'error') {
+                $.notify({
+                    message: 'Couldn\'t find a user with that id'
+                },{
+                    type: 'danger'
+                });
+            };
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcInviteGroup"); 
         });
     }

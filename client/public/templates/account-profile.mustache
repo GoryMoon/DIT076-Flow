@@ -1,0 +1,37 @@
+<form class="form-custom">
+    <div class="form-label-group">
+        <input  type="email" id="account_change_email" class="form-control" autocomplete="email" placeholder="Email address" value="{{email}}" required autofocus>
+        <label for="account_change_email">Email address</label>
+    </div>
+    <div class="form-label-group">
+        <input  type="text" id="account_change_nick" class="form-control" autocomplete="username" placeholder="Nick" value="{{nick}}" required>
+        <label for="account_register_nick">Nick</label>
+    </div>
+    <button  id="account_update_info_button" class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
+</form>
+<hr>
+<h5>Change Password</h5>
+<form class="form-custom">
+    <div class="form-label-group">
+        <input  type="password" id="account_change_password" class="form-control" autocomplete="new-password" placeholder="Password" required>
+        <label for="account_change_password">Password</label>
+    </div>
+    <div class="form-label-group">
+        <input  type="password" id="account_change_password_confirm" class="form-control" autocomplete="new-password" placeholder="Password (Confirm)" oninput="check(this)" required>
+        <label for="account_change_password_confirm">Password (Confirm)</label>
+    </div>
+    <button  id="account_update_password_button" class="btn btn-lg btn-primary btn-block" type="submit">Change password</button>
+    <script language='javascript' type='text/javascript'>
+        function check(input) {
+            if (input.value != $('#account_change_password').val()) {
+                input.setCustomValidity('Password Must be Matching.');
+            } else {
+                // input is valid -- reset the error message
+                input.setCustomValidity('');
+            }
+            if (input.value == "") {
+                input.setCustomValidity('');
+            };
+        }
+    </script>
+</form>

@@ -1,4 +1,4 @@
-<div class="comment clearfix"  data-comid="{{id}}">
+<div class="comment clearfix" data-comid="{{id}}" data-status="{{status}}">
     <img src="img/profile.png" class="float-left profile-img profile-comment rounded-circle" alt="Profile pic">
     <div class="user-info">
         <div class="clearfix">
@@ -10,7 +10,7 @@
                 <div class="dropdown">
                     <a class="dropdown-toggle" id="commentDrop{{id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                     <div class="dropdown-menu" aria-labelledby="commentDrop{{d}}">
-                        <a class="comment_hide_button pointer dropdown-item">Hide</a>
+                        <a id="comment_hide_button_{{id}}" class="comment_hide_button pointer dropdown-item">{{toggle_comment}}</a>
                     </div>
                 </div>
           </div>

@@ -61,18 +61,18 @@ class GroupView {
     }
 
     groupCreateView() {
-        $("#groupModalTitle").text("Create Group");
+        $("#mainModalTitle").text("Create Group");
         getTemplate('/templates/create-group.mustache', (template) => {
             $('#modal-content').html(Mustache.render(template));
-            $('#groupModal').modal('show');
-            $('#groupModal').on('shown.bs.modal', function () {
+            $('#mainModal').modal('show');
+            $('#mainModal').on('shown.bs.modal', function () {
                 $('#group_send_name').trigger('focus')
             });
         });
     }
     
     groupInviteView() {
-        $("#groupModalTitle").text("Group Invites");
+        $("#mainModalTitle").text("Group Invites");
         gc.get(() => {
             av.updateHeader();
             getTemplate('/templates/invite-group.mustache', (template) => {
@@ -85,7 +85,7 @@ class GroupView {
                 };
                 $('#modal-content').html(Mustache.render(template, { invites: inviteList}));
                 
-                $('#groupModal').modal('show');
+                $('#mainModal').modal('show');
             });
         });
     }
@@ -172,7 +172,8 @@ class GroupView {
     groupGet(data) {}
     
     groupPost(data) {
-        $('#groupModal').modal('hide');
+        av.refreshHeader();
+        $('#mainModal').modal('hide');
         if (location.pathname == '/group') {
             page('/group');
         }
@@ -185,7 +186,7 @@ class GroupView {
     groupJoin(data) {
         $('.group-invite-' + data.id).parent().remove();
         if ($('#group-invite-list').children().length === 0) {
-            $('#groupModal').modal('hide');
+            $('#mainModal').modal('hide');
         }
         av.refreshHeader();
     }
@@ -199,16 +200,27 @@ class GroupView {
         $('#leaveModal').modal('hide');
     }
 
-    groupLeave(data) {
-        $('.group-kick-' + data.id).parent().remove();
-        if (data.id == store.get('user').id) {
+    groupKick(data) {
+        $('.group-kick-' + data.leaveid).parent().remove();
+        if (data.leaveid == store.get('user').id) {
             $('#groupid-{{id}}').remove();
         }
-        $('#leaveModal').modal('hide');
+        $('#kickModal').modal('hide');
+
+        $.notify({
+            message: 'Kick was successfullt'
+        },{
+            type: 'success'
+        });
     }
     
     groupInvite(data) {
         $("#invite_user-" + data.id).val("");
+        $.notify({
+            message: 'You have invited ' + data.nick 
+        },{
+            type: 'success'
+        });
     }
   
 }
@@ -216,8 +228,8 @@ class GroupView {
 const groupView = new GroupView();
 eB.register(groupView);
 
-$('#groupModal').on('hidden.bs.modal', function (e) {
+$('#mainModal').on('hidden.bs.modal', function (e) {
     $('#modal-content').empty();
-    $("#groupModalTitle").text("Group");
+    $("#mainModalTitle").text("Group");
 })
 

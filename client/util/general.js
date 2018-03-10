@@ -79,11 +79,18 @@ export const ACCOUNT_REGISTER_EMAIL = "#account_register_email";
 export const ACCOUNT_REGISTER_NICK = "#account_register_nick";
 export const ACCOUNT_REGISTER_PASSWORD = "#account_register_password";
 export const ACCOUNT_REGISTER_PASSWORD_CONFIRM = "#account_register_password_confirm";
+export const ACCOUNT_CHANGE_PASSWORD = "#account_change_password";
+export const ACCOUNT_CHANGE_PASSWORD_CONFIRM = "#account_change_password_confirm";
+export const ACCOUNT_CHANGE_EMAIL = "#account_change_email";
+export const ACCOUNT_CHANGE_NICK = "#account_change_nick";
 
 // ACCOUNT BUTTONS
 export const ACCOUNT_LOGIN_BUTTON = "#account_login_button";
 export const ACCOUNT_LOGOUT_BUTTON = "#account_logout_button";
 export const ACCOUNT_REGISTER_BUTTON = "#account_register_button";
+export const ACCOUNT_PROFILE_BUTTON = "#account_profile_button";
+export const ACCOUNT_UPDATE_INFO_BUTTON = "#account_update_info_button";
+export const ACCOUNT_UPDATE_PASSWORD_BUTTON = "#account_update_password_button";
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,11 +129,12 @@ export const GROUP_INVITE = ".group_invite";
 export const GROUP_CREATE_VIEW_BUTTON = "#group_create_view_button";
 export const GROUP_INVITE_VIEW_BUTTON = "#group_invite_view_button";
 export const GROUP_OWNER_VIEW_BUTTON = "#group_owner_view_button";
-export const GROUP_RETRIEVE_BUTTON = "#group_retrieve_button";
+export const GROUP_RETRIEVE_BUTTON = ".group_retrieve_button";
 export const GROUP_SEND_BUTTON = "#group_send_button";
 export const GROUP_CHANGE_NAME_BUTTON = ".group_change_name_button";
 export const GROUP_INVITE_BUTTON = ".group_invite_button";
 export const GROUP_ACCEPT_INVITE_BUTTON = ".group_accept_invite_button";
+export const GROUP_DECLINE_INVITE_BUTTON = ".group_decline_invite_button";
 export const GROUP_UPDATE_BUTTON = ".group_update_button";
 export const GROUP_LEAVE_BUTTON = "#group_leave_button";
 export const GROUP_KICK_BUTTON = "#group_kick_button";

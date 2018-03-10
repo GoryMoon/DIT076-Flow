@@ -3,6 +3,7 @@
 import {
     EVENT_ACCOUNT_VIEW_LOGIN,
     EVENT_ACCOUNT_VIEW_REGISTER,
+    EVENT_ACCOUNT_VIEW,
     EVENT_ACCOUNT_LOGIN,
     EVENT_ACCOUNT_REGISTER,
     EVENT_ACCOUNT_LOGOUT,
@@ -28,6 +29,9 @@ class AccountView {
                 break;
             case EVENT_ACCOUNT_VIEW_REGISTER:
                 this.accountViewRegister(data);
+                break;
+            case EVENT_ACCOUNT_VIEW:
+                this.accountView(data);
                 break;
             case EVENT_ACCOUNT_LOGIN:
                 this.accountLogin(data);
@@ -55,6 +59,14 @@ class AccountView {
     accountViewRegister(ctx) {
         setTitle('Register');
         getTemplate('/templates/register.mustache', (template) => $('#content').html(Mustache.render(template)));
+    }
+
+    accountView(data) {
+        $("#mainModalTitle").text("Profile");
+        getTemplate('/templates/account-profile.mustache', (template) => {
+            $('#modal-content').html(Mustache.render(template, data));
+            $('#mainModal').modal('show');
+        });
     }
 
     accountLogin(data) {

@@ -24,7 +24,6 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import com.google.gson.annotations.Expose;
-import static java.lang.System.out;
 
 /**
  * A Flow user
@@ -57,8 +56,8 @@ public class User implements Serializable
     @Setter
     @Getter
     @Column(nullable=false)
-    @Size(min = 2, max = 25,
-            message = "Nickname must be between 2 and 25 characters long")
+    /*@Size(min = 2, max = 25,
+            message = "Nickname must be between 2 and 25 characters long")*/
     @Expose
     private String nick;
     

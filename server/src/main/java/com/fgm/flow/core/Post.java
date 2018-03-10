@@ -44,8 +44,6 @@ public class Post implements Serializable
     @Setter
     @Column(nullable=false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    //@JoinColumn(name = "employer_id", referencedColumnName = "id")
-    //@ManyToOne
     @Expose
     private int id;
     

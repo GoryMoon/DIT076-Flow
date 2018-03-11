@@ -112,12 +112,17 @@ public class PostResource
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(GetData inData)
-    {
-        // Most GetData fields are currentlty ignored 
-        
+    {   
         if(inData.userid == null)
         {
             return Response.status(BAD_REQUEST).build();
+        }
+        
+        if(inData.id != null || inData.nick != null 
+            || inData.text != null || inData.title != null
+        )
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
         }
         
         User user = userReg.find(inData.userid);
@@ -322,14 +327,17 @@ public class PostResource
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response putRequest(PutData inData)
-    {
-        // Most PutData fields are ignored currently
-        
+    {        
         // Respond with status 'bad request' if userid or (post) id haven't
         // been supplied
         if(inData.userid == null || inData.id == null)
         {
             return Response.status(BAD_REQUEST).build();
+        }
+        
+        if(inData.title != null || inData.text != null)
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
         }
         
         User user = userReg.find(inData.userid);

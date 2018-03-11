@@ -91,7 +91,8 @@ class AccountView {
         $.notify({
             message: 'Successfully updated info'
         },{
-            type: 'success'
+            type: 'success',
+            z_index: 1100
         });
     }
     

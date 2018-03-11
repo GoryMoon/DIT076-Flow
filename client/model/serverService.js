@@ -2,22 +2,36 @@
 
 class ServerService {
     constructor() {
+        let dev = true;
         this.serverUrl = "http://localhost:8080/api/";
         this.errorFunc = function(msg, ajaxOpt, thrownError, funcName) {
-            console.log("Failiure in \"" + funcName + "\"");
-            console.log("Error Message: " + JSON.stringify(msg));
-            console.log("Ajax Options: " + ajaxOpt);
-            console.log("Thrown Error: " + thrownError);
+            if (dev) {
+                console.log("Failiure in \"" + funcName + "\"");
+                console.log("Error Message: " + JSON.stringify(msg));
+                console.log("Ajax Options: " + ajaxOpt);
+                console.log("Thrown Error: " + thrownError);
+                $.notify({
+                    icon: 'fas fa-exclamation-triangle',
+                    title: '<strong>Error message:</strong>',
+                    message: '<br>' + 'Status: ' + msg.status + '<br>Error: ' + thrownError
+                },{
+                    type: 'danger',
+                    z_index: 1100
+                });
+            }
         };
         this.successFunc = function(data, funcName) {
-            console.log("Request succeded for \"" + funcName + "\"");
-            console.log("Response: " + JSON.stringify(data));
+            if (dev) {
+                console.log("Request succeded for \"" + funcName + "\"");
+                console.log("Response: " + JSON.stringify(data));
+            }
         };
         this.sendingFunc = function(data, funcName) {
-            console.log("Sent request \"" + funcName + "\"");
-            console.log("Data sent: " + JSON.stringify(data));
+            if (dev) {
+                console.log("Sent request \"" + funcName + "\"");
+                console.log("Data sent: " + JSON.stringify(data));
+            }
         };
-        
     }
 
     rpcGetAccount(getAccountData, callback) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
@@ -56,13 +70,15 @@ class ServerService {
                 $.notify({
                     message: 'Email or password was wrong. Try again' 
                 },{
-                    type: 'danger'
+                    type: 'danger',
+                    z_index: 1100
                 });
             } else if (ajaxOpt == 'error') {
                 $.notify({
                     message: 'Can\'t reach the server. Try again later' 
                 },{
-                    type: 'warning'
+                    type: 'warning',
+                    z_index: 1100
                 });
             }
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcLoginAccount"); 
@@ -86,7 +102,8 @@ class ServerService {
             $.notify({
                 message: thrownError
             },{
-                type: 'warning'
+                type: 'warning',
+                z_index: 1100
             });
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcPutAccount"); 
         });
@@ -195,7 +212,15 @@ class ServerService {
         }).done(data => {
             this.successFunc(data, "rpcPutGroup");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail(function (msg, ajaxOpt, thrownError) {
+            if (msg.status == 409) {
+                $.notify({
+                    message: 'A group with that name already exists'
+                },{
+                    type: 'danger',
+                    z_index: 1100
+                });
+            }
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcPutGroup"); 
         });
     }
@@ -213,7 +238,15 @@ class ServerService {
         }).done(data => {
             this.successFunc(data, "rpcPostGroup");
             callback(data);
-        }).fail(function (msg, ajaxOpt, thrownError) { 
+        }).fail(function (msg, ajaxOpt, thrownError) {
+            if (msg.status == 403) {
+                $.notify({
+                    message: 'A group with that name already exists'
+                },{
+                    type: 'danger',
+                    z_index: 1100
+                });
+            }
             this.errorFunc(msg, ajaxOpt, thrownError, "rpcPostGroup"); 
         });
     }

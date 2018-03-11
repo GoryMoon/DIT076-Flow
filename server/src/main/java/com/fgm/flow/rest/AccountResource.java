@@ -415,7 +415,7 @@ public class AccountResource
         
         if(inData.password != null)
         {
-            user.setPassword(inData.password);
+            user.setPassword(getPasswordHash(inData.password));
         }
         
         userReg.update(user);

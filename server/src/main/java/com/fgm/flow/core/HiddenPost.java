@@ -33,13 +33,13 @@ public class HiddenPost
     
     @Getter
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(/*fetch = FetchType.LAZY*/)
     @MapsId("userId")
     private User user;
 
     @Getter
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(/*fetch = FetchType.LAZY*/)
     @MapsId("postId")
     private Post post;
 

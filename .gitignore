@@ -66,3 +66,4 @@ typings/
 
 # Other
 .DS_Store
+/server/nbproject/

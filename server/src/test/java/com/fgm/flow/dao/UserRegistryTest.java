@@ -19,6 +19,7 @@ import org.junit.Test;
  *
  * A starting point for more extensive testing of UserRegistry
  * 
+ * Disabled as they won't pass if the db isn't initiated.
  * 
  * @author fgm
  */

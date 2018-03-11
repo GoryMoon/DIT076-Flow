@@ -262,6 +262,11 @@ public class PostResource
             return Response.status(BAD_REQUEST).build();
         }
         
+        if(inData.status != null)
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
+        }
+        
         User user = userReg.find(inData.userid);
         
         if(user == null)

@@ -5,11 +5,9 @@
  */
 package com.fgm.flow.rest;
 
-import com.fgm.flow.core.Post;
 import com.fgm.flow.core.User;
 import com.fgm.flow.core.UserGroup;
 import com.fgm.flow.core.Membership;
-import com.fgm.flow.dao.PostRegistry;
 import com.fgm.flow.dao.UserRegistry;
 import com.fgm.flow.dao.UserGroupRegistry;
 import com.fgm.flow.dao.MembershipRegistry;
@@ -18,33 +16,29 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.net.URI;
 import java.util.List;
-import static java.lang.System.out;
-import static java.lang.System.err;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.GONE;
 
 /**
  *
+ * Handles membership test requests
+ * 
  * @author fgm
+ * 
  */
 @Path("membership")
-public class MembershipResource {
-
-    //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
-
+public class MembershipResource
+{
     @Context
     private UriInfo uriInfo;
 

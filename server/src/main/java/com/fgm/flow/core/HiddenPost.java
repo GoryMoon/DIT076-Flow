@@ -11,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.EmbeddedId;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
@@ -34,13 +33,13 @@ public class HiddenPost
     
     @Getter
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(/*fetch = FetchType.LAZY*/)
     @MapsId("userId")
     private User user;
 
     @Getter
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(/*fetch = FetchType.LAZY*/)
     @MapsId("postId")
     private Post post;
 

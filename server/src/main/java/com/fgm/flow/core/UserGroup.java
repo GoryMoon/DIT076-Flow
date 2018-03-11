@@ -16,14 +16,11 @@ import javax.persistence.TemporalType;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import com.google.gson.annotations.Expose;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 /**
  * A Flow group
@@ -53,15 +50,7 @@ public class UserGroup implements Serializable
     @Expose
     private String name;
     
-    /*
-    @ManyToOne
-    @JoinColumn(name="OWNER")   
-    @Getter
-    @Setter
-    private User owner;
-    */
-    
-    @OneToMany(mappedBy="userGroup", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="userGroup", fetch=FetchType.LAZY)
     @Setter
     @Getter
     private List<Membership> memberships;
@@ -73,7 +62,7 @@ public class UserGroup implements Serializable
     @Expose
     private Date time;
     
-    @OneToMany(mappedBy="userGroup", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="userGroup", fetch=FetchType.LAZY)
     @Setter
     @Getter
     private List<Post> posts;

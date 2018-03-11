@@ -22,38 +22,32 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Date;
 import static java.util.Collections.sort;
 import java.util.Comparator;
-import static java.lang.System.out;
-import static java.lang.System.err;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.*;
 import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
 
 /**
- * A flow post
+ * 
+ * Handles post related requests
  * 
  * @author fgm
  */
 @Path("post")
 public class PostResource
 {   
-    //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
-
     @Context
     private UriInfo uriInfo;
 
@@ -118,12 +112,17 @@ public class PostResource
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(GetData inData)
-    {
-        // Most GetData fields are currentlty ignored 
-        
+    {   
         if(inData.userid == null)
         {
             return Response.status(BAD_REQUEST).build();
+        }
+        
+        if(inData.id != null || inData.nick != null 
+            || inData.text != null || inData.title != null
+        )
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
         }
         
         User user = userReg.find(inData.userid);
@@ -263,6 +262,11 @@ public class PostResource
             return Response.status(BAD_REQUEST).build();
         }
         
+        if(inData.status != null)
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
+        }
+        
         User user = userReg.find(inData.userid);
         
         if(user == null)
@@ -328,14 +332,17 @@ public class PostResource
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response putRequest(PutData inData)
-    {
-        // Most PutData fields are ignored currently
-        
+    {        
         // Respond with status 'bad request' if userid or (post) id haven't
         // been supplied
         if(inData.userid == null || inData.id == null)
         {
             return Response.status(BAD_REQUEST).build();
+        }
+        
+        if(inData.title != null || inData.text != null)
+        {
+            return Response.status(NOT_IMPLEMENTED).build();
         }
         
         User user = userReg.find(inData.userid);

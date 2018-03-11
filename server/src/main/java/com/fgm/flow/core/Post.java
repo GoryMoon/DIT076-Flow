@@ -44,8 +44,6 @@ public class Post implements Serializable
     @Setter
     @Column(nullable=false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    //@JoinColumn(name = "employer_id", referencedColumnName = "id")
-    //@ManyToOne
     @Expose
     private int id;
     
@@ -73,12 +71,12 @@ public class Post implements Serializable
     @Setter
     private UserGroup userGroup;
     
-    @OneToMany(mappedBy="post", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="post", fetch=FetchType.LAZY)
     @Setter
     @Getter
     private List<Comment> comments;
     
-    @OneToMany(mappedBy="post", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="post", fetch=FetchType.LAZY)
     @Setter
     @Getter
     private List<HiddenPost> hidingUsers;

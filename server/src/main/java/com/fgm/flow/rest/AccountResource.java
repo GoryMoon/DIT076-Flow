@@ -30,7 +30,11 @@ import static java.util.Collections.sort;
 import java.util.Comparator;
 
 import static java.lang.System.out;
-
+import static java.lang.System.err;
+import java.security.MessageDigest;
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -40,7 +44,7 @@ import static java.lang.System.out;
  */
 @Path("account")
 public class AccountResource
-{    
+{
     @EJB
     private UserRegistry userReg;
     @EJB
@@ -48,8 +52,6 @@ public class AccountResource
     @EJB
     private MembershipRegistry memshipReg;
     private final Gson gson = new Gson();
-    
-    GsonBuilder gb = new GsonBuilder();
 
     public static class GetData 
     {
@@ -81,9 +83,7 @@ public class AccountResource
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getRequest(GetData inData)
-    {
-        // The fields id, email and nick are currentlty ignored 
-        
+    {   
         if(inData.userid == null)
         {
             return Response.status(BAD_REQUEST).build();
@@ -196,7 +196,7 @@ public class AccountResource
             
             for(User usr : userReg.findAll())
             {
-                if(usr.isMemberOfGroup(userGroup))
+                if(usr.hasAnyMembershipStatus(userGroup))
                 {
                     getDataOutList.add(new GetDataOut(usr));
                 }
@@ -260,6 +260,8 @@ public class AccountResource
     @Produces({MediaType.APPLICATION_JSON})
     public Response loginRequest(LoginData inData)
     {
+        out.println(getPasswordHash(inData.password));
+        
         // Check user object
         if(inData.email == null || inData.password == null)
         {
@@ -287,7 +289,7 @@ public class AccountResource
         
         // Respond woth status 'unauthorized' if an incorrect password has
         // been supplied for the user
-        if(!user.getPassword().equals(inData.password))
+        if(!user.getPassword().equals(getPasswordHash(inData.password)))
         {
             return Response.status(UNAUTHORIZED).build();           
         }        
@@ -413,7 +415,7 @@ public class AccountResource
         
         if(inData.password != null)
         {
-            user.setPassword(inData.password);
+            user.setPassword(getPasswordHash(inData.password));
         }
         
         userReg.update(user);
@@ -456,7 +458,8 @@ public class AccountResource
     @Produces({MediaType.APPLICATION_JSON})
     public Response registerRequest(RegisterData inData)
     {
-        // Check user object
+        // Respond with status 'bad request' if email, nick or password
+        // hasn't been supplied
         if(inData.email == null || inData.nick == null  || inData.password == null)
         {
             return Response.status(BAD_REQUEST).build();
@@ -472,7 +475,8 @@ public class AccountResource
             return Response.status(CONFLICT).build();
         }
   
-        User user = new User(inData.email, inData.nick, inData.password);    
+        User user = new User(inData.email, inData.nick,
+                getPasswordHash(inData.password));    
         
         userReg.create(user);
         
@@ -484,6 +488,20 @@ public class AccountResource
         // Respond with status 'ok' and only the ID if the
         // nick did not already exists
         return Response.ok(gson.toJson(new RegisterDataOut(user))).build();
+    }
+    
+    // For password hashing
+    private String getPasswordHash(String password)
+    {
+        try
+        {   MessageDigest md = MessageDigest.getInstance("SHA-512");
+            return (new HexBinaryAdapter()).marshal(md.digest(password.getBytes(Charset.forName("UTF-8"))));
+        }
+        catch(NoSuchAlgorithmException e)
+        {
+            err.println("Failed to create password hash");
+            return password;
+        }
     }
     
 

@@ -86,8 +86,7 @@ class AccountView {
     
     accountPut(data) {
         this.refreshHeader();
-        page('/');
-        $(POST_RETRIEVE_BUTTON).click();
+        page(location.pathname);
         $('#mainModal').modal('hide');
         $.notify({
             message: 'Successfully updated info'

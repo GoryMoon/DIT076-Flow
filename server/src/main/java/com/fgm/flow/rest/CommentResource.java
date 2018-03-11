@@ -20,19 +20,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.net.URI;
 import java.util.List;
 import java.util.ArrayList;
-import static java.lang.System.out;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.*;
@@ -40,16 +37,17 @@ import java.util.Date;
 import java.util.Comparator;
 import static java.util.Collections.sort;
 import static com.fgm.flow.service.TestingStatusSupplier.TESTING_DISABLED;
-import java.io.Serializable;
 
 /**
  *
+ * Handles requests related to comments on posts
+ * 
  * @author fgm
+ * 
  */
 @Path("comment")
-public class CommentResource {
-
-    //private static final Logger LOG = Logger.getLogger(UserResource.class.getName());
+public class CommentResource 
+{
     @Context
     private UriInfo uriInfo;
 
@@ -63,6 +61,8 @@ public class CommentResource {
     private MembershipRegistry memshipReg;
     private final Gson gson = new Gson();
 
+    // Used in the test methods to prevent cyclical references when
+    // creating json strings
     GsonBuilder gb = new GsonBuilder();
     Gson gsonEWE = gb.excludeFieldsWithoutExposeAnnotation().create();
 
@@ -102,7 +102,7 @@ public class CommentResource {
         }
     }
      
-    // For retrieving comments for a post.
+    // For retrieving comments on a post.
     // Could be expanded to return a filtered list of comments. 
     @POST
     @Path("get")
@@ -222,7 +222,7 @@ public class CommentResource {
             return Response.status(NOT_FOUND).build();
         }
         
-        if(!comment.getCommenter().equals(user))
+        if(!comment.getPost().getPoster().equals(user))
         {
              return Response.status(UNAUTHORIZED).build();           
         }

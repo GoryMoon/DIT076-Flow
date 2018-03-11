@@ -30,9 +30,7 @@ import { groupCtrl as gc } from "../control/groupCtrl.js"
 class PostCtrl {
 
     refresh() {
-        if (location.pathname == '/') {
-            postCtrl.get();
-        }
+        page(location.pathname);
     }
     get() {
         if (hasUser()) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED

@@ -1,5 +1,4 @@
 # README
-
 About the client application - description from course workshop i applicable:
 
 This is an ES6 "in-house MVC" client application running in the browser (reason for in-house: Any framework too complex) The view layer (HTML) uses "Datatables" (jqueryPlugin). Lots of functionality built in. Possible have to explore a bit.

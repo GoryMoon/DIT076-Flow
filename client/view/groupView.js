@@ -61,18 +61,18 @@ class GroupView {
     }
 
     groupCreateView() {
-        $("#groupModalTitle").text("Create Group");
+        $("#mainModalTitle").text("Create Group");
         getTemplate('/templates/create-group.mustache', (template) => {
             $('#modal-content').html(Mustache.render(template));
-            $('#groupModal').modal('show');
-            $('#groupModal').on('shown.bs.modal', function () {
+            $('#mainModal').modal('show');
+            $('#mainModal').on('shown.bs.modal', function () {
                 $('#group_send_name').trigger('focus')
             });
         });
     }
     
     groupInviteView() {
-        $("#groupModalTitle").text("Group Invites");
+        $("#mainModalTitle").text("Group Invites");
         gc.get(() => {
             av.updateHeader();
             getTemplate('/templates/invite-group.mustache', (template) => {
@@ -85,7 +85,7 @@ class GroupView {
                 };
                 $('#modal-content').html(Mustache.render(template, { invites: inviteList}));
                 
-                $('#groupModal').modal('show');
+                $('#mainModal').modal('show');
             });
         });
     }
@@ -128,6 +128,9 @@ class GroupView {
 
                 $(".show_hide.user_link.outer").click((event) => {
                     let self = $(event.target);
+                    if (self.is('svg') || self.is('path')) {
+                        self = self.parents('a');
+                    }
                     let drawer = self.next();
                     if (drawer.hasClass('show')) {
                         self.html("Show Users <i class=\"fas fa-angle-down\"></i>");
@@ -141,7 +144,11 @@ class GroupView {
                 });
                 //Bottom hide users button
                 $(".show_hide.user_link.inner").click((event) => {
-                    let drawer = $(event.target).parent();
+                    let target = $(event.target);
+                    if (target.is('svg') || target.is('path')) {
+                        target = target.parents('a');
+                    }
+                    let drawer = target.parent();
                     if (drawer.hasClass('show')) {
                         drawer.prev().html("Show Users <i class=\"fas fa-angle-down\"></i>");
                     } else {
@@ -172,7 +179,8 @@ class GroupView {
     groupGet(data) {}
     
     groupPost(data) {
-        $('#groupModal').modal('hide');
+        av.refreshHeader();
+        $('#mainModal').modal('hide');
         if (location.pathname == '/group') {
             page('/group');
         }
@@ -180,14 +188,22 @@ class GroupView {
     
     groupPut(data) {
         av.refreshHeader();
+        $.notify({
+            message: 'Updated group name' 
+        },{
+            type: 'success'
+        });
     }
     
     groupJoin(data) {
         $('.group-invite-' + data.id).parent().remove();
         if ($('#group-invite-list').children().length === 0) {
-            $('#groupModal').modal('hide');
+            $('#mainModal').modal('hide');
         }
         av.refreshHeader();
+        if (location.pathname == '/group') {
+            page('/group');
+        }
     }
     
     groupLeave(data) {
@@ -199,16 +215,34 @@ class GroupView {
         $('#leaveModal').modal('hide');
     }
 
-    groupLeave(data) {
-        $('.group-kick-' + data.id).parent().remove();
-        if (data.id == store.get('user').id) {
+    groupKick(data) {
+        $('.group-kick-' + data.leaveid).parent().remove();
+        if (data.leaveid == store.get('user').id) {
             $('#groupid-{{id}}').remove();
         }
-        $('#leaveModal').modal('hide');
+        $('#kickModal').modal('hide');
+        let name = 'the group';
+        for (var i = 0; i < gc.getGroupInfo().length; i++) {
+            if (gc.getGroupInfo()[i].id == data.id) {
+                name = gc.getGroupInfo()[i].name;
+                break;
+            }
+        };
+        $.notify({
+            message: 'You have kicked <b>' + data.nick + '</b> from <b>' + name + '</b>'
+        },{
+            type: 'success'
+        });
     }
     
     groupInvite(data) {
         $("#invite_user-" + data.id).val("");
+        $("#groupid-" + data.id + " .group_retrieve_button").click();
+        $.notify({
+            message: 'You have invited <b>' + data.nick + '</b>'
+        },{
+            type: 'success'
+        });
     }
   
 }
@@ -216,8 +250,8 @@ class GroupView {
 const groupView = new GroupView();
 eB.register(groupView);
 
-$('#groupModal').on('hidden.bs.modal', function (e) {
+$('#mainModal').on('hidden.bs.modal', function (e) {
     $('#modal-content').empty();
-    $("#groupModalTitle").text("Group");
+    $("#mainModalTitle").text("Group");
 })
 

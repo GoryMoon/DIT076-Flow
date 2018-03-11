@@ -28,7 +28,7 @@ class CommentView {
         }
     }
   
-    commentRetrieve(data) { // NOT TESTED
+    commentRetrieve(data) {
         let comments = $('#postid-' + data.id + ' .comments');
         comments.empty();
         getTemplate('/templates/comment.mustache', (template) => {
@@ -36,7 +36,10 @@ class CommentView {
                 comments.html('<div class="no-comment"><small>No comments</small></div>');
             } else {
                 for (var i = 0; i < data.comments.length; i++) {
-                    var rendered = Mustache.render(template, getFancyTimeData(data.comments[i]));
+                    let d = getFancyTimeData(data.comments[i]);
+                    let status = d.status == 0 ? 'Hide': 'Show';
+                    d.toggle_comment = status;
+                    var rendered = Mustache.render(template, d);
                     comments.append(rendered);
                 }
             }
@@ -44,12 +47,17 @@ class CommentView {
         });
     }
     
-    commentSend(data) { // NOT TESTED
-        console.log("Unused event sent: EVENT_COMMENT_POST, with data: " + JSON.stringify(data));
-    }
+    commentSend(data) {}
     
-    commentHide(data) { // NOT TESTED
-        console.log("Unused event sent: EVENT_COMMENT_PUT, with data: " + JSON.stringify(data));
+    commentHide(data) {
+        $('#postid-' + data.postid + ' .comment_retrieve_button').click();
+        let status = $('#postid-' + data.postid).find('.comment-text').text().trim();
+        if (status == "Hidden") {
+            status = 'Show';
+        } else {
+            status = 'Hide';
+        }
+        $('#comment_hide_button_' + data.id).text(status);
     }
 }
 

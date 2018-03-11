@@ -3,6 +3,7 @@
 import {
     EVENT_ACCOUNT_VIEW_LOGIN,
     EVENT_ACCOUNT_VIEW_REGISTER,
+    EVENT_ACCOUNT_VIEW,
     EVENT_ACCOUNT_LOGIN,
     EVENT_ACCOUNT_REGISTER,
     EVENT_ACCOUNT_LOGOUT,
@@ -15,7 +16,8 @@ import { groupCtrl as gc } from "../control/groupCtrl.js"
 import { 
     setTitle, 
     getTemplate, 
-    GROUP_UPDATE_BUTTON 
+    GROUP_UPDATE_BUTTON,
+    POST_RETRIEVE_BUTTON
 } from "../util/general.js"
 import Mustache from 'mustache'
 
@@ -28,6 +30,9 @@ class AccountView {
                 break;
             case EVENT_ACCOUNT_VIEW_REGISTER:
                 this.accountViewRegister(data);
+                break;
+            case EVENT_ACCOUNT_VIEW:
+                this.accountView(data);
                 break;
             case EVENT_ACCOUNT_LOGIN:
                 this.accountLogin(data);
@@ -57,6 +62,14 @@ class AccountView {
         getTemplate('/templates/register.mustache', (template) => $('#content').html(Mustache.render(template)));
     }
 
+    accountView(data) {
+        $("#mainModalTitle").text("Profile");
+        getTemplate('/templates/account-profile.mustache', (template) => {
+            $('#modal-content').html(Mustache.render(template, data));
+            $('#mainModal').modal('show');
+        });
+    }
+
     accountLogin(data) {
         this.refreshHeader();
     }
@@ -71,7 +84,16 @@ class AccountView {
     
     accountGet(data) {}
     
-    accountPut(data) {}
+    accountPut(data) {
+        this.refreshHeader();
+        page(location.pathname);
+        $('#mainModal').modal('hide');
+        $.notify({
+            message: 'Successfully updated info'
+        },{
+            type: 'success'
+        });
+    }
     
     updateHeader() {
         $("#nav-group").remove();

@@ -320,7 +320,7 @@ public class UserGroupResource
         public Integer id;
         public String nick;
         
-        public JoinDataOut(Membership membership)
+        public JoinDataOut(Membership membership, String nick)
         {
             this.userid = membership.getUser().getId();
             this.id = membership.getUserGroup().getId();
@@ -362,7 +362,7 @@ public class UserGroupResource
         Membership membership = new Membership(user, userGroup, 1);
         memshipReg.update(membership);
         
-        return Response.ok(gson.toJson(new JoinDataOut(membership))).build();
+        return Response.ok(gson.toJson(new JoinDataOut(membership, user.getNick()))).build();
     }
 
     public static class InviteData
@@ -379,7 +379,7 @@ public class UserGroupResource
         public Integer id;
         public String nick;
         
-        public InviteDataOut(Membership membership)
+        public InviteDataOut(Membership membership, String nick)
         {
             this.inviteid = membership.getUser().getId();
             this.id = membership.getUserGroup().getId();
@@ -469,7 +469,7 @@ public class UserGroupResource
         Membership membership = new Membership(invited, userGroup, 2);
         memshipReg.create(membership);
         
-        return Response.ok(gson.toJson(new InviteDataOut(membership))).build();
+        return Response.ok(gson.toJson(new InviteDataOut(membership, invited.getNick()))).build();
     }
     
     public static class LeaveData

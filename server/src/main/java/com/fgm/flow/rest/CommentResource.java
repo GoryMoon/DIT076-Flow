@@ -222,7 +222,7 @@ public class CommentResource
             return Response.status(NOT_FOUND).build();
         }
         
-        if(!comment.getCommenter().equals(user))
+        if(!comment.getPost().getPoster().equals(user))
         {
              return Response.status(UNAUTHORIZED).build();           
         }

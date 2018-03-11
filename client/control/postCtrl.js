@@ -12,6 +12,7 @@ eventBus as eB
 } from "../util/eventBus.js"
 import {
 getInput,
+getUser,
 hasUser,
 validate,
 POST_FILTER_GROUP,
@@ -37,7 +38,7 @@ class PostCtrl {
             gc.get(() => {
                 eB.notify(EVENT_POST_VIEW);
                 let getPostData = {userid: null, ownerid: null, groupid: null, nick: null, id: null, title: null, text: null, before: null, after: null, count: null};
-                getPostData.userid = store.get('user').id; // verify user can access this info.
+                getPostData.userid = getUser().id; // verify user can access this info.
                 server.rpcGetPost(getPostData, data => { return eB.notify(EVENT_POST_GET, data); });
             });
         }
@@ -46,7 +47,7 @@ class PostCtrl {
     put(event) { // PROTOCOL 3.1 COMPLIANT - NOT TESTED
         let id = $(event.target).parents('.card').data('postid');
         let putPostData = {userid: null, id: null, title: null, text: null, status: null};
-        putPostData.userid = store.get('user').id;
+        putPostData.userid = getUser().id;
         putPostData.id = id;
         putPostData.status = 1;
         server.rpcPutPost(putPostData, data => { 
@@ -59,7 +60,7 @@ class PostCtrl {
         if (validate(POST_SEND_TITLE, POST_SEND_TEXT, POST_SEND_GROUP_ID)) {
             event.preventDefault();
             let postPostData = {userid: null, groupid: null, title: null, text: null, status: null};
-            postPostData.userid = store.get('user').id;
+            postPostData.userid = getUser().id;
             postPostData.groupid = getInput(POST_SEND_GROUP_ID);
             postPostData.title = getInput(POST_SEND_TITLE);
             postPostData.text = getInput(POST_SEND_TEXT);

@@ -20,6 +20,7 @@ import {
 } from "../util/eventBus.js"
 import {
     getInput,
+    getUser,
     hasUser,
     validate,
     ACCOUNT_ID,
@@ -57,7 +58,7 @@ class GroupCtrl {
     get(callback) {
         if (hasUser()) {
             let getGroupData = {userid: null, ownerid: null, id: null, name: null, before: null, after: null, count: null};
-            getGroupData.userid = store.get('user').id; // used to verify user CAN access this info.
+            getGroupData.userid = getUser().id; // used to verify user CAN access this info.
             server.rpcGetGroup(getGroupData, data => { 
                 this.groupInfo = data;
                 eB.notify(EVENT_GROUP_GET, data);
@@ -86,7 +87,7 @@ class GroupCtrl {
         if (validate("#change_name-" + id)) {
             event.preventDefault();
             let putGroupData = {userid: null, id: null, name: null};
-            putGroupData.userid = store.get('user').id;
+            putGroupData.userid = getUser().id;
             putGroupData.id = id;
             putGroupData.name = $("#change_name-" + id).val();
             server.rpcPutGroup(putGroupData, data => { 
@@ -100,7 +101,7 @@ class GroupCtrl {
         if (validate(GROUP_SEND_NAME)) {
             event.preventDefault();
             let postGroupData = {userid: null, name: null};
-            postGroupData.userid = store.get('user').id;
+            postGroupData.userid = getUser().id;
             postGroupData.name = getInput(GROUP_SEND_NAME);
             server.rpcPostGroup(postGroupData, data => { 
                 eB.notify(EVENT_GROUP_POST, data);
@@ -115,7 +116,7 @@ class GroupCtrl {
             target = target.parents('button');
         }
         let joinGroupData = {userid: null, id: null};
-        joinGroupData.userid = store.get('user').id;
+        joinGroupData.userid = getUser().id;
         joinGroupData.id = target.data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
         server.rpcJoinGroup(joinGroupData, data => { 
             return eB.notify(EVENT_GROUP_JOIN, data);}
@@ -128,8 +129,8 @@ class GroupCtrl {
             target = target.parents('button');
         }
         let leaveGroupData = {userid: null, leaveid: null, id: null};
-        leaveGroupData.userid = store.get('user').id;
-        leaveGroupData.leaveid = store.get('user').id; // id of user to leave or kick
+        leaveGroupData.userid = getUser().id;
+        leaveGroupData.leaveid = getUser().id; // id of user to leave or kick
         leaveGroupData.id = target.data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
         server.rpcLeaveGroup(leaveGroupData, data => { 
             return eB.notify(EVENT_GROUP_JOIN, data);}
@@ -138,8 +139,8 @@ class GroupCtrl {
     
     leave(event) {
         let leaveGroupData = {userid: null, leaveid: null, id: null};
-        leaveGroupData.userid = store.get('user').id;
-        leaveGroupData.leaveid = store.get('user').id; // id of user to leave or kick
+        leaveGroupData.userid = getUser().id;
+        leaveGroupData.leaveid = getUser().id; // id of user to leave or kick
         leaveGroupData.id = $(event.target).data('id'); // ID OF GROUP THE USER TRIES TO JOIN.
         server.rpcLeaveGroup(leaveGroupData, data => { 
             return eB.notify(EVENT_GROUP_LEAVE, data);}
@@ -148,7 +149,7 @@ class GroupCtrl {
 
     kick() {
         let leaveGroupData = {userid: null, leaveid: null, id: null};
-        leaveGroupData.userid = store.get('user').id;
+        leaveGroupData.userid = getUser().id;
         let id = $(event.target).data('id');
         leaveGroupData.leaveid = id.id; // id of user to leave or kick
         leaveGroupData.id = id.groupid; // ID OF GROUP THE USER TRIES TO JOIN.
@@ -162,7 +163,7 @@ class GroupCtrl {
         if (validate("#invite_user-" + id)) {
             event.preventDefault();
             let inviteGroupData = {userid: null, inviteid: null, invitenick: null, id: null};
-            inviteGroupData.userid = store.get('user').id; // id of inviter
+            inviteGroupData.userid = getUser().id; // id of inviter
             inviteGroupData.invitenick = $('#invite_user-' + id).val();
             inviteGroupData.id = id; // id of group
             server.rpcInviteGroup(inviteGroupData, data => { return eB.notify(EVENT_GROUP_INVITE, data);});

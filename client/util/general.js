@@ -12,6 +12,18 @@ export function hasUser() {
     return store.get('user') !== undefined;
 }
 
+export function setUser(user) {
+    store.set('user', btoa(JSON.stringify(user)));
+}
+
+export function getUser() {
+    let u = store.get('user');
+    if (u == undefined) { 
+        return u;
+    }
+    return JSON.parse(atob(u));
+}
+
 export function setTitle(title) {
     document.title = "Flow - " + title;
 }

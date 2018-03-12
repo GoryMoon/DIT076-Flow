@@ -11,6 +11,7 @@ eventBus as eB
 } from "../util/eventBus.js"
 import {
 getInput,
+getUser,
 validate,
 ACCOUNT_ID,
 COMMENT_FILTER_POSTID,
@@ -33,7 +34,7 @@ class CommentCtrl {
 
     get(postid) { // PROTOCOL 3.0 COMPLIANT - NOT TESTED
         let getCommentData = {userid: null, ownerid: null, postid: null, nick: null, id: null, text: null, before: null, after: null, count: null};
-        getCommentData.userid = store.get('user').id;
+        getCommentData.userid = getUser().id;
         getCommentData.postid = postid;
         
         server.rpcGetComment(getCommentData, data => { return eB.notify(EVENT_COMMENT_GET, { id: postid, comments: data}); });
@@ -43,7 +44,7 @@ class CommentCtrl {
         let target = $(event.target).parents('.comment');
         let id = target.data('comid');
         let putCommentData = {userid: null, id: null, text: null, status: null};
-        putCommentData.userid = store.get('user').id;
+        putCommentData.userid = getUser().id;
         putCommentData.id = id;
         let status = target.data('status') == 0 ? 'hidden': 'visible';
         putCommentData.status = status; // 1 is hide, 0 is visible. null defaults to visible.
@@ -55,7 +56,7 @@ class CommentCtrl {
         if (validate("#postid-" + id + " " + COMMENT_SEND_TEXT)) {
             event.preventDefault();
             let postCommentData = {userid: null, postid: null, text: null, status: null};
-            postCommentData.userid = store.get('user').id;
+            postCommentData.userid = getUser().id;
             postCommentData.postid = id;
             let inVal = $("#postid-" + id + " " + COMMENT_SEND_TEXT);
             postCommentData.text = inVal.val();

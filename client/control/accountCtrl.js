@@ -16,6 +16,8 @@ eventBus as eB
 } from "../util/eventBus.js"
 import {
 getInput,
+getUser,
+setUser,
 validate,
 ACCOUNT_LOGIN_EMAIL,
 ACCOUNT_LOGIN_PASSWORD,
@@ -46,8 +48,8 @@ class AccountCtrl {
 
     viewAccount() {
         let accountGetData = {userid: null, groupid: null, id: null, email: null, nick: null, count: null};
-        accountGetData.userid = store.get('user').id; // verify this user CAN access this information.
-        accountGetData.id = store.get('user').id;
+        accountGetData.userid = getUser().id; // verify this user CAN access this information.
+        accountGetData.id = getUser().id;
         server.rpcGetAccount(accountGetData, data => {
             eB.notify(EVENT_ACCOUNT_VIEW, data);
         });
@@ -55,7 +57,7 @@ class AccountCtrl {
     
     get(groupid) {
         let accountGetData = {userid: null, groupid: null, id: null, email: null, nick: null, count: null};
-        accountGetData.userid = store.get('user').id; // verify this user CAN access this information.
+        accountGetData.userid = getUser().id; // verify this user CAN access this information.
         accountGetData.groupid = groupid;
         server.rpcGetAccount(accountGetData, data => { eB.notify(EVENT_ACCOUNT_GET, {id: groupid, users: data}); });
     }
@@ -67,7 +69,7 @@ class AccountCtrl {
             accountLoginData.email = getInput(ACCOUNT_LOGIN_EMAIL);
             accountLoginData.password = getInput(ACCOUNT_LOGIN_PASSWORD);
             server.rpcLoginAccount(accountLoginData, data => { 
-                store.set('user', data);
+                setUser(data);
                 eB.notify(EVENT_ACCOUNT_LOGIN, data);
                 page('/');
             });
@@ -78,12 +80,12 @@ class AccountCtrl {
         if (validate(ACCOUNT_CHANGE_EMAIL, ACCOUNT_CHANGE_NICK)) {
             event.preventDefault();
             let accountPutData = {userid: null, id: null, email: null, nick: null, password: null};
-            accountPutData.userid = store.get('user').id; // id of editor.
-            accountPutData.id = store.get('user').id;   // id of account to be modified.
+            accountPutData.userid = getUser().id; // id of editor.
+            accountPutData.id = getUser().id;   // id of account to be modified.
             accountPutData.email = getInput(ACCOUNT_CHANGE_EMAIL);
             accountPutData.nick = getInput(ACCOUNT_CHANGE_NICK);
             server.rpcPutAccount(accountPutData, data => { 
-                store.set('user', data);
+                setUser(data);
                 eB.notify(EVENT_ACCOUNT_PUT, data);
             });
         }
@@ -93,8 +95,8 @@ class AccountCtrl {
         if (validate(ACCOUNT_CHANGE_PASSWORD, ACCOUNT_CHANGE_PASSWORD_CONFIRM)) {
             event.preventDefault();
             let accountPutData = {userid: null, id: null, email: null, nick: null, password: null};
-            accountPutData.userid = store.get('user').id; // id of editor.
-            accountPutData.id = store.get('user').id;   // id of account to be modified.
+            accountPutData.userid = getUser().id; // id of editor.
+            accountPutData.id = getUser().id;   // id of account to be modified.
             accountPutData.password = getInput(ACCOUNT_CHANGE_PASSWORD);
             server.rpcPutAccount(accountPutData, data => { eB.notify(EVENT_ACCOUNT_PUT, data); });
         }
@@ -108,7 +110,7 @@ class AccountCtrl {
             accountRegisterData.nick = getInput(ACCOUNT_REGISTER_NICK);
             accountRegisterData.password = getInput(ACCOUNT_REGISTER_PASSWORD);
             server.rpcRegisterAccount(accountRegisterData, data => {
-                store.set('user', data);
+                setUser(data);
                 eB.notify(EVENT_ACCOUNT_REGISTER, data);
                 page('/');
             });

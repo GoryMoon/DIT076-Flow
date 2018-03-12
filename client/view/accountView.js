@@ -15,6 +15,7 @@ import {
 import { groupCtrl as gc } from "../control/groupCtrl.js"
 import { 
     setTitle, 
+    getUser,
     getTemplate, 
     GROUP_UPDATE_BUTTON,
     POST_RETRIEVE_BUTTON
@@ -100,7 +101,7 @@ class AccountView {
         $("#nav-group").remove();
         $("#nav-drop").remove();
 
-        var userData = store.get('user');
+        var userData = getUser();
         if (userData !== undefined) {
             let groupInfo = gc.getGroupInfo();
             let invites = 0;

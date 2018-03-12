@@ -14,7 +14,7 @@ EVENT_GROUP_KICK,
 EVENT_ACCOUNT_GET,
 eventBus as eB
 } from "../util/eventBus.js"
-import { getTemplate } from "../util/general.js"
+import { getTemplate, getUser } from "../util/general.js"
 import { groupCtrl as gc } from "../control/groupCtrl.js"
 import { accountView as av } from "../view/accountView.js"
 import { accountCtrl as ac } from "../control/accountCtrl.js"
@@ -205,6 +205,7 @@ class GroupView {
         if (location.pathname == '/group') {
             page('/group');
         }
+        $('.post_retrieve_button').click();
     }
     
     groupLeave(data) {
@@ -218,7 +219,7 @@ class GroupView {
 
     groupKick(data) {
         $('.group-kick-' + data.leaveid).parent().remove();
-        if (data.leaveid == store.get('user').id) {
+        if (data.leaveid == getUser().id) {
             $('#groupid-{{id}}').remove();
         }
         $('#kickModal').modal('hide');
